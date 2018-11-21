@@ -1,0 +1,48 @@
+server:
+  port: 7086
+eureka:
+  instance:
+    hostname: 47.99.242.122
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 5
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://47.99.242.122:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+spring:
+  application:
+    name: server-admin
+  mail:
+    host: smtp.163.com
+    username: 18217428005@163.com
+    password: woainiZHANG520
+    properties:
+      mail.debug: false
+      mail.smtp.auth: true   #安全认证(默认是true)
+      mail.smtp.port: 465
+      mail.smtp.ssl.enable: true  #开启ssl加密 否则项目启动时报530error
+      mail.smtp.ssl.socketFactory: sf
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+  boot:
+    admin:
+      notify:
+        mail:
+          to: 18217428005@163.com
+          from: 18217428005@163.com
+      client:
+        url: http://localhost:7086
+  security:
+    user:
+      name: admin
+      password: admin
