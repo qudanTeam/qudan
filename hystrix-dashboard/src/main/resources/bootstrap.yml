@@ -9,4 +9,4 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:7086
+        url: http://47.99.242.122:7086
