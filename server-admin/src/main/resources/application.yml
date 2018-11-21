@@ -11,6 +11,8 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://47.99.242.122:8761/eureka/
+    healthcheck:
+      enabled: true
 management:
   endpoints:
     web:
@@ -41,7 +43,7 @@ spring:
           to: 18217428005@163.com
           from: 18217428005@163.com
       client:
-        url: http://localhost:7086
+        url: http://47.99.242.122:7086
   security:
     user:
       name: admin
