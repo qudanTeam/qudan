@@ -47,6 +47,11 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+		<!--添加日志管理依赖-->
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
@@ -114,11 +119,6 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.28</version>
-		</dependency>
-		<!--添加日志管理依赖-->
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
