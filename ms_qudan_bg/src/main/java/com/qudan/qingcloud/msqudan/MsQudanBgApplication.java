@@ -19,10 +19,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients
 @EnableSwagger2
 //@Import({DynamicDataSourceRegister.class}) // 注册动态多数据源
-public class MsQudanApplication {
+public class MsQudanBgApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MsQudanApplication.class, args);
+        SpringApplication.run(MsQudanBgApplication.class, args);
 
     }
 }

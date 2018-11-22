@@ -164,7 +164,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.qudan.qingcloud.msqudan.MsQudanApplication</mainClass>
+                    <mainClass>com.qudan.qingcloud.msqudan.MsQudanBgApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
