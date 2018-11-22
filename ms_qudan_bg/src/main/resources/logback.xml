@@ -7,11 +7,11 @@
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">  
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">  
             <!--<Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread]%logger{56}.%method:%L - %msg%n</Pattern>-->
-            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} | msvideo | %-5level | %thread | %logger{56}.%method | %L : %msg%n</Pattern>
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} | msqudanbg | %-5level | %thread | %logger{56}.%method | %L : %msg%n</Pattern>
         </encoder>  
     </appender>
     
-    <appender name="msvideostdout" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="msqudanbgstdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">  
             <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</Pattern>  
         </encoder>  
