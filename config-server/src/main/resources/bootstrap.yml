@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/qudanTeam/qudan
+          search-paths: /spring-cloud-config/service*
+  security:
+    user:
+      name: user
+      password: 123456
+  boot:
+    admin:
+      client:
+        url: http://47.99.242.122:7086
