@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangheng.qingcloud.msqudan.mapper.UserMapper">
+    <select id="getUserInfoByUsername" resultType="map">
+        SELECT
+         *
+        FROM
+         user u
+         WHERE
+         u.username = #{username}
+         AND
+         u.isenable = 1
+
+    </select>
+
+    <!--根据用户名查询用户所拥有的角色-->
+    <select id="getUserAndRoleInfoByUsername" resultType="map">
+        SELECT
+            u.username,
+            u.isenable,
+            r.`name`,
+            r.nameZh,
+            u.`password`
+        FROM
+            USER u
+        INNER JOIN user_role ur ON u.id = ur.userid
+        INNER JOIN role r ON r.id = ur.roleid
+        WHERE
+          u.username = #{username}
+         AND
+            u.isenable = 1
+
+    </select>
+
+    <!--获取后台所有api接口-->
+    <select id="getAllApi" resultType="map">
+        SELECT
+        *
+        FROM
+        api
+    </select>
+
+    <!--根据apiid获取api所拥有的访问角色权限-->
+    <select id="getApiRoleByApiId" resultType="map">
+        SELECT
+	    r.*
+        FROM
+        role_api ra
+        INNER JOIN role r ON ra.roleid = r.id
+        WHERE
+	    ra.apiid = #{apiid}
+	    AND
+	    ra.del_flag = 0
+    </select>
+
+    <!--前端登录-->
+    <select id="appLogin" resultType="map">
+        SELECT
+        *
+        FROM
+        USER u
+        WHERE
+        u.username = #{username}
+        AND
+        u.password = #{password}
+    </select>
+</mapper>
