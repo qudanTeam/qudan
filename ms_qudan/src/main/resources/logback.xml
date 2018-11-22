@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<configuration>
+
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <jmxConfigurator/>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">  
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">  
+            <!--<Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread]%logger{56}.%method:%L - %msg%n</Pattern>-->
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} | msqudan | %-5level | %thread | %logger{56}.%method | %L : %msg%n</Pattern>
+        </encoder>  
+    </appender>
+    
+    <appender name="msqudanstdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">  
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</Pattern>  
+        </encoder>  
+    </appender>
+
+   <!-- <logger nacom.zhangheng.qingcloud.msqudanideo.util.logger" additivity="false">
+        <level value="info" />
+        <appender-ref ref="cpstdout" />
+    </logger>-->
+    
+<!--     <logger name="com.pateo.qingcloud.cp" level="debug" /> -->
+<!--     <logger name="org" level="info" /> -->
+    
+    <root level="info">
+        <appender-ref ref="stdout" />
+    </root>  
+</configuration>
