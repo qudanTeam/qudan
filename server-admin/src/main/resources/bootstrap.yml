@@ -10,3 +10,5 @@ spring:
     admin:
       client:
         url: http://47.99.242.122:7086
+  profiles:
+    active: secure
