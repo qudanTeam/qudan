@@ -10,10 +10,10 @@ spring:
 #      uri: http://user:123456@47.99.242.122:8888/
 #      profile: dev
 #      label: master
-#  security:
-#    user:
-#      name: user
-#      password: 123456
+  security:
+    user:
+      name: user
+      password: 123456
 #  boot:
 #    admin:
 #      client:
