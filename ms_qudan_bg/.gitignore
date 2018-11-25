@@ -1,0 +1,24 @@
+# 统一排除目录
+
+### Maven ###
+*/target
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+*/.project
+*/.settings
+*/.classpath
+.DS_Store
+
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

@@ -12,7 +12,6 @@
          u.username = #{username}
          AND
          u.isenable = 1
-
     </select>
 
     <!--根据用户名查询用户所拥有的角色-->
