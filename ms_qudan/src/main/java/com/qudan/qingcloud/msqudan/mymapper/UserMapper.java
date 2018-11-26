@@ -10,4 +10,6 @@ public interface UserMapper {
         "SELECT username FROM user"
     })
     List<String> selectUserById();
+
+
 }
