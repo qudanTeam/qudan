@@ -13,8 +13,6 @@ import java.util.Map;
  * Created by 蜡笔小新不爱吃青椒 on 2018/7/24.
  */
 
-@Repository
-@Mapper
 public interface UserMapper extends YHMapper<User> {
 
     //根据用户名查询用户信息(包括角色)

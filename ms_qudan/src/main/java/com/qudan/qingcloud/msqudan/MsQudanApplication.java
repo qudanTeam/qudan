@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -18,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient//开启服务注册功能
 @EnableFeignClients
 @EnableSwagger2
+@EnableAutoConfiguration
 //@Import({DynamicDataSourceRegister.class}) // 注册动态多数据源
 public class MsQudanApplication {
 

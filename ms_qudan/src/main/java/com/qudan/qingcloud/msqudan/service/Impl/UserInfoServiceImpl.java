@@ -21,16 +21,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final Logger logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
 
-    //注入mapper
-    @Autowired
-    private UserMapper userMapper;
-
     @Override
     @HystrixCommand
     public YHResult getUserInfoByUsername(Map<String, String> params) {
 
-        Map<String, Object> userInfoByUsername = userMapper.getUserInfoByUsername(params.get("username"));
-        return YHResult.ok(userInfoByUsername);
+        return null;
     }
 
     /**
@@ -42,9 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @HystrixCommand
     public YHResult getUserAndRoleInfoByUsername(Map<String, String> params) {
 
-        List<Map<String,Object>> userAndRoleInfoByUsername = userMapper.getUserAndRoleInfoByUsername(params.get("username"));
-
-        return YHResult.ok(userAndRoleInfoByUsername);
+        return null;
     }
 
     /**
@@ -54,8 +47,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @HystrixCommand
     public YHResult getAllApi() {
-        List<Map<String, Object>> allApi = userMapper.getAllApi();
-        return YHResult.ok(allApi);
+        return null;
     }
 
 
@@ -68,16 +60,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     @HystrixCommand
     public YHResult getApiRoleByApiId(Map<String, Object> params) {
 
-        List<Map<String, Object>> apiRoleByApiId = userMapper.getApiRoleByApiId(Integer.parseInt(params.get("apiid")+""));
-        return YHResult.ok(apiRoleByApiId);
+        return null;
     }
 
     @Override
     @HystrixCommand
     public YHResult appLogin(Map<String, String> params) {
 
-        Map<String, Object> map = userMapper.appLogin(params.get("username") + "", params.get("password") + "");
-
-        return YHResult.ok(map);
+        return null;
     }
 }

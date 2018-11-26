@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.controller;
 
+import com.qudan.qingcloud.msqudan.mymapper.UserMapper;
 import com.qudan.qingcloud.msqudan.service.UserInfoService;
 import com.qudan.qingcloud.msqudan.util.YHResult;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +34,13 @@ public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @RequestMapping(value = "/getUsernames", method = RequestMethod.GET)
+    public List<String> names(){
+        return userMapper.selectUserById();
+    }
 
     /**
      * 根据用户名查找用户信息
