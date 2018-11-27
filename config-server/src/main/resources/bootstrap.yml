@@ -7,9 +7,9 @@ spring:
         git:
           uri: https://github.com/qudanTeam/qudan
           search-paths: /spring-cloud-config/service*
-      uri: http://user:123456@47.99.242.122:8888/
-      profile: dev
-      label: master
+#      uri: http://user:123456@47.99.242.122:8888/
+#      profile: dev
+#      label: master
   security:
     user:
       name: user
