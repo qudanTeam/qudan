@@ -1,7 +1,6 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.qudan.qingcloud.msqudan.mapper.UserMapper;
 import com.qudan.qingcloud.msqudan.service.UserInfoService;
 import com.qudan.qingcloud.msqudan.util.YHResult;
 import org.slf4j.Logger;

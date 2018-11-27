@@ -37,11 +37,6 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping(value = "/getUsernames", method = RequestMethod.GET)
-    public List<String> names(){
-        return userMapper.selectUserById();
-    }
-
     /**
      * 根据用户名查找用户信息
      */
