@@ -10,7 +10,7 @@ import java.util.List;
 public interface BankMapperSelf {
 
     @Select({
-        "SELECT * FROM category WHERE category_type = #{type} ORDER id"
+        "SELECT * FROM category WHERE category_type = #{type} ORDER BY id"
     })
     List<Category> categories(@Param("type")Integer type);
 }

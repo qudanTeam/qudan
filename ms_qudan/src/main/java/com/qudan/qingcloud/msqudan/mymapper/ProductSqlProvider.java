@@ -41,7 +41,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getIsInShop() != null) {
-            VALUES("\"is_ in_shop\"", "#{isInShop,jdbcType=INTEGER}");
+            VALUES("is_in_shop", "#{isInShop,jdbcType=INTEGER}");
         }
         
         if (record.getIsShelf() != null) {
@@ -264,7 +264,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getIsInShop() != null) {
-            SET("\"is_ in_shop\" = #{isInShop,jdbcType=INTEGER}");
+            SET("is_in_shop = #{isInShop,jdbcType=INTEGER}");
         }
         
         if (record.getIsShelf() != null) {

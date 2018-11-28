@@ -17,6 +17,11 @@ public class ProductController {
     @Autowired
     public ProductServiceImpl productService;
 
+    /**
+     * 热门商品
+     * @param type
+     * @return
+     */
     @GetMapping("/products/hot")
     public ResponseEntity<Map<String, Object>> hots(@RequestParam("type") Integer type) {
         ApiResponseEntity ARE = new ApiResponseEntity();
@@ -24,6 +29,13 @@ public class ProductController {
         return ARE.createResponseEntity();
     }
 
+    /**
+     * 商品列表，搜索
+     * @param type
+     * @param keyword
+     * @param request
+     * @return
+     */
     @GetMapping("/products/")
     public ResponseEntity<Map<String, Object>> list(@RequestParam(value = "type", required = false) Integer type,
                                                     @RequestParam(value = "keyword", required = false)String keyword,
@@ -36,14 +48,12 @@ public class ProductController {
         return ARE.createResponseEntity();
     }
 
-    @GetMapping("/product/${id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Map<String, Object>> detail(@PathVariable("id")Integer id,
                                                     HttpServletRequest request
     ) {
         ApiResponseEntity ARE = new ApiResponseEntity();
-        if(ComUtils.validPage(ARE, request)){
-            ARE.setData(productService.productDetail(ARE, id));
-        }
+        ARE.setData(productService.productDetail(ARE, id));
         return ARE.createResponseEntity();
     }
 }

@@ -2,9 +2,11 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.entity.Banner;
 import com.qudan.qingcloud.msqudan.mymapper.BannerMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.BannerMapperSelf;
+import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import java.util.Map;
 public class BannerServiceImpl  {
 
     @Autowired
+    CommonConfig config;
+    @Autowired
     BannerMapperSelf bannerMapperSelf;
 
 
@@ -25,6 +29,9 @@ public class BannerServiceImpl  {
     public Map<String,Object>  getBanners(ApiResponseEntity ARE){
         Map<String,Object> data = Maps.newHashMap();
         List<Banner> list = bannerMapperSelf.banners();
+        for(Banner banner : list){
+            banner.setImg(ComUtils.addPrefixToImg(banner.getImg(), config.getQiniuImageUrl()));
+        }
         data.put("banners", list);
         return data;
     }

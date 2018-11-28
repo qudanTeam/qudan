@@ -106,6 +106,7 @@ public class ProductServiceImpl {
             productVo.setLoanTag(tags);
         }
         Map<String,Object> data = Maps.newHashMap();
+        data.put("detail", productVo);
         return data;
     }
 
