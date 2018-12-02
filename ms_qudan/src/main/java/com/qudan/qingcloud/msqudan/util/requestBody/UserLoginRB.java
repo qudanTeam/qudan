@@ -1,9 +1,9 @@
-package com.qudan.qingcloud.msqudan.entity.self.requestBody;
+package com.qudan.qingcloud.msqudan.util.requestBody;
 
 public class UserLoginRB {
     private String mobile;
     private String password;
-    private String code;
+    private String validcode;
 
     public String getMobile() {
         return mobile;
@@ -21,11 +21,11 @@ public class UserLoginRB {
         this.password = password;
     }
 
-    public String getCode() {
-        return code;
+    public String getValidcode() {
+        return validcode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setValidcode(String validcode) {
+        this.validcode = validcode;
     }
 }

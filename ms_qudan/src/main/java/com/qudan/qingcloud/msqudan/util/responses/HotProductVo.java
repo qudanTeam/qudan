@@ -1,4 +1,4 @@
-package com.qudan.qingcloud.msqudan.entity.self.response;
+package com.qudan.qingcloud.msqudan.util.responses;
 
 import java.math.BigDecimal;
 

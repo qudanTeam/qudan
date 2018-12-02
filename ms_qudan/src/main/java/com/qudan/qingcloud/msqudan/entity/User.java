@@ -21,7 +21,7 @@ public class User {
 
     private Integer agentLevel;
 
-    private Integer registerTime;
+    private Date registerTime;
 
     private Date lastLoginTime;
 
@@ -111,11 +111,11 @@ public class User {
         this.agentLevel = agentLevel;
     }
 
-    public Integer getRegisterTime() {
+    public Date getRegisterTime() {
         return registerTime;
     }
 
-    public void setRegisterTime(Integer registerTime) {
+    public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
     }
 

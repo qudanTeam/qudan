@@ -2,8 +2,8 @@ package com.qudan.qingcloud.msqudan.mymapper.self;
 
 import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
-import com.qudan.qingcloud.msqudan.entity.self.response.HotProductVo;
-import com.qudan.qingcloud.msqudan.entity.self.response.ProductListVo;
+import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
+import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

@@ -49,7 +49,7 @@ public class UserSqlProvider {
         }
         
         if (record.getRegisterTime() != null) {
-            VALUES("register_time", "#{registerTime,jdbcType=INTEGER}");
+            VALUES("register_time", "#{registerTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getLastLoginTime() != null) {
@@ -124,7 +124,7 @@ public class UserSqlProvider {
         }
         
         if (record.getRegisterTime() != null) {
-            SET("register_time = #{registerTime,jdbcType=INTEGER}");
+            SET("register_time = #{registerTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getLastLoginTime() != null) {
