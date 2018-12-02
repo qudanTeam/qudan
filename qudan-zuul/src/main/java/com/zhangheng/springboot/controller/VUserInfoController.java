@@ -53,9 +53,9 @@ public class VUserInfoController {
     public YHResult appLogin(
 //              @RequestBody Map<String,Object> params,
             @RequestParam(value = "username", required = true) String username,
-            @RequestParam(value = "userId", required = true) String userId,
-            HttpServletRequest request
-      ){
+            @RequestParam(value = "userId", required = true) int userId
+            //HttpServletRequest request
+    ){
           try {
               /**
                * 登录根据数据库的逻辑处理
@@ -64,6 +64,7 @@ public class VUserInfoController {
               claims.put("username",username);
               claims.put("userId",userId);
               long ttlMillis = 1000 * 60 * 60;//过期时间(单位毫秒)
+
               String token  = JwtUtil.createJWT(claims, "qudan", "趣单",ttlMillis,"");
               Map<String,Object> params = new HashMap<>();
               params.put("token",token);
