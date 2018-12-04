@@ -1,39 +1,44 @@
 package com.qudan.qingcloud.msqudan.util;
 
-import com.github.pagehelper.PageInfo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class PageUtils<T> {
+/**
+ * 分页基类
+ * Created by wzx on 2018/7/24.
+ */
+public class PageUtils implements Serializable {
 
-    private List<T> result;
+    private Integer pageNum = 1;
 
-    public List<T> getResult() {
-        return result;
+    private Integer pageSize = 10;
+
+    public Integer getPageNum() {
+        return pageNum;
     }
 
-    public void setResult(List<T> result) {
-        this.result = result;
+    public void setPageNum(Integer pageNum) {
+        if(Objects.nonNull(pageNum)){
+            this.pageNum = pageNum;
+        }
     }
 
-    public PageUtils(List<T> result) {
-        this.result = result;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public Map<String, Object> build() {
-        PageInfo page = new PageInfo(this.result);
-
-        //返回值封装
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("totalRows", page.getTotal());
-        resultMap.put("totalPages", page.getPages());
-        resultMap.put("pageSize", page.getPageSize());
-        resultMap.put("pageNum", page.getPageNum());
-        resultMap.put("list", result);
-
-        return resultMap;
+    public void setPageSize(Integer pageSize) {
+        if(Objects.nonNull(pageSize)){
+            this.pageSize = pageSize;
+        }
     }
 
+    @Override
+    public String toString() {
+        return "PageUtils{" +
+                "pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }

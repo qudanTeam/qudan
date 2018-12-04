@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qudan.qingcloud.msqudan.mapper.ProductMapper">
+
+  <resultMap id="PageResultMap" type="com.qudan.qingcloud.msqudan.entity.web.ProductCategory">
+  <id column="id" jdbcType="INTEGER" property="id" />
+  <result column="product_name" jdbcType="VARCHAR" property="productName" />
+  <result column="logo" jdbcType="VARCHAR" property="logo" />
+  <result column="product_type" jdbcType="INTEGER" property="productType" />
+  <result column="is_hot" jdbcType="INTEGER" property="isHot" />
+  <result column="is_show" jdbcType="INTEGER" property="isShow" />
+  <result column="customer" jdbcType="INTEGER" property="customer" />
+  <result column="is_in_shop" jdbcType="INTEGER" property="isInShop" />
+  <result column="is_shelf" jdbcType="INTEGER" property="isShelf" />
+  <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  <result column="commission" jdbcType="DECIMAL" property="commission" />
+  <result column="sort_val" jdbcType="INTEGER" property="sortVal" />
+  <result column="bg_category" jdbcType="VARCHAR" property="bgCategory" />
+  <result column="amount_line" jdbcType="INTEGER" property="amountLine" />
+  <result column="progress_query_img" jdbcType="VARCHAR" property="progressQueryImg" />
+  <result column="allow_rate" jdbcType="DECIMAL" property="allowRate" />
+  <result column="apply_num" jdbcType="INTEGER" property="applyNum" />
+  <result column="apply_condition" jdbcType="VARCHAR" property="applyCondition" />
+  <result column="apply_tp_img" jdbcType="VARCHAR" property="applyTpImg" />
+  <result column="day_rate" jdbcType="DECIMAL" property="dayRate" />
+  <result column="month_rate" jdbcType="DECIMAL" property="monthRate" />
+  <result column="a_begin" jdbcType="INTEGER" property="aBegin" />
+  <result column="a_limit" jdbcType="INTEGER" property="aLimit" />
+  <result column="b_begin" jdbcType="INTEGER" property="bBegin" />
+  <result column="b_limit" jdbcType="INTEGER" property="bLimit" />
+  <result column="c_start" jdbcType="INTEGER" property="cStart" />
+  <result column="c_limit" jdbcType="VARCHAR" property="cLimit" />
+  <result column="a_level_reward" jdbcType="DECIMAL" property="aLevelReward" />
+  <result column="b_level_reward" jdbcType="DECIMAL" property="bLevelReward" />
+  <result column="c_level_reward" jdbcType="DECIMAL" property="cLevelReward" />
+  <result column="base_salary" jdbcType="DECIMAL" property="baseSalary" />
+  <result column="month_salary" jdbcType="VARCHAR" property="monthSalary" />
+  <result column="salary" jdbcType="VARCHAR" property="salary" />
+  <result column="salary_desc" jdbcType="VARCHAR" property="salaryDesc" />
+  <result column="month_salary_desc" jdbcType="VARCHAR" property="monthSalaryDesc" />
+  <result column="second_summary" jdbcType="VARCHAR" property="secondSummary" />
+  <result column="third_summary" jdbcType="VARCHAR" property="thirdSummary" />
+  <result column="detail_header_img" jdbcType="VARCHAR" property="detailHeaderImg" />
+  <result column="card_long_img" jdbcType="VARCHAR" property="cardLongImg" />
+  <result column="product_show_img" jdbcType="VARCHAR" property="productShowImg" />
+  <result column="burundian" jdbcType="VARCHAR" property="burundian" />
+  <result column="settlement_type" jdbcType="INTEGER" property="settlementType" />
+  <result column="expire_unit" jdbcType="VARCHAR" property="expireUnit" />
+  <result column="how_settle" jdbcType="VARCHAR" property="howSettle" />
+  <result column="expire_begin" jdbcType="INTEGER" property="expireBegin" />
+  <result column="expire_end" jdbcType="INTEGER" property="expireEnd" />
+  <result column="commission_standard" jdbcType="VARCHAR" property="commissionStandard" />
+  <result column="share_title" jdbcType="VARCHAR" property="shareTitle" />
+  <result column="card_progress_img" jdbcType="VARCHAR" property="cardProgressImg" />
+  <result column="base_right" jdbcType="VARCHAR" property="baseRight" />
+  <result column="preferential" jdbcType="VARCHAR" property="preferential" />
+  <result column="special_tag" jdbcType="VARCHAR" property="specialTag" />
+  <result column="special_txt" jdbcType="VARCHAR" property="specialTxt" />
+  <result column="unit" jdbcType="VARCHAR" property="unit" />
+  <result column="name" jdbcType="VARCHAR" property="name" />
+  <result column="category_type" jdbcType="INTEGER" property="categoryType" />
+</resultMap>
+
+  <resultMap id="BaseResultMap" type="com.qudan.qingcloud.msqudan.entity.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="product_type" jdbcType="INTEGER" property="productType" />
+    <result column="is_hot" jdbcType="INTEGER" property="isHot" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="customer" jdbcType="INTEGER" property="customer" />
+    <result column="is_in_shop" jdbcType="INTEGER" property="isInShop" />
+    <result column="is_shelf" jdbcType="INTEGER" property="isShelf" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="commission" jdbcType="DECIMAL" property="commission" />
+    <result column="sort_val" jdbcType="INTEGER" property="sortVal" />
+    <result column="bg_category" jdbcType="VARCHAR" property="bgCategory" />
+    <result column="amount_line" jdbcType="INTEGER" property="amountLine" />
+    <result column="progress_query_img" jdbcType="VARCHAR" property="progressQueryImg" />
+    <result column="allow_rate" jdbcType="DECIMAL" property="allowRate" />
+    <result column="apply_num" jdbcType="INTEGER" property="applyNum" />
+    <result column="apply_condition" jdbcType="VARCHAR" property="applyCondition" />
+    <result column="apply_tp_img" jdbcType="VARCHAR" property="applyTpImg" />
+    <result column="day_rate" jdbcType="DECIMAL" property="dayRate" />
+    <result column="month_rate" jdbcType="DECIMAL" property="monthRate" />
+    <result column="a_begin" jdbcType="INTEGER" property="aBegin" />
+    <result column="a_limit" jdbcType="INTEGER" property="aLimit" />
+    <result column="b_begin" jdbcType="INTEGER" property="bBegin" />
+    <result column="b_limit" jdbcType="INTEGER" property="bLimit" />
+    <result column="c_start" jdbcType="INTEGER" property="cStart" />
+    <result column="c_limit" jdbcType="VARCHAR" property="cLimit" />
+    <result column="a_level_reward" jdbcType="DECIMAL" property="aLevelReward" />
+    <result column="b_level_reward" jdbcType="DECIMAL" property="bLevelReward" />
+    <result column="c_level_reward" jdbcType="DECIMAL" property="cLevelReward" />
+    <result column="base_salary" jdbcType="DECIMAL" property="baseSalary" />
+    <result column="month_salary" jdbcType="VARCHAR" property="monthSalary" />
+    <result column="salary" jdbcType="VARCHAR" property="salary" />
+    <result column="salary_desc" jdbcType="VARCHAR" property="salaryDesc" />
+    <result column="month_salary_desc" jdbcType="VARCHAR" property="monthSalaryDesc" />
+    <result column="second_summary" jdbcType="VARCHAR" property="secondSummary" />
+    <result column="third_summary" jdbcType="VARCHAR" property="thirdSummary" />
+    <result column="detail_header_img" jdbcType="VARCHAR" property="detailHeaderImg" />
+    <result column="card_long_img" jdbcType="VARCHAR" property="cardLongImg" />
+    <result column="product_show_img" jdbcType="VARCHAR" property="productShowImg" />
+    <result column="burundian" jdbcType="VARCHAR" property="burundian" />
+    <result column="settlement_type" jdbcType="INTEGER" property="settlementType" />
+    <result column="expire_unit" jdbcType="VARCHAR" property="expireUnit" />
+    <result column="how_settle" jdbcType="VARCHAR" property="howSettle" />
+    <result column="expire_begin" jdbcType="INTEGER" property="expireBegin" />
+    <result column="expire_end" jdbcType="INTEGER" property="expireEnd" />
+    <result column="commission_standard" jdbcType="VARCHAR" property="commissionStandard" />
+    <result column="share_title" jdbcType="VARCHAR" property="shareTitle" />
+    <result column="card_progress_img" jdbcType="VARCHAR" property="cardProgressImg" />
+    <result column="base_right" jdbcType="VARCHAR" property="baseRight" />
+    <result column="preferential" jdbcType="VARCHAR" property="preferential" />
+    <result column="special_tag" jdbcType="VARCHAR" property="specialTag" />
+    <result column="special_txt" jdbcType="VARCHAR" property="specialTxt" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, product_name, logo, product_type, is_hot, is_show, customer, is_in_shop, is_shelf, 
+    create_time, modify_time, commission, sort_val, bg_category, amount_line, progress_query_img, 
+    allow_rate, apply_num, apply_condition, apply_tp_img, day_rate, month_rate, a_begin, 
+    a_limit, b_begin, b_limit, c_start, c_limit, a_level_reward, b_level_reward, c_level_reward, 
+    base_salary, month_salary, salary, salary_desc, month_salary_desc, second_summary, 
+    third_summary, detail_header_img, card_long_img, product_show_img, burundian, settlement_type, 
+    expire_unit, how_settle, expire_begin, expire_end, commission_standard, share_title, 
+    card_progress_img, base_right, preferential, special_tag, special_txt, unit
+  </sql>
+
+  <select id="selectByPage" parameterType="com.qudan.qingcloud.msqudan.entity.web.ProductCategory" resultMap="PageResultMap">
+    select 
+    id, product_name, logo, product_type, is_hot, is_show, customer, is_in_shop, is_shelf,
+    create_time, modify_time, commission, sort_val, bg_category, amount_line, progress_query_img,
+    allow_rate, apply_num, apply_condition, apply_tp_img, day_rate, month_rate, a_begin,
+    a_limit, b_begin, b_limit, c_start, c_limit, a_level_reward, b_level_reward, c_level_reward,
+    base_salary, month_salary, salary, salary_desc, month_salary_desc, second_summary,
+    third_summary, detail_header_img, card_long_img, product_show_img, burundian, settlement_type,
+    expire_unit, how_settle, expire_begin, expire_end, commission_standard, share_title,
+    card_progress_img, base_right, preferential, special_tag, special_txt, unit,category.name as `name` ,category.category_type as category_type
+    from product,product_category_relation,category
+    <where>
+      <if test="productName != null and productName != '' ">
+        AND `product_name` LIKE CONCAT('%',#{productName},'%')
+      </if>
+      <if test="categoryType != null">
+        AND category.category_type = #{categoryType}
+      </if>
+      <if test="name != null and name !='' ">
+        AND category.name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="isShelf != null">
+        AND is_shelf = #{isShelf}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.qudan.qingcloud.msqudan.entity.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="logo != null">
+        logo,
+      </if>
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="isHot != null">
+        is_hot,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="customer != null">
+        customer,
+      </if>
+      <if test="isInShop != null">
+        is_in_shop,
+      </if>
+      <if test="isShelf != null">
+        is_shelf,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="commission != null">
+        commission,
+      </if>
+      <if test="sortVal != null">
+        sort_val,
+      </if>
+      <if test="bgCategory != null">
+        bg_category,
+      </if>
+      <if test="amountLine != null">
+        amount_line,
+      </if>
+      <if test="progressQueryImg != null">
+        progress_query_img,
+      </if>
+      <if test="allowRate != null">
+        allow_rate,
+      </if>
+      <if test="applyNum != null">
+        apply_num,
+      </if>
+      <if test="applyCondition != null">
+        apply_condition,
+      </if>
+      <if test="applyTpImg != null">
+        apply_tp_img,
+      </if>
+      <if test="dayRate != null">
+        day_rate,
+      </if>
+      <if test="monthRate != null">
+        month_rate,
+      </if>
+      <if test="aBegin != null">
+        a_begin,
+      </if>
+      <if test="aLimit != null">
+        a_limit,
+      </if>
+      <if test="bBegin != null">
+        b_begin,
+      </if>
+      <if test="bLimit != null">
+        b_limit,
+      </if>
+      <if test="cStart != null">
+        c_start,
+      </if>
+      <if test="cLimit != null">
+        c_limit,
+      </if>
+      <if test="aLevelReward != null">
+        a_level_reward,
+      </if>
+      <if test="bLevelReward != null">
+        b_level_reward,
+      </if>
+      <if test="cLevelReward != null">
+        c_level_reward,
+      </if>
+      <if test="baseSalary != null">
+        base_salary,
+      </if>
+      <if test="monthSalary != null">
+        month_salary,
+      </if>
+      <if test="salary != null">
+        salary,
+      </if>
+      <if test="salaryDesc != null">
+        salary_desc,
+      </if>
+      <if test="monthSalaryDesc != null">
+        month_salary_desc,
+      </if>
+      <if test="secondSummary != null">
+        second_summary,
+      </if>
+      <if test="thirdSummary != null">
+        third_summary,
+      </if>
+      <if test="detailHeaderImg != null">
+        detail_header_img,
+      </if>
+      <if test="cardLongImg != null">
+        card_long_img,
+      </if>
+      <if test="productShowImg != null">
+        product_show_img,
+      </if>
+      <if test="burundian != null">
+        burundian,
+      </if>
+      <if test="settlementType != null">
+        settlement_type,
+      </if>
+      <if test="expireUnit != null">
+        expire_unit,
+      </if>
+      <if test="howSettle != null">
+        how_settle,
+      </if>
+      <if test="expireBegin != null">
+        expire_begin,
+      </if>
+      <if test="expireEnd != null">
+        expire_end,
+      </if>
+      <if test="commissionStandard != null">
+        commission_standard,
+      </if>
+      <if test="shareTitle != null">
+        share_title,
+      </if>
+      <if test="cardProgressImg != null">
+        card_progress_img,
+      </if>
+      <if test="baseRight != null">
+        base_right,
+      </if>
+      <if test="preferential != null">
+        preferential,
+      </if>
+      <if test="specialTag != null">
+        special_tag,
+      </if>
+      <if test="specialTxt != null">
+        special_txt,
+      </if>
+      <if test="unit != null">
+        unit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        #{productType,jdbcType=INTEGER},
+      </if>
+      <if test="isHot != null">
+        #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="customer != null">
+        #{customer,jdbcType=INTEGER},
+      </if>
+      <if test="isInShop != null">
+        #{isInShop,jdbcType=INTEGER},
+      </if>
+      <if test="isShelf != null">
+        #{isShelf,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commission != null">
+        #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="sortVal != null">
+        #{sortVal,jdbcType=INTEGER},
+      </if>
+      <if test="bgCategory != null">
+        #{bgCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="amountLine != null">
+        #{amountLine,jdbcType=INTEGER},
+      </if>
+      <if test="progressQueryImg != null">
+        #{progressQueryImg,jdbcType=VARCHAR},
+      </if>
+      <if test="allowRate != null">
+        #{allowRate,jdbcType=DECIMAL},
+      </if>
+      <if test="applyNum != null">
+        #{applyNum,jdbcType=INTEGER},
+      </if>
+      <if test="applyCondition != null">
+        #{applyCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTpImg != null">
+        #{applyTpImg,jdbcType=VARCHAR},
+      </if>
+      <if test="dayRate != null">
+        #{dayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="monthRate != null">
+        #{monthRate,jdbcType=DECIMAL},
+      </if>
+      <if test="aBegin != null">
+        #{aBegin,jdbcType=INTEGER},
+      </if>
+      <if test="aLimit != null">
+        #{aLimit,jdbcType=INTEGER},
+      </if>
+      <if test="bBegin != null">
+        #{bBegin,jdbcType=INTEGER},
+      </if>
+      <if test="bLimit != null">
+        #{bLimit,jdbcType=INTEGER},
+      </if>
+      <if test="cStart != null">
+        #{cStart,jdbcType=INTEGER},
+      </if>
+      <if test="cLimit != null">
+        #{cLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="aLevelReward != null">
+        #{aLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="bLevelReward != null">
+        #{bLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="cLevelReward != null">
+        #{cLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="baseSalary != null">
+        #{baseSalary,jdbcType=DECIMAL},
+      </if>
+      <if test="monthSalary != null">
+        #{monthSalary,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null">
+        #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="salaryDesc != null">
+        #{salaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="monthSalaryDesc != null">
+        #{monthSalaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="secondSummary != null">
+        #{secondSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdSummary != null">
+        #{thirdSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="detailHeaderImg != null">
+        #{detailHeaderImg,jdbcType=VARCHAR},
+      </if>
+      <if test="cardLongImg != null">
+        #{cardLongImg,jdbcType=VARCHAR},
+      </if>
+      <if test="productShowImg != null">
+        #{productShowImg,jdbcType=VARCHAR},
+      </if>
+      <if test="burundian != null">
+        #{burundian,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementType != null">
+        #{settlementType,jdbcType=INTEGER},
+      </if>
+      <if test="expireUnit != null">
+        #{expireUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="howSettle != null">
+        #{howSettle,jdbcType=VARCHAR},
+      </if>
+      <if test="expireBegin != null">
+        #{expireBegin,jdbcType=INTEGER},
+      </if>
+      <if test="expireEnd != null">
+        #{expireEnd,jdbcType=INTEGER},
+      </if>
+      <if test="commissionStandard != null">
+        #{commissionStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="shareTitle != null">
+        #{shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="cardProgressImg != null">
+        #{cardProgressImg,jdbcType=VARCHAR},
+      </if>
+      <if test="baseRight != null">
+        #{baseRight,jdbcType=VARCHAR},
+      </if>
+      <if test="preferential != null">
+        #{preferential,jdbcType=VARCHAR},
+      </if>
+      <if test="specialTag != null">
+        #{specialTag,jdbcType=VARCHAR},
+      </if>
+      <if test="specialTxt != null">
+        #{specialTxt,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.qudan.qingcloud.msqudan.entity.Product">
+    update product
+    <set>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=INTEGER},
+      </if>
+      <if test="isHot != null">
+        is_hot = #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="customer != null">
+        customer = #{customer,jdbcType=INTEGER},
+      </if>
+      <if test="isInShop != null">
+        is_in_shop = #{isInShop,jdbcType=INTEGER},
+      </if>
+      <if test="isShelf != null">
+        is_shelf = #{isShelf,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commission != null">
+        commission = #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="sortVal != null">
+        sort_val = #{sortVal,jdbcType=INTEGER},
+      </if>
+      <if test="bgCategory != null">
+        bg_category = #{bgCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="amountLine != null">
+        amount_line = #{amountLine,jdbcType=INTEGER},
+      </if>
+      <if test="progressQueryImg != null">
+        progress_query_img = #{progressQueryImg,jdbcType=VARCHAR},
+      </if>
+      <if test="allowRate != null">
+        allow_rate = #{allowRate,jdbcType=DECIMAL},
+      </if>
+      <if test="applyNum != null">
+        apply_num = #{applyNum,jdbcType=INTEGER},
+      </if>
+      <if test="applyCondition != null">
+        apply_condition = #{applyCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTpImg != null">
+        apply_tp_img = #{applyTpImg,jdbcType=VARCHAR},
+      </if>
+      <if test="dayRate != null">
+        day_rate = #{dayRate,jdbcType=DECIMAL},
+      </if>
+      <if test="monthRate != null">
+        month_rate = #{monthRate,jdbcType=DECIMAL},
+      </if>
+      <if test="aBegin != null">
+        a_begin = #{aBegin,jdbcType=INTEGER},
+      </if>
+      <if test="aLimit != null">
+        a_limit = #{aLimit,jdbcType=INTEGER},
+      </if>
+      <if test="bBegin != null">
+        b_begin = #{bBegin,jdbcType=INTEGER},
+      </if>
+      <if test="bLimit != null">
+        b_limit = #{bLimit,jdbcType=INTEGER},
+      </if>
+      <if test="cStart != null">
+        c_start = #{cStart,jdbcType=INTEGER},
+      </if>
+      <if test="cLimit != null">
+        c_limit = #{cLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="aLevelReward != null">
+        a_level_reward = #{aLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="bLevelReward != null">
+        b_level_reward = #{bLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="cLevelReward != null">
+        c_level_reward = #{cLevelReward,jdbcType=DECIMAL},
+      </if>
+      <if test="baseSalary != null">
+        base_salary = #{baseSalary,jdbcType=DECIMAL},
+      </if>
+      <if test="monthSalary != null">
+        month_salary = #{monthSalary,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null">
+        salary = #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="salaryDesc != null">
+        salary_desc = #{salaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="monthSalaryDesc != null">
+        month_salary_desc = #{monthSalaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="secondSummary != null">
+        second_summary = #{secondSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdSummary != null">
+        third_summary = #{thirdSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="detailHeaderImg != null">
+        detail_header_img = #{detailHeaderImg,jdbcType=VARCHAR},
+      </if>
+      <if test="cardLongImg != null">
+        card_long_img = #{cardLongImg,jdbcType=VARCHAR},
+      </if>
+      <if test="productShowImg != null">
+        product_show_img = #{productShowImg,jdbcType=VARCHAR},
+      </if>
+      <if test="burundian != null">
+        burundian = #{burundian,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementType != null">
+        settlement_type = #{settlementType,jdbcType=INTEGER},
+      </if>
+      <if test="expireUnit != null">
+        expire_unit = #{expireUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="howSettle != null">
+        how_settle = #{howSettle,jdbcType=VARCHAR},
+      </if>
+      <if test="expireBegin != null">
+        expire_begin = #{expireBegin,jdbcType=INTEGER},
+      </if>
+      <if test="expireEnd != null">
+        expire_end = #{expireEnd,jdbcType=INTEGER},
+      </if>
+      <if test="commissionStandard != null">
+        commission_standard = #{commissionStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="shareTitle != null">
+        share_title = #{shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="cardProgressImg != null">
+        card_progress_img = #{cardProgressImg,jdbcType=VARCHAR},
+      </if>
+      <if test="baseRight != null">
+        base_right = #{baseRight,jdbcType=VARCHAR},
+      </if>
+      <if test="preferential != null">
+        preferential = #{preferential,jdbcType=VARCHAR},
+      </if>
+      <if test="specialTag != null">
+        special_tag = #{specialTag,jdbcType=VARCHAR},
+      </if>
+      <if test="specialTxt != null">
+        special_txt = #{specialTxt,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
