@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/msqudanbg/customer")
+@RequestMapping("/msqudanbg/product")
 @Api(value = "msqudanbg", description = "商品管理")
 public class ProductController {
 
