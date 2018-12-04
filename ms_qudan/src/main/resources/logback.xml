@@ -2,12 +2,30 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <jmxConfigurator/>
+
+    <!-- MyBatis日志 -->
+    <appender name="mybatis-log-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_DIR}/${APP_NAME}(${HOSTNAME})-mybatis-current.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/history/${APP_NAME}(${HOSTNAME})-mybatis-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <Pattern>[%d{HH:mm:ss}] [%thread] |%level| %marker %logger{50} -> %X{rpid} %msg %n%ex</Pattern>
+        </encoder>
+    </appender>
+
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} | msqudan | %-5level | %thread | %logger{56}.%method | %L : %msg%n</Pattern>
         </encoder>
     </appender>
-    <root level="info">
+
+    <logger name="com.qudan.qingcloud.msqudan.mymapper" level="DEBUG" >
+
+    </logger>
+
+    <root level="INFO">
         <appender-ref ref="stdout" />
     </root>
 </configuration>

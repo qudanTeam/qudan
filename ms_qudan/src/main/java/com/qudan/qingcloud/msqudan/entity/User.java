@@ -1,46 +1,49 @@
 package com.qudan.qingcloud.msqudan.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
-/**
- * Created by 蜡笔小新不爱吃青椒 on 2018/7/24.
- *
- * 用户表
- */
 public class User {
+    private Integer id;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    //用户名(cas 唯一不能重复)
     private String username;
 
-    //密码
     private String password;
 
-    //用户名称
-    private String name;
-
-    //角色
-    private String role;
-
-    //用户头像
     private String userface;
 
-    //是否启用(1:启用,0:禁用)
     private Integer isenable;
 
+    private String registerMobile;
 
-    public Long getId() {
+    private String idNo;
+
+    private String alipayNo;
+
+    private Integer agentLevel;
+
+    private Date registerTime;
+
+    private Date lastLoginTime;
+
+    private Integer status;
+
+    private Integer userType;
+
+    private Date modifyTime;
+
+    private Integer agentId;
+
+    private String recommendInviteCode;
+
+    private String inviteCode;
+
+    private Long recommendInviteId;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,7 +52,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username == null ? null : username.trim();
     }
 
     public String getPassword() {
@@ -57,23 +60,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+        this.password = password == null ? null : password.trim();
     }
 
     public String getUserface() {
@@ -81,7 +68,7 @@ public class User {
     }
 
     public void setUserface(String userface) {
-        this.userface = userface;
+        this.userface = userface == null ? null : userface.trim();
     }
 
     public Integer getIsenable() {
@@ -90,5 +77,109 @@ public class User {
 
     public void setIsenable(Integer isenable) {
         this.isenable = isenable;
+    }
+
+    public String getRegisterMobile() {
+        return registerMobile;
+    }
+
+    public void setRegisterMobile(String registerMobile) {
+        this.registerMobile = registerMobile == null ? null : registerMobile.trim();
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo == null ? null : idNo.trim();
+    }
+
+    public String getAlipayNo() {
+        return alipayNo;
+    }
+
+    public void setAlipayNo(String alipayNo) {
+        this.alipayNo = alipayNo == null ? null : alipayNo.trim();
+    }
+
+    public Integer getAgentLevel() {
+        return agentLevel;
+    }
+
+    public void setAgentLevel(Integer agentLevel) {
+        this.agentLevel = agentLevel;
+    }
+
+    public Date getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    public Integer getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(Integer agentId) {
+        this.agentId = agentId;
+    }
+
+    public String getRecommendInviteCode() {
+        return recommendInviteCode;
+    }
+
+    public void setRecommendInviteCode(String recommendInviteCode) {
+        this.recommendInviteCode = recommendInviteCode == null ? null : recommendInviteCode.trim();
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode == null ? null : inviteCode.trim();
+    }
+
+    public Long getRecommendInviteId() {
+        return recommendInviteId;
+    }
+
+    public void setRecommendInviteId(Long recommendInviteId) {
+        this.recommendInviteId = recommendInviteId;
     }
 }

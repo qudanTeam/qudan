@@ -1,0 +1,33 @@
+jwt:
+    secretkey: qudan_key
+#图形验证码
+kaptcha:
+#  session:
+#    key: moore.kaptcha.code
+  #border: no
+  #渲染效果：水纹：WaterRipple；鱼眼：FishEyeGimpy；阴影：ShadowGimpy
+  obscurificator:
+    impl: com.google.code.kaptcha.impl.WaterRipple
+  #不要噪点
+  noise:
+    impl: com.google.code.kaptcha.impl.NoNoise
+  image:
+    width: 120
+    height: 45
+  textproducer:
+    font:
+      size: 30
+      color: 255,255,255
+      names: arial,courier
+      white: 76,149,41
+    char:
+      length: 4
+      space: 6
+  #和登录框背景颜色一致
+  background:
+    clear:
+      from: 58,87,149
+      to: 58,87,149
+    white:
+      from: 255,255,255
+      to: 255,255,255
