@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.mymapper.self;
 
 import com.qudan.qingcloud.msqudan.entity.Category;
+import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
 import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
@@ -72,6 +73,11 @@ public interface ProductMapperSelf extends ProductMapper{
     })
     List<ProductListVo> getProductList(@Param("type")Integer type, @Param("keyword")String keyword);
 
+
+    @Select({
+            "SELECT * FROM product_config WHERE  product_id = #{productId}"
+    })
+   ProductConfig getProductConfig(@Param("productId")Integer productId);
 
     @Select({
         "SELECT * FROM share_manager WHERE is_show = 1 AND product_id = #{productId}"

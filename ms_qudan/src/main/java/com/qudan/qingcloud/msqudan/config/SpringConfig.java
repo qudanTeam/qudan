@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.config;
 
+import com.qudan.qingcloud.msqudan.base.JwtFilter;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +32,32 @@ public class SpringConfig {
     @Bean
     public CorsFilter corsFilter(){
         return new CorsFilter();
+    }
+
+    @Bean
+    public JwtFilter JwtFilter(){
+        return  new JwtFilter();
+    }
+
+    @Bean
+    public FilterRegistrationBean jwtFilter() {
+        final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setOrder(3);
+        registrationBean.setFilter(JwtFilter());
+        registrationBean.addUrlPatterns("/msqudan/api/user/*");
+
+        //跳过过滤的链接 以逗号隔开
+        registrationBean.addInitParameter("excludeUrl",
+                "/msqudan/api/login," +
+                        "/msqudan/api/products/*," +
+                        "/msqudan/api/products/," +
+                        "/msqudan/api/product/*,"
+
+        );
+        //无论有没有JWT都给通过的链接 以逗号隔开
+        registrationBean.addInitParameter("uncertainUrl",""
+/*     "/msqudan/api/"+*/
+        );
+        return registrationBean;
     }
 }

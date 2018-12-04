@@ -6,6 +6,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.entity.Product;
+import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
 import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
@@ -53,8 +54,11 @@ public class ProductServiceImpl {
         ComUtils.startPage(page, perPage);
         List<ProductListVo> list = productMapperSelf.getProductList(type, keyword);
         Map<String,Object> data = Maps.newHashMap();
+        long total = 0;
         if(CollectionUtils.isEmpty(list)){
             list = Lists.newArrayList();
+        } else {
+            total =  ((Page) list).getTotal();
         }
         List<ProductListVo> card = Lists.newArrayList();
         List<ProductListVo> loan = Lists.newArrayList();
@@ -68,7 +72,7 @@ public class ProductServiceImpl {
         }
         data.put("card", card);
         data.put("loan", loan);
-        data.put("total", ((Page) list).getTotal());
+        data.put("total", total);
         return data;
     }
 
@@ -105,6 +109,9 @@ public class ProductServiceImpl {
             }
             productVo.setLoanTag(tags);
         }
+
+        ProductConfig config = productMapperSelf.getProductConfig(id);
+        productVo.setConfig(config);
         Map<String,Object> data = Maps.newHashMap();
         data.put("detail", productVo);
         return data;

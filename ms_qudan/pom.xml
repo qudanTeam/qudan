@@ -138,6 +138,13 @@
             <version>1.8.10</version>
         </dependency>
 
+        <!--jwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
         <!--微信-->
         <dependency>
             <groupId>com.github.binarywang</groupId>

@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
 import com.qudan.qingcloud.msqudan.entity.Product;
+import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class ProductVo {
     private String bank;
     private String bankQueryLink;
     private List<String> loanTag;
+    private ProductConfig config;
 
     public Product getProduct() {
         return product;
@@ -50,5 +52,14 @@ public class ProductVo {
 
     public void setLoanTag(List<String> loanTag) {
         this.loanTag = loanTag;
+    }
+
+
+    public ProductConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(ProductConfig config) {
+        this.config = config;
     }
 }
