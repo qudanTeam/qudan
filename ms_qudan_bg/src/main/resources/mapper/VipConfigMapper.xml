@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qudan.qingcloud.msqudan.mapper.VipConfigMapper">
+  <resultMap id="BaseResultMap" type="com.qudan.qingcloud.msqudan.entity.VipConfig">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="add_rate" jdbcType="DECIMAL" property="addRate" />
+    <result column="vip_price" jdbcType="DECIMAL" property="vipPrice" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="over_time" jdbcType="TIMESTAMP" property="overTime" />
+    <result column="vip_logo" jdbcType="TIMESTAMP" property="vipLogo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="isenable" jdbcType="INTEGER" property="isenable" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="vip_name" jdbcType="VARCHAR" property="vipName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, add_rate, vip_price, start_time, over_time, vip_logo, create_time, modify_time, 
+    isenable, version, vip_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from vip_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vip_config
+  </select>
+
+  <update id="delete">
+    update vip_config
+    set isenable = 0
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <insert id="insert" parameterType="com.qudan.qingcloud.msqudan.entity.VipConfig">
+    insert into vip_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="addRate != null">
+        add_rate,
+      </if>
+      <if test="vipPrice != null">
+        vip_price,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="overTime != null">
+        over_time,
+      </if>
+      <if test="vipLogo != null">
+        vip_logo,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="isenable != null">
+        isenable,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="vipName != null">
+        vip_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="addRate != null">
+        #{addRate,jdbcType=DECIMAL},
+      </if>
+      <if test="vipPrice != null">
+        #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overTime != null">
+        #{overTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vipLogo != null">
+        #{vipLogo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isenable != null">
+        #{isenable,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="vipName != null">
+        #{vipName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.qudan.qingcloud.msqudan.entity.VipConfig">
+    update vip_config
+    <set>
+      <if test="addRate != null">
+        add_rate = #{addRate,jdbcType=DECIMAL},
+      </if>
+      <if test="vipPrice != null">
+        vip_price = #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overTime != null">
+        over_time = #{overTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vipLogo != null">
+        vip_logo = #{vipLogo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="vipName != null">
+        vip_name = #{vipName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

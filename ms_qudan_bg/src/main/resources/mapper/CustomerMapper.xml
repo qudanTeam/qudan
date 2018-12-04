@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qudan.qingcloud.msqudan.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.qudan.qingcloud.msqudan.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="weixin" jdbcType="VARCHAR" property="weixin" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, create_time, modify_time, mobile, weixin
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPage" parameterType="com.qudan.qingcloud.msqudan.entity.Customer" resultMap="BaseResultMap">
+    select
+     customer.id as id,customer.name as `name`, customer.create_time as create_time, customer.modify_time as modify_time, customer.mobile as mobile, customer.weixin as weixin, count(product.customer) as num
+    from customer left join product on customer.id = product.customer
+    <where>
+      <if test="id != null ">
+        AND `id` LIKE CONCAT('%',#{id},'%')
+      </if>
+      <if test="name != null and name !=''">
+        AND `name` LIKE CONCAT('%',#{name},'%')
+      </if>
+      <if test="mobile != null and mobile !=''">
+        AND `mobile` LIKE CONCAT('%',#{mobile},'%')
+      </if>
+      <if test="weixin != null and weixin!=''">
+        AND `weixin` LIKE CONCAT('%',#{weixin},'%')
+      </if>
+    </where>
+    group by product.customer
+  </select>
+
+</mapper>

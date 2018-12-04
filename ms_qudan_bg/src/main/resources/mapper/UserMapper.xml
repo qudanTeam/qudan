@@ -1,69 +1,116 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qudan.qingcloud.msqudan.mapper.UserMapper">
-    <select id="getUserInfoByUsername" resultType="map">
-        SELECT
-         *
-        FROM
-         user u
-         WHERE
-         u.username = #{username}
-         AND
-         u.isenable = 1
+  <resultMap id="BaseResultMap" type="com.qudan.qingcloud.msqudan.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="userface" jdbcType="VARCHAR" property="userface" />
+    <result column="isenable" jdbcType="INTEGER" property="isenable" />
+    <result column="register_mobile" jdbcType="VARCHAR" property="registerMobile" />
+    <result column="id_no" jdbcType="VARCHAR" property="idNo" />
+    <result column="alipay_no" jdbcType="VARCHAR" property="alipayNo" />
+    <result column="agent_level" jdbcType="INTEGER" property="agentLevel" />
+    <result column="register_time" jdbcType="INTEGER" property="registerTime" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="agent_id" jdbcType="INTEGER" property="agentId" />
+    <result column="recommend_invite_code" jdbcType="VARCHAR" property="recommendInviteCode" />
+    <result column="invite_code" jdbcType="VARCHAR" property="inviteCode" />
+    <result column="recommend_invite_id" jdbcType="BIGINT" property="recommendInviteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, userface, isenable, register_mobile, id_no, alipay_no, agent_level, 
+    register_time, last_login_time, status, user_type, modify_time, agent_id, recommend_invite_code, 
+    invite_code, recommend_invite_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
 
-    </select>
+  <select id="selectByPage" parameterType="com.qudan.qingcloud.msqudan.entity.User" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    <where>
+      <if test="id != null ">
+        AND `id` LIKE CONCAT('%',#{id},'%')
+      </if>
+      <if test="registerMobile != null and registerMobile !='' ">
+        AND register_mobile = #{registerMobile,jdbcType=VARCHAR}
+      </if>
+      <if test="idNo != null and idNo !='' ">
+        AND id_no = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null and username!='' ">
+        AND `username` LIKE CONCAT('%',#{username},'%')
+      </if>
+      <if test="alipayNo !=null and alipayNo != ''">
+        AND alipay_no = #{alipayNo,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
 
-    <!--根据用户名查询用户所拥有的角色-->
-    <select id="getUserAndRoleInfoByUsername" resultType="map">
-        SELECT
-            u.username,
-            u.isenable,
-            r.`name`,
-            r.nameZh,
-            u.`password`
-        FROM
-            USER u
-        INNER JOIN user_role ur ON u.id = ur.userid
-        INNER JOIN role r ON r.id = ur.roleid
-        WHERE
-          u.username = #{username}
-         AND
-            u.isenable = 1
-
-    </select>
-
-    <!--获取后台所有api接口-->
-    <select id="getAllApi" resultType="map">
-        SELECT
-        *
-        FROM
-        api
-    </select>
-
-    <!--根据apiid获取api所拥有的访问角色权限-->
-    <select id="getApiRoleByApiId" resultType="map">
-        SELECT
-	    r.*
-        FROM
-        role_api ra
-        INNER JOIN role r ON ra.roleid = r.id
-        WHERE
-	    ra.apiid = #{apiid}
-	    AND
-	    ra.del_flag = 0
-    </select>
-
-    <!--前端登录-->
-    <select id="appLogin" resultType="map">
-        SELECT
-        *
-        FROM
-        USER u
-        WHERE
-        u.username = #{username}
-        AND
-        u.password = #{password}
-    </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qudan.qingcloud.msqudan.entity.User">
+    update user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="userface != null">
+        userface = #{userface,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=INTEGER},
+      </if>
+      <if test="registerMobile != null">
+        register_mobile = #{registerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null">
+        id_no = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayNo != null">
+        alipay_no = #{alipayNo,jdbcType=VARCHAR},
+      </if>
+      <if test="agentLevel != null">
+        agent_level = #{agentLevel,jdbcType=INTEGER},
+      </if>
+      <if test="registerTime != null">
+        register_time = #{registerTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=INTEGER},
+      </if>
+      <if test="recommendInviteCode != null">
+        recommend_invite_code = #{recommendInviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteCode != null">
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendInviteId != null">
+        recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>
