@@ -5,11 +5,11 @@ eureka:
     enable-self-preservation: true
     eviction-interval-timer-in-ms: 3000
   instance:
-    hostname: 47.99.242.122
+    hostname: ${spring.cloud.client.ipAddress}
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 3
     prefer-ip-address: true
-    #instance-id : ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}:@project.version@
+    instance-id : ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}:@project.version@
     status-page-url: http://47.99.242.122:8761/swagger-ui.html
   client:
     register-with-eureka: false
