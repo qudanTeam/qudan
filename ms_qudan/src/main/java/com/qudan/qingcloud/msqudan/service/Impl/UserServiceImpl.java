@@ -94,7 +94,12 @@ public class UserServiceImpl {
             return null;
         }
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1)){
-            User user = new User();
+            User user = userMapperSelf.selectUserByMobile(RB.getMobile());
+            if(user != null){
+                ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
+                return null;
+            }
+            user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
             user.setPassword(PasswordUtils.encodePassword("123456"));
             user.setUserface("");

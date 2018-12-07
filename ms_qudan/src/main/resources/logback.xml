@@ -3,6 +3,9 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <jmxConfigurator/>
 
+    <property name="LOG_DIR" value="/data/log/msqudan/" />
+    <property name="APP_NAME" value="msqudan" />
+
     <!-- MyBatis日志 -->
     <appender name="mybatis-log-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_DIR}/${APP_NAME}(${HOSTNAME})-mybatis-current.log</File>
