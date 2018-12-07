@@ -6,6 +6,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
@@ -59,5 +61,18 @@ public class SpringConfig {
 /*     "/msqudan/api/"+*/
         );
         return registrationBean;
+    }
+
+    @Bean
+    TaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+
+        taskExecutor.setMaxPoolSize(30);
+        taskExecutor.setCorePoolSize(30);
+        //taskExecutor.setQueueCapacity(10000);
+        //taskExecutor.setKeepAliveSeconds(5000);
+        //taskExecutor.initialize();
+        //taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        return taskExecutor;
     }
 }

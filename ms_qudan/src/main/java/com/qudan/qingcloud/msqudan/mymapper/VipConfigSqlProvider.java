@@ -16,6 +16,10 @@ public class VipConfigSqlProvider {
         BEGIN();
         INSERT_INTO("vip_config");
         
+        if (record.getId() != null) {
+            VALUES("\" id\"", "#{id,jdbcType=INTEGER}");
+        }
+        
         if (record.getAddRate() != null) {
             VALUES("add_rate", "#{addRate,jdbcType=DECIMAL}");
         }
@@ -28,12 +32,16 @@ public class VipConfigSqlProvider {
             VALUES("start_time", "#{startTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getServiceDays() != null) {
+            VALUES("service_days", "#{serviceDays,jdbcType=INTEGER}");
+        }
+        
         if (record.getOverTime() != null) {
             VALUES("over_time", "#{overTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getVipLogo() != null) {
-            VALUES("vip_logo", "#{vipLogo,jdbcType=TIMESTAMP}");
+            VALUES("vip_logo", "#{vipLogo,jdbcType=VARCHAR}");
         }
         
         if (record.getCreateTime() != null) {
@@ -75,12 +83,16 @@ public class VipConfigSqlProvider {
             SET("start_time = #{startTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getServiceDays() != null) {
+            SET("service_days = #{serviceDays,jdbcType=INTEGER}");
+        }
+        
         if (record.getOverTime() != null) {
             SET("over_time = #{overTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getVipLogo() != null) {
-            SET("vip_logo = #{vipLogo,jdbcType=TIMESTAMP}");
+            SET("vip_logo = #{vipLogo,jdbcType=VARCHAR}");
         }
         
         if (record.getCreateTime() != null) {
@@ -103,7 +115,7 @@ public class VipConfigSqlProvider {
             SET("vip_name = #{vipName,jdbcType=VARCHAR}");
         }
         
-        WHERE("id = #{id,jdbcType=INTEGER}");
+        WHERE("\" id\" = #{id,jdbcType=INTEGER}");
         
         return SQL();
     }

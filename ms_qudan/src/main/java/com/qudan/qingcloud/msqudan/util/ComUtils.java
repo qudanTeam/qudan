@@ -54,7 +54,10 @@ public class ComUtils {
         String result = "";
         StringTokenizer tokenizer = new StringTokenizer(img, ",");
         while (tokenizer.hasMoreTokens()){
-            result = (result + prefix + tokenizer.nextToken() + ",");
+            String str = tokenizer.nextToken();
+            if(StringUtils.isNotBlank(str)){
+                result = (result + (str.startsWith("http")?"":prefix) + str + ",");
+            }
         }
         if(StringUtils.isNotBlank(result)){
             result = result.substring(0, result.length()-1);

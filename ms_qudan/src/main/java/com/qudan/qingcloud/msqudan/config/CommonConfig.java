@@ -6,14 +6,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.google.code.kaptcha.util.Config;
 
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
 public class CommonConfig {
 
+    //七牛 以下2个
+    @Value("${qiniu.account.accesskey}")
+    private String qiniuAccesskey;
+
+    @Value("${qiniu.account.secretkey}")
+    private String qiniuSecretkey;
+
+    @Value("${qiniu.upload.image.bucket}")
+    private String qiniuUploadImageBucket;
+
+    @Value("${qiniu.upload.image.url}")
+    private String qiniuUploadImageUrl;
+
+
     public String getQiniuImageUrl(){
-        return "http://qudan.com/";
+        return qiniuUploadImageUrl;
     }
+
+
+
 
     @Value("${kaptcha.textproducer.font.color}")
     private String fcolor;

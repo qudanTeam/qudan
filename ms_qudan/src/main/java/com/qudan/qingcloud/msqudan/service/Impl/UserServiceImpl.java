@@ -3,26 +3,21 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.cloudClients.UserLoginClient;
-import com.qudan.qingcloud.msqudan.entity.SmsSendRecord;
-import com.qudan.qingcloud.msqudan.entity.User;
-import com.qudan.qingcloud.msqudan.entity.UserShare;
-import com.qudan.qingcloud.msqudan.entity.WeixinSceneRecord;
-import com.qudan.qingcloud.msqudan.mymapper.SmsSendRecordMapper;
-import com.qudan.qingcloud.msqudan.mymapper.UserShareMapper;
-import com.qudan.qingcloud.msqudan.mymapper.WeixinSceneRecordMapper;
-import com.qudan.qingcloud.msqudan.mymapper.self.OtherMapperSelf;
-import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
-import com.qudan.qingcloud.msqudan.mymapper.self.WeixinQrMapperSelf;
-import com.qudan.qingcloud.msqudan.util.DateUtil;
-import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
-import com.qudan.qingcloud.msqudan.util.PasswordUtils;
-import com.qudan.qingcloud.msqudan.util.YHResult;
+import com.qudan.qingcloud.msqudan.entity.*;
+import com.qudan.qingcloud.msqudan.mymapper.*;
+import com.qudan.qingcloud.msqudan.mymapper.self.*;
+import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
+import com.qudan.qingcloud.msqudan.util.responses.UserAgentVo;
+import com.qudan.qingcloud.msqudan.util.responses.UserInfo;
+import com.qudan.qingcloud.msqudan.util.responses.UserVipVo;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -56,32 +51,18 @@ public class UserServiceImpl {
     @Autowired
     UserShareMapper userShareMapper;
 
-    @HystrixCommand
-    public Map<String,Object> login(ApiResponseEntity ARE, UserLoginRB RB){
-        Map<String,Object> data = Maps.newHashMap();
-        if(StringUtils.isBlank(RB.getMobile())){
-            ARE.addInfoError("login.mobile.isEmpty", "手机号不能为空");
-            return null;
-        }
-        if(StringUtils.isBlank(RB.getPassword())){
-            ARE.addInfoError("login.password.isEmpty", "密码不能为空");
-            return null;
-        }
-        if(StringUtils.isBlank(RB.getValidcode())){
-            ARE.addInfoError("login.validcode.isEmpty", "验证码不能为空");
-            return null;
-        }
+    @Autowired
+    UserAccountMapper userAccountMapper;
 
-        if(RB.getValidcode().equals("852852") || checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1)){
-            User user = userMapperSelf.selectUserByMobile(RB.getMobile());
-            if(user == null){
-                ARE.addInfoError("login.mobile.isNotExist", "不存在的手机号码");
-                return null;
-            }
-            if(!user.getPassword().equals(PasswordUtils.encodePassword(RB.getPassword()))){
-                ARE.addInfoError("login.password.isError", "密码不正确");
-                return null;
-            }
+    @Autowired
+    VipMapperSelf vipMapperSelf;
+
+    @Autowired
+    AgentMapperSelf agentMapperSelf;
+
+    public Map<String,Object> loginWithValidcode(ApiResponseEntity ARE, UserLoginRB RB, User user){
+        Map<String,Object> data = Maps.newHashMap();
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 2)){
             YHResult result = userLoginClient.appLogin(user.getUsername(), user.getId());
             if(result == null){
                 ARE.addInfoError("zuul.system.error", "微服务调用错误!");
@@ -91,7 +72,85 @@ public class UserServiceImpl {
             if(result.getData() == null){
                 ARE.addInfoError("zuul.data.isEmpty", "微服务没有返回数据");
             }
-            data = (Map<String, Object>)result.getData();
+            data = getToken(ARE, user);
+        }
+        return data;
+    }
+
+    public Map<String,Object> loginWithPassword(ApiResponseEntity ARE, UserLoginRB RB, User user){
+        Map<String,Object> data = Maps.newHashMap();
+        if(!user.getPassword().equals(PasswordUtils.encodePassword(RB.getPassword()))){
+            ARE.addInfoError("login.password.isError", "密码不正确");
+            return null;
+        }
+        data = getToken(ARE, user);
+        return data;
+    }
+    @HystrixCommand
+    public Map<String,Object> register(ApiResponseEntity ARE, UserLoginRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(RB.getMobile())){
+            ARE.addInfoError("login.mobile.isEmpty", "手机号不能为空");
+            return null;
+        }
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1)){
+            User user = new User();
+            user.setUsername("编号"+RandomUtils.generateNumString(4));
+            user.setPassword(PasswordUtils.encodePassword("123456"));
+            user.setUserface("");
+            user.setIsenable(1);
+            user.setRegisterMobile(RB.getMobile());
+            user.setRegisterTime(new Date());
+            user.setLastLoginTime(new Date());
+            user.setStatus(0);
+            user.setUserType(0);
+            user.setInviteCode(RandomUtils.generateMixString(16));
+            user.setModifyTime(new Date());
+            //TODO 邀请逻辑
+            userMapperSelf.insertSelective(user);
+
+            //生成账户
+            UserAccount userAccount = new UserAccount();
+            userAccount.setUserId(user.getId());
+            userAccount.setBlance(BigDecimal.ZERO);
+            userAccount.setAllowTx(BigDecimal.ZERO);
+            userAccount.setTx(BigDecimal.ZERO);
+            userAccount.setCreateTime(new Date());
+            userAccount.setModifyTime(new Date());
+            data = getToken(ARE, user);
+            userAccountMapper.insertSelective(userAccount);
+        }
+        return data;
+    }
+
+    private Map<String,Object> getToken(ApiResponseEntity ARE, User user){
+        Map<String,Object> data = Maps.newHashMap();
+        YHResult result = userLoginClient.appLogin(user.getUsername(), user.getId());
+        if(result == null){
+            ARE.addInfoError("zuul.system.error", "微服务调用错误!");
+            return null;
+        }
+
+        if(result.getData() == null){
+            ARE.addInfoError("zuul.data.isEmpty", "微服务没有返回数据");
+        }
+        data = (Map<String, Object>)result.getData();
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> login(ApiResponseEntity ARE, UserLoginRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(RB.getMobile())){
+            ARE.addInfoError("login.mobile.isEmpty", "手机号不能为空");
+            return null;
+        }
+        User user = userMapperSelf.selectUserByMobile(RB.getMobile());
+        if(StringUtils.isNotBlank(RB.getValidcode())){
+            return loginWithValidcode(ARE, RB, user);
+        }
+        if(StringUtils.isNotBlank(RB.getPassword())){
+            return loginWithPassword(ARE, RB, user);
         }
         return data;
     }
@@ -123,6 +182,47 @@ public class UserServiceImpl {
         data.put("qrCode", record.getQrAddress());
         return data;
     }
+
+    @HystrixCommand
+    public Map<String,Object> getUserInfo(ApiResponseEntity ARE){
+        Map<String,Object> data = Maps.newHashMap();
+        Integer userId = LocalUserHelper.getUserId();
+        User user = userMapperSelf.selectById(userId);
+        UserAccount account = userMapperSelf.selectAccountById(userId);
+        UserInfo userInfo = new UserInfo();
+
+        userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
+        userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
+
+        userInfo.setBlance(account.getBlance());
+        UserVipVo userVipVo = new UserVipVo();
+        UserAgentVo userAgentVo = new UserAgentVo();
+        BeanUtils.copyProperties(user, userInfo);
+        userInfo.setAgent(user.getAgentLevel() != null && user.getAgentLevel() > 0);
+        userInfo.setVip(StringUtils.isNotBlank(user.getVipName()));
+        if(userInfo.getVip()){
+            VipRecord record = vipMapperSelf.selectVipById(userId);
+            VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(record.getVipConfigId());
+            userVipVo.setVipName(vipConfig.getVipName());
+            userVipVo.setVipExpireDate(DateUtil.getFormatDate(record.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+            userVipVo.setVipRate(vipConfig.getAddRate());
+            userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
+        }
+        if(userInfo.getAgent()){
+            userAgentVo.setAgentLevel(user.getAgentLevel());
+            AgentConfig agentConfig = agentMapperSelf.selectConfigByLevel(user.getAgentLevel());
+            userAgentVo.setAgentRate(agentConfig.getDirectRate());
+
+            //TODO 下一等级计算
+            userAgentVo.setNextLevelGap(20);
+            userAgentVo.setAgentRevenue(userMapperSelf.selectAgentRevenue(userId));
+            userAgentVo.setRecommendJobDoneCount(userMapperSelf.selectAgentRevenueDone(userId));
+            userAgentVo.setRecommendRegisterCount(userMapperSelf.selectRecommendCount(userId));
+        }
+        data.put("user", userInfo);
+        return data;
+    }
+
 
     /**
      * 获取用户的临时二维码信息

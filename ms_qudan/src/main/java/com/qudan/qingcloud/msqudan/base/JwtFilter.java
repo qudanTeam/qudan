@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.base;
 
 import com.qudan.qingcloud.msqudan.config.CommonConfig;
+import com.qudan.qingcloud.msqudan.mymapper.BannerMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.util.JwtUtil;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;

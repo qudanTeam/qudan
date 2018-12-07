@@ -84,6 +84,10 @@ public class UserSqlProvider {
             VALUES("recommend_invite_id", "#{recommendInviteId,jdbcType=BIGINT}");
         }
         
+        if (record.getVipName() != null) {
+            VALUES("vip_name", "#{vipName,jdbcType=VARCHAR}");
+        }
+        
         return SQL();
     }
 
@@ -157,6 +161,10 @@ public class UserSqlProvider {
         
         if (record.getRecommendInviteId() != null) {
             SET("recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT}");
+        }
+        
+        if (record.getVipName() != null) {
+            SET("vip_name = #{vipName,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

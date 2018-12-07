@@ -31,3 +31,22 @@ kaptcha:
     white:
       from: 255,255,255
       to: 255,255,255
+sms:
+    submail:
+        xsend_url: http://api.mysubmail.com/message/xsend
+        template_url: http://api.mysubmail.com/message/template
+        thing:
+            appId: 30169
+            appKey: 6ec86e65db441d0d8dc1708d143219a8
+        market:
+            appId: 30169
+            appKey: 6ec86e65db441d0d8dc1708d143219a8
+    active: submail
+qiniu:
+    account:
+        accesskey: 3zwCbYQEVLBBAyWpww2I_mtvL3HDNzx1ro6RVydz
+        secretkey: FCgzF5i6nxisRZlEP96ry3CQTjgk26GyQlt25EiK
+    upload:
+        image:
+            bucket: qudan-idc
+            url: http://pj7lk9wjg.bkt.clouddn.com/

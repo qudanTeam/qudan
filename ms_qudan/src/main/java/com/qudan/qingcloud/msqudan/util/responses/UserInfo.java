@@ -10,6 +10,8 @@ public class UserInfo extends User {
     private UserAgentVo agent;
     private UserVipVo vip;
     private BigDecimal blance;
+    private BigDecimal allowTx;
+    private BigDecimal waitSettle;
 
     public Boolean getAgent() {
         return isAgent;
@@ -41,5 +43,21 @@ public class UserInfo extends User {
 
     public void setVip(Boolean vip) {
         isVip = vip;
+    }
+
+    public BigDecimal getAllowTx() {
+        return allowTx;
+    }
+
+    public void setAllowTx(BigDecimal allowTx) {
+        this.allowTx = allowTx;
+    }
+
+    public BigDecimal getWaitSettle() {
+        return waitSettle;
+    }
+
+    public void setWaitSettle(BigDecimal waitSettle) {
+        this.waitSettle = waitSettle;
     }
 }

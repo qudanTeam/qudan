@@ -1,9 +1,11 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.qudan.qingcloud.msqudan.service.Impl.LoginServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.PasswordUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.ValidcodeRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.WxLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,31 @@ public class LoginController {
     UserServiceImpl userService;
 
     @Autowired
+    LoginServiceImpl loginService;
+
+    @Autowired
     private DefaultKaptcha defaultKaptcha;
+
+
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UserLoginRB userLoginRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         ARE.setData(userService.login(ARE, userLoginRB));
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/validcode")
+    public ResponseEntity<Map<String, Object>> validcode(@RequestBody ValidcodeRB validcodeRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(loginService.mobileValidcode(ARE, validcodeRB));
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserLoginRB userLoginRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(userService.register(ARE, userLoginRB));
         return ARE.createResponseEntity();
     }
 

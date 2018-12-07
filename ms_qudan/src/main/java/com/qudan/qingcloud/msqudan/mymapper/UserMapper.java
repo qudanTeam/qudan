@@ -28,7 +28,7 @@ public interface UserMapper {
         "status, user_type, ",
         "modify_time, agent_id, ",
         "recommend_invite_code, invite_code, ",
-        "recommend_invite_id)",
+        "recommend_invite_id, vip_name)",
         "values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, ",
         "#{userface,jdbcType=VARCHAR}, #{isenable,jdbcType=INTEGER}, ",
         "#{registerMobile,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, ",
@@ -37,7 +37,7 @@ public interface UserMapper {
         "#{status,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, ",
         "#{modifyTime,jdbcType=TIMESTAMP}, #{agentId,jdbcType=INTEGER}, ",
         "#{recommendInviteCode,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, ",
-        "#{recommendInviteId,jdbcType=BIGINT})"
+        "#{recommendInviteId,jdbcType=BIGINT}, #{vipName,jdbcType=VARCHAR})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(User record);
@@ -50,7 +50,7 @@ public interface UserMapper {
         "select",
         "id, username, password, userface, isenable, register_mobile, id_no, alipay_no, ",
         "agent_level, register_time, last_login_time, status, user_type, modify_time, ",
-        "agent_id, recommend_invite_code, invite_code, recommend_invite_id",
+        "agent_id, recommend_invite_code, invite_code, recommend_invite_id, vip_name",
         "from user",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -72,7 +72,8 @@ public interface UserMapper {
         @Result(column="agent_id", property="agentId", jdbcType=JdbcType.INTEGER),
         @Result(column="recommend_invite_code", property="recommendInviteCode", jdbcType=JdbcType.VARCHAR),
         @Result(column="invite_code", property="inviteCode", jdbcType=JdbcType.VARCHAR),
-        @Result(column="recommend_invite_id", property="recommendInviteId", jdbcType=JdbcType.BIGINT)
+        @Result(column="recommend_invite_id", property="recommendInviteId", jdbcType=JdbcType.BIGINT),
+        @Result(column="vip_name", property="vipName", jdbcType=JdbcType.VARCHAR)
     })
     User selectByPrimaryKey(Integer id);
 
@@ -97,7 +98,8 @@ public interface UserMapper {
           "agent_id = #{agentId,jdbcType=INTEGER},",
           "recommend_invite_code = #{recommendInviteCode,jdbcType=VARCHAR},",
           "invite_code = #{inviteCode,jdbcType=VARCHAR},",
-          "recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT}",
+          "recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT},",
+          "vip_name = #{vipName,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(User record);

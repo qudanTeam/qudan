@@ -12,9 +12,11 @@ public class VipConfig {
 
     private Date startTime;
 
+    private Integer serviceDays;
+
     private Date overTime;
 
-    private Date vipLogo;
+    private String vipLogo;
 
     private Date createTime;
 
@@ -58,6 +60,14 @@ public class VipConfig {
         this.startTime = startTime;
     }
 
+    public Integer getServiceDays() {
+        return serviceDays;
+    }
+
+    public void setServiceDays(Integer serviceDays) {
+        this.serviceDays = serviceDays;
+    }
+
     public Date getOverTime() {
         return overTime;
     }
@@ -66,12 +76,12 @@ public class VipConfig {
         this.overTime = overTime;
     }
 
-    public Date getVipLogo() {
+    public String getVipLogo() {
         return vipLogo;
     }
 
-    public void setVipLogo(Date vipLogo) {
-        this.vipLogo = vipLogo;
+    public void setVipLogo(String vipLogo) {
+        this.vipLogo = vipLogo == null ? null : vipLogo.trim();
     }
 
     public Date getCreateTime() {

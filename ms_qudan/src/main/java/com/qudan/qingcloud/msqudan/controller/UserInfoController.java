@@ -19,6 +19,13 @@ public class UserInfoController {
     UserServiceImpl userService;
 
 
+    @GetMapping("/user/info")
+    public ResponseEntity<Map<String, Object>> userInfo(@RequestParam(value = "shareType",required = true)Integer shareType, @RequestParam(value = "pid",required = true)Integer pid) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(userService.getUserInfo(ARE));
+        return ARE.createResponseEntity();
+    }
+
     @GetMapping("/user/share/qrcode")
     public ResponseEntity<Map<String, Object>> getShareCode(@RequestParam(value = "shareType",required = true)Integer shareType, @RequestParam(value = "pid",required = true)Integer pid) {
         ApiResponseEntity ARE = new ApiResponseEntity();

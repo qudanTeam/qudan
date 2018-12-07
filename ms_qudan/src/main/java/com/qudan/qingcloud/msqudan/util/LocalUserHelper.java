@@ -1,6 +1,5 @@
 package com.qudan.qingcloud.msqudan.util;
 
-import com.qudan.qingcloud.msqudan.entity.User;
 import com.qudan.qingcloud.msqudan.util.responses.UserInfo;
 
 public class LocalUserHelper {
