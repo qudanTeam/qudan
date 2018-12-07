@@ -63,7 +63,7 @@ public class VUserInfoController {
               Map<String,Object> claims = new HashMap<>();//存放用户信息(敏感信息不要放 比如密码)
               claims.put("username",username);
               claims.put("userId",userId);
-              long ttlMillis = 1000 * 60 * 60;//过期时间(单位毫秒)
+              long ttlMillis = 1000 * 60 * 60 * 24;//过期时间(单位毫秒)
 
               String token  = JwtUtil.createJWT(claims, "qudan", "趣单",ttlMillis,"");
               Map<String,Object> params = new HashMap<>();
