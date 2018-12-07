@@ -296,7 +296,7 @@ public class UserServiceImpl {
         SmsSendRecord record_update = new SmsSendRecord();
         record_update.setId(record.getId());
         record_update.setIsValid(1);
-        smsSendRecordMapper.updateByPrimaryKey(record_update);
+        smsSendRecordMapper.updateByPrimaryKeySelective(record_update);
         return true;
     }
 }
