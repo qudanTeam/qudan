@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.zhangheng.springboot.controller.VUserInfoController;
+import com.zhangheng.springboot.filter.WhiteListPool;
 import com.zhangheng.springboot.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
@@ -30,7 +31,8 @@ public class PreFilter extends ZuulFilter{
     //日志
     private final static Logger logger = LoggerFactory.getLogger(PreFilter.class);
 
-
+    @Autowired
+    private WhiteListPool pool;
     /**
      * 返回一个字符代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型。
      * pre:可以在请求被路由之前调用。
@@ -67,6 +69,13 @@ public class PreFilter extends ZuulFilter{
     }
 
     /**
+     * 是否白名单
+     */
+    public boolean isWhiteList(String url){
+        return pool.getValue().stream().anyMatch(url::contains);
+    }
+
+    /**
      * 过滤器的具体逻辑
      * @return
      */
@@ -77,6 +86,10 @@ public class PreFilter extends ZuulFilter{
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
         logger.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
+        if(isWhiteList(request.getRequestURI().toString())){
+            logger.info("接口:"+request.getRequestURI().toString()+"在白名单内,不做验证!");
+            return null;
+        }
         String authHeader = request.getHeader("authorization");
         if(!StringUtils.isEmpty(authHeader)) {
             String token = authHeader.replace("Bearer ", "");
