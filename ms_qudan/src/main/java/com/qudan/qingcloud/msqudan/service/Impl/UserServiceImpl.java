@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
+import com.github.pagehelper.Page;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.cloudClients.UserLoginClient;
@@ -7,18 +8,19 @@ import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.*;
 import com.qudan.qingcloud.msqudan.util.*;
+import com.qudan.qingcloud.msqudan.util.params.OrderParams;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
-import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
-import com.qudan.qingcloud.msqudan.util.responses.UserAgentVo;
-import com.qudan.qingcloud.msqudan.util.responses.UserInfo;
-import com.qudan.qingcloud.msqudan.util.responses.UserVipVo;
+import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -230,6 +232,95 @@ public class UserServiceImpl {
         return data;
     }
 
+
+    @HystrixCommand
+    public Map<String,Object> revenueRecords(ApiResponseEntity ARE,Integer sendStatus, Integer page, Integer per_page){
+        Map<String,Object> data = Maps.newHashMap();
+        long total = 0;
+        ComUtils.startPage(page, per_page);
+        List<RevenueRecord> list = userMapperSelf.selectRevenueRecord(ARE.getUserId(), sendStatus);
+        if(CollectionUtils.isEmpty(list)){
+            list = Lists.newArrayList();
+        } else {
+            total =  ((Page) list).getTotal();
+        }
+        data.put("rows", list);
+        data.put("total", total);
+        return data;
+    }
+
+
+
+    @HystrixCommand
+    public Map<String,Object> orders(ApiResponseEntity ARE, OrderParams orderParams, Integer page, Integer per_page){
+        Map<String,Object> data = Maps.newHashMap();
+        if(orderParams.getProductType() == null){
+            ARE.addInfoError("productType.isEmpty", "商品类型不能为空");
+        }
+        orderParams.setUserId(ARE.getUserId());
+        long total = 0;
+        ComUtils.startPage(page, per_page);
+        List<OrderVos> list = userMapperSelf.applyRecords(orderParams);
+        if(CollectionUtils.isEmpty(list)){
+            list = Lists.newArrayList();
+        } else {
+            total =  ((Page) list).getTotal();
+        }
+        data.put("rows", list);
+        data.put("total", total);
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> txrecords(ApiResponseEntity ARE,Integer status, Integer page, Integer per_page){
+        Map<String,Object> data = Maps.newHashMap();
+        long total = 0;
+        ComUtils.startPage(page, per_page);
+        List<TxRecord> list = userMapperSelf.selectTxRecord(ARE.getUserId(), status);
+        if(CollectionUtils.isEmpty(list)){
+            list = Lists.newArrayList();
+        } else {
+            total =  ((Page) list).getTotal();
+        }
+        data.put("rows", list);
+        data.put("total", total);
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> team(ApiResponseEntity ARE,String ym, Integer page, Integer per_page){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isNotBlank(ym)){
+            try {
+                DateUtil.StrToDate(ym, "yyyy-MM");
+            }catch (Exception ex){
+                ARE.addInfoError("ym.format.isError", "日期格式不正确");
+                return null;
+            }
+        } else {
+            ARE.addInfoError("ym.format.isEmpty", "筛选日期不能为空");
+            return null;
+        }
+
+        int count = userMapperSelf.countRevenuePeople(ARE.getUserId(), ym);
+        BigDecimal revenue = userMapperSelf.countRevenuePrice(ARE.getUserId(), ym);
+        List<MemberVos> members = null;
+        long total = 0;
+        if(count > 0){
+            ComUtils.startPage(page, per_page);
+            members = userMapperSelf.selectMember(ARE.getUserId(), ym);
+            if(CollectionUtils.isEmpty(members)){
+                members = Lists.newArrayList();
+            } else {
+                total =  ((Page) members).getTotal();
+            }
+        }
+        data.put("rows", members);
+        data.put("total", total);
+        data.put("totalRevenue", revenue);
+        data.put("totalPeople", count);
+        return data;
+    }
 
     /**
      * 获取用户的临时二维码信息
