@@ -1,19 +1,25 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.qudan.qingcloud.msqudan.entity.User;
+import com.qudan.qingcloud.msqudan.util.responses.jackson.NullBigDecimalSerializer;
 
 import java.math.BigDecimal;
 
 public class UserInfo extends User {
     private Boolean isAgent;
     private Boolean isVip;
+    @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
+    private BigDecimal blance;
+    @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
+    private BigDecimal allowTx;
+    @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
+    private BigDecimal waitSettle;
     private UserAgentVo agent;
     private UserVipVo vip;
-    private BigDecimal blance;
-    private BigDecimal allowTx;
-    private BigDecimal waitSettle;
 
-    public Boolean getAgent() {
+
+    public Boolean getIsAgent() {
         return isAgent;
     }
 
@@ -21,16 +27,20 @@ public class UserInfo extends User {
         this.agent = agent;
     }
 
-    public void setAgent(Boolean agent) {
+    public void setIsAgent(Boolean agent) {
         isAgent = agent;
     }
 
-    public Boolean getVip() {
+    public Boolean getIsVip() {
         return isVip;
     }
 
     public void setVip(UserVipVo vip) {
         this.vip = vip;
+    }
+
+    public void setIsVip(Boolean vip) {
+        isVip = vip;
     }
 
     public BigDecimal getBlance() {
@@ -39,10 +49,6 @@ public class UserInfo extends User {
 
     public void setBlance(BigDecimal blance) {
         this.blance = blance;
-    }
-
-    public void setVip(Boolean vip) {
-        isVip = vip;
     }
 
     public BigDecimal getAllowTx() {
@@ -60,4 +66,14 @@ public class UserInfo extends User {
     public void setWaitSettle(BigDecimal waitSettle) {
         this.waitSettle = waitSettle;
     }
+
+    public UserAgentVo getAgent() {
+        return agent;
+    }
+
+    public UserVipVo getVip() {
+        return vip;
+    }
+
+
 }

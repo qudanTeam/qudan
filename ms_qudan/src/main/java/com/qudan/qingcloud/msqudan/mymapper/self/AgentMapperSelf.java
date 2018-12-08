@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AgentMapperSelf extends AgentConfigMapper {
     @Select({
-        "SELECT * FROM agent_level WHERE level = #{level}"
+        "SELECT * FROM agent_config WHERE level = #{level}"
     })
     AgentConfig selectConfigByLevel(@Param("level")int level);
 

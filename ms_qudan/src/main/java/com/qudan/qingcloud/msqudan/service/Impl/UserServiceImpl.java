@@ -163,7 +163,7 @@ public class UserServiceImpl {
     @HystrixCommand
     public Map<String,Object> addShareTime(ApiResponseEntity ARE, String ticket){
         Map<String,Object> data = Maps.newHashMap();
-        Integer userId = LocalUserHelper.getUserId();
+        Integer userId = ARE.getUserId();
         WeixinSceneRecord record = weixinQrMapperSelf.getQrRecordByTicket(ticket, userId);
         if(record == null){
             ARE.addInfoError("ticket.isNotExist", "不存在的ticket");
@@ -180,7 +180,7 @@ public class UserServiceImpl {
     @HystrixCommand
     public Map<String,Object> getShareProductQrcode(ApiResponseEntity ARE,Integer type, Integer productId){
         Map<String,Object> data = Maps.newHashMap();
-        Integer userId = LocalUserHelper.getUserId();
+        Integer userId = ARE.getUserId();
         String params = "pid="+productId;
         WeixinSceneRecord record = getUserTempQrRecord(userId, type, params);
         data.put("ticket", record.getTicket());
@@ -191,21 +191,21 @@ public class UserServiceImpl {
     @HystrixCommand
     public Map<String,Object> getUserInfo(ApiResponseEntity ARE){
         Map<String,Object> data = Maps.newHashMap();
-        Integer userId = LocalUserHelper.getUserId();
+        Integer userId = ARE.getUserId();
         User user = userMapperSelf.selectById(userId);
-        UserAccount account = userMapperSelf.selectAccountById(userId);
         UserInfo userInfo = new UserInfo();
+        BeanUtils.copyProperties(user, userInfo);
 
+        UserAccount account = userMapperSelf.selectAccountById(userId);
         userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
         userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
-
         userInfo.setBlance(account.getBlance());
+
         UserVipVo userVipVo = new UserVipVo();
         UserAgentVo userAgentVo = new UserAgentVo();
-        BeanUtils.copyProperties(user, userInfo);
-        userInfo.setAgent(user.getAgentLevel() != null && user.getAgentLevel() > 0);
-        userInfo.setVip(StringUtils.isNotBlank(user.getVipName()));
-        if(userInfo.getVip()){
+        userInfo.setIsAgent(user.getAgentLevel() != null && user.getAgentLevel() > 0);
+        userInfo.setIsVip(StringUtils.isNotBlank(user.getVipName()));
+        if(userInfo.getIsVip()){
             VipRecord record = vipMapperSelf.selectVipById(userId);
             VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(record.getVipConfigId());
             userVipVo.setVipName(vipConfig.getVipName());
@@ -213,7 +213,7 @@ public class UserServiceImpl {
             userVipVo.setVipRate(vipConfig.getAddRate());
             userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
         }
-        if(userInfo.getAgent()){
+        if(userInfo.getIsAgent()){
             userAgentVo.setAgentLevel(user.getAgentLevel());
             AgentConfig agentConfig = agentMapperSelf.selectConfigByLevel(user.getAgentLevel());
             userAgentVo.setAgentRate(agentConfig.getDirectRate());
@@ -224,6 +224,8 @@ public class UserServiceImpl {
             userAgentVo.setRecommendJobDoneCount(userMapperSelf.selectAgentRevenueDone(userId));
             userAgentVo.setRecommendRegisterCount(userMapperSelf.selectRecommendCount(userId));
         }
+        userInfo.setVip(userVipVo);
+        userInfo.setAgent(userAgentVo);
         data.put("user", userInfo);
         return data;
     }
@@ -232,6 +234,7 @@ public class UserServiceImpl {
     /**
      * 获取用户的临时二维码信息
      */
+
     public WeixinSceneRecord getUserTempQrRecord(Integer userId, Integer shareType, String params){
         int sceneId = sceneIdService.getTempQrSequence();
         String qrcode = "http://pj7lk9wjg.bkt.clouddn.com/qr_test_code.png";

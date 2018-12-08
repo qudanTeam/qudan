@@ -16,10 +16,6 @@ public class VipConfigSqlProvider {
         BEGIN();
         INSERT_INTO("vip_config");
         
-        if (record.getId() != null) {
-            VALUES("\" id\"", "#{id,jdbcType=INTEGER}");
-        }
-        
         if (record.getAddRate() != null) {
             VALUES("add_rate", "#{addRate,jdbcType=DECIMAL}");
         }
@@ -115,7 +111,7 @@ public class VipConfigSqlProvider {
             SET("vip_name = #{vipName,jdbcType=VARCHAR}");
         }
         
-        WHERE("\" id\" = #{id,jdbcType=INTEGER}");
+        WHERE("id = #{id,jdbcType=INTEGER}");
         
         return SQL();
     }

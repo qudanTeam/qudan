@@ -3,24 +3,24 @@ package com.qudan.qingcloud.msqudan.util;
 import com.qudan.qingcloud.msqudan.util.responses.UserInfo;
 
 public class LocalUserHelper {
-    private final static ThreadLocal<UserInfo>  ACCOUNT_THREAD_LOCAL = new ThreadLocal<>();
+    private final static ThreadLocal<UserInfo>  ACCOUNT_THREAD_LOCAL = new ThreadLocal<UserInfo>();
 
     public static void putUser(Object id) {
-        UserInfo account = new UserInfo();
-        account.setId(Integer.valueOf(id.toString()));
-        ACCOUNT_THREAD_LOCAL.set(account);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(Integer.valueOf(id.toString()));
+        ACCOUNT_THREAD_LOCAL.set(userInfo);
     }
 
     /**
      * 登陆账户id
-     * @return
+     * @returns
      */
     public static Integer getUserId(){
-        UserInfo user = ACCOUNT_THREAD_LOCAL.get();
-        if (user == null){
+        UserInfo userInfo = ACCOUNT_THREAD_LOCAL.get();
+        if (userInfo == null){
             return null;
         }
-        return  user.getId();
+        return userInfo.getId();
     }
 
 

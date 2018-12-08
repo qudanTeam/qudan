@@ -25,37 +25,37 @@ public interface UserMapperSelf extends UserMapper {
     UserInfo selectById(Integer id);
 
     @Select({
-        "SELECT * FROM user_account WHERE user_Iid = #{userId}"
+        "SELECT * FROM user_account WHERE user_id = #{userId}"
     })
     UserAccount selectAccountById(Integer userId);
 
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE send_type = 1 AND status = 2 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE send_status = 1 AND status = 2 AND user_id = #{userId}"
     })
     BigDecimal selectWaitTx(@Param("userId") Integer userId);
 
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE send_type = 1 AND status = 1 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE send_status = 1 AND status = 1 AND user_id = #{userId}"
     })
     BigDecimal selectWaitSettle(@Param("userId") Integer userId);
 
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE trade_type = 3 AND send_type = 2 AND status = 2 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE trade_type = 3 AND send_status = 2 AND status = 2 AND user_id = #{userId}"
     })
     BigDecimal selectAgentRevenue(@Param("userId") Integer userId);
 
     @Select({
-            "SELECT count(1) FROM trade_type WHERE trade_type = 3 AND send_type = 2 AND status = 2 AND user_id = #{userId}"
+            "SELECT count(1) FROM trade_type WHERE trade_type = 3 AND send_status = 2 AND status = 2 AND user_id = #{userId}"
     })
     int selectAgentRevenueDone(@Param("userId") Integer userId);
 
     @Select({
-        "SELECT count(1) FROM recommend_invite_id = #{userId}"
+        "SELECT count(1) FROM user WHERE  recommend_invite_id = #{userId}"
     })
     int selectRecommendCount(@Param("userId") Integer userId);
 
     @Select({
-        "SELECT SUM(vip_price) FROM trade_type WHERE send_type = 2 AND status = 2 AND user_id = #{userId}"
+        "SELECT SUM(vip_price) FROM trade_type WHERE send_status = 2 AND status = 2 AND user_id = #{userId}"
     })
     BigDecimal selectVipRevenue(@Param("userId") Integer userId);
 }

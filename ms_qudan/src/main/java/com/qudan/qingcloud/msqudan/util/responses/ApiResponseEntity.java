@@ -11,6 +11,7 @@ import java.util.Map;
  * Created by word on 2016/6/17.
  */
 public class ApiResponseEntity {
+    private Integer userId;
     private HttpStatus code = HttpStatus.OK;
     private Object data;
     private ErrorEntity errorEntity;
@@ -169,5 +170,13 @@ public class ApiResponseEntity {
 
     public ResponseEntity<Map<String,Object>> createResponseEntity(){
         return  new ResponseEntity<Map<String, Object>>(getResponseData(), code);
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
