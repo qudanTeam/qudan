@@ -64,7 +64,7 @@ public class WxPayServiceImpl {
         StringBuffer url= new StringBuffer();
         try {
             Map<String, String> resp = wxpay.unifiedOrder(data);
-            System.out.println(resp);
+            logger.info("统一下单接口返回:"+resp);
             String returnCode = resp.get("return_code");    //获取返回码
             String returnMsg = resp.get("return_msg");
 
