@@ -49,8 +49,8 @@ public class WxPayController {
             @ApiParam(required = true, name = "trade_type", value = "交易类型 JSAPI(h5浏览器调用支付) NATIVE(扫码支付) APP(手机app内支付)") @RequestParam(required = true,value = "trade_type")String trade_type,
             @ApiParam(required = false, name = "product_id", value = "商品id 交易类型为NATIVE时必传") @RequestParam(required = false,value = "product_id")String product_id,
             HttpServletRequest req, HttpServletResponse response) throws Exception {
-        logggr.info("进入微信支付申请");
-        Date now = new Date();
+        logggr.info("进入微信支付申请...");
+//        Date now = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");//可以方便地修改日期格式
 //        String hehe = dateFormat.format(now);
 

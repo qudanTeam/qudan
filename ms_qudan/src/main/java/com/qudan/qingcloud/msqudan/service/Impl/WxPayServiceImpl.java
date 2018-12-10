@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class WxPayServiceImpl {
         MyWXConfig config = new MyWXConfig();
         MD5Util md5Util = new MD5Util();
         WXPay wxpay = new WXPay(config);
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
 //        data.put("appid", config.getAppID());
 //        data.put("mch_id", config.getMchID());
 //        data.put("nonce_str","6128be982a7f40daa930025dedd1a90d");
@@ -163,6 +165,7 @@ public class WxPayServiceImpl {
      * @param out_trade_no 订单号
      */
     public Map<String, String> orderQuery(String  out_trade_no){
+        logger.info("订单查询...");
         MyWXConfig config = null;
         try {
             config = new MyWXConfig();
@@ -193,6 +196,7 @@ public class WxPayServiceImpl {
      * @param refund_fee 退款金额
      */
     public void doRefund(String out_trade_no,String total_fee,String refund_fee){
+        logger.info("退款...");
         MyWXConfig config = null;
         try {
             config = new MyWXConfig();
@@ -224,6 +228,7 @@ public class WxPayServiceImpl {
      * @param out_trade_no 订单号
      */
     public void doRefundQuery(String out_trade_no){
+        logger.info("退款订单查询...");
         MyWXConfig config = null;
         try {
             config = new MyWXConfig();
@@ -324,7 +329,32 @@ public class WxPayServiceImpl {
     }
 
     /**
-     * 扫码支付 下单
+     * 下载对账单
      */
+    public void doDownloadBill(){
+        logger.info("下载对账单...");
+        Date now = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String format = dateFormat.format(now);
+        MyWXConfig config = null;
+        try {
+            config = new MyWXConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("单例MyWXConfig-------》异常==>下载对账单");
+            logger.info(e.getMessage());
+        }
+        WXPay wxpay = new WXPay(config);
+        HashMap<String, String> data = new HashMap<>();
+        data.put("bill_date", format);
+        data.put("bill_type", "ALL");
+        try {
+            Map<String, String> r = wxpay.downloadBill(data);
+            logger.info("下载对账单返回:"+r);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("下载对账单异常返回:"+e.getMessage());
+        }
+    }
 
 }
