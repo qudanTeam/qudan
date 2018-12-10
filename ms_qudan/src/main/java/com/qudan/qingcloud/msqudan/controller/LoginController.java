@@ -6,6 +6,7 @@ import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.PasswordUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.ValidcodeRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.VerifyRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.WxLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,13 @@ public class LoginController {
     public ResponseEntity<Map<String, Object>> validcode(@RequestBody ValidcodeRB validcodeRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         ARE.setData(loginService.mobileValidcode(ARE, validcodeRB));
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/validcode/verify")
+    public ResponseEntity<Map<String, Object>> validcodeVerify(@RequestBody VerifyRB verifyRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(loginService.verify(ARE, verifyRB));
         return ARE.createResponseEntity();
     }
 

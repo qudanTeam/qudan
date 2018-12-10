@@ -9,6 +9,7 @@ import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.RandomUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.ValidcodeRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.VerifyRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,16 @@ public class LoginServiceImpl {
 
     @Autowired
     private TaskExecutor taskExecutor;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @HystrixCommand
+    public Map<String,Object> verify(ApiResponseEntity ARE, VerifyRB verifyRB){
+        Map<String,Object> data = Maps.newHashMap();
+        userService.checkCode(ARE, verifyRB.getMobile(), verifyRB.getValidcode(), verifyRB.getType(),false);
+        return data;
+    }
 
     @HystrixCommand
     public Map<String,Object> mobileValidcode(ApiResponseEntity ARE, ValidcodeRB validcodeRB){

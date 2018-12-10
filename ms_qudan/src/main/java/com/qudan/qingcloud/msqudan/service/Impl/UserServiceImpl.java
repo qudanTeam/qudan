@@ -64,7 +64,7 @@ public class UserServiceImpl {
 
     public Map<String,Object> loginWithValidcode(ApiResponseEntity ARE, UserLoginRB RB, User user){
         Map<String,Object> data = Maps.newHashMap();
-        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 2)){
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 2, true)){
             YHResult result = userLoginClient.appLogin(user.getUsername(), user.getId());
             if(result == null){
                 ARE.addInfoError("zuul.system.error", "微服务调用错误!");
@@ -92,10 +92,14 @@ public class UserServiceImpl {
     public Map<String,Object> register(ApiResponseEntity ARE, UserLoginRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(StringUtils.isBlank(RB.getMobile())){
-            ARE.addInfoError("login.mobile.isEmpty", "手机号不能为空");
+            ARE.addInfoError("mobile.isEmpty", "手机号不能为空");
             return null;
         }
-        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1)){
+        if(StringUtils.isBlank(RB.getPassword())){
+            ARE.addInfoError("password.isEmpty", "密码不能为空");
+            return null;
+        }
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
             User user = userMapperSelf.selectUserByMobile(RB.getMobile());
             if(user != null){
                 ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
@@ -103,7 +107,7 @@ public class UserServiceImpl {
             }
             user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
-            user.setPassword(PasswordUtils.encodePassword("123456"));
+            user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
             user.setUserface("");
             user.setIsenable(1);
             user.setRegisterMobile(RB.getMobile());
@@ -373,7 +377,7 @@ public class UserServiceImpl {
         return weixinSceneRecord;
     }
 
-    public boolean checkCode(ApiResponseEntity ARE, String mobile, String validcode, Integer type){
+    public boolean checkCode(ApiResponseEntity ARE, String mobile, String validcode, Integer type, Boolean verify){
         SmsSendRecord record = otherMapperSelf.selectByCodeAndType(validcode, mobile, type);
         if(record == null){
             ARE.addInfoError("login.validcode.isNotExist", "不存在的验证码");
@@ -387,10 +391,12 @@ public class UserServiceImpl {
             ARE.addInfoError("login.validcode.isExpire", "验证码已过期");
             return false;
         }
-        SmsSendRecord record_update = new SmsSendRecord();
-        record_update.setId(record.getId());
-        record_update.setIsValid(1);
-        smsSendRecordMapper.updateByPrimaryKeySelective(record_update);
+        if(verify){
+            SmsSendRecord record_update = new SmsSendRecord();
+            record_update.setId(record.getId());
+            record_update.setIsValid(1);
+            smsSendRecordMapper.updateByPrimaryKeySelective(record_update);
+        }
         return true;
     }
 }
