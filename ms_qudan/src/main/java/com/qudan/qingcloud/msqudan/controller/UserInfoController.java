@@ -6,6 +6,7 @@ import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
 import com.qudan.qingcloud.msqudan.util.requestBody.ShareAddRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +54,15 @@ public class UserInfoController {
         } else {
             ARE.addInfoError("ticket.isEmpty", "不存在的ticket");
         }
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/user/realname")
+    public ResponseEntity<Map<String, Object>> realname(@RequestBody UserRealnameRB RB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.realname(ARE, RB));
         return ARE.createResponseEntity();
     }
 }

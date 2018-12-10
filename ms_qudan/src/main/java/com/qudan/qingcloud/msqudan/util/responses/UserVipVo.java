@@ -13,6 +13,8 @@ public class UserVipVo {
     @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
     private BigDecimal vipRevenue; //VIP多赚的钱
 
+    private Integer vipLevel; //VIP等级
+
     public String getVipName() {
         return vipName;
     }
@@ -43,5 +45,13 @@ public class UserVipVo {
 
     public void setVipRevenue(BigDecimal vipRevenue) {
         this.vipRevenue = vipRevenue;
+    }
+
+    public Integer getVipLevel() {
+        return vipLevel;
+    }
+
+    public void setVipLevel(Integer vipLevel) {
+        this.vipLevel = vipLevel;
     }
 }

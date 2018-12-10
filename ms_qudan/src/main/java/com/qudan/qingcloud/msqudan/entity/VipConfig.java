@@ -28,6 +28,8 @@ public class VipConfig {
 
     private String vipName;
 
+    private Integer vipLevel;
+
     public Integer getId() {
         return id;
     }
@@ -122,5 +124,13 @@ public class VipConfig {
 
     public void setVipName(String vipName) {
         this.vipName = vipName == null ? null : vipName.trim();
+    }
+
+    public Integer getVipLevel() {
+        return vipLevel;
+    }
+
+    public void setVipLevel(Integer vipLevel) {
+        this.vipLevel = vipLevel;
     }
 }

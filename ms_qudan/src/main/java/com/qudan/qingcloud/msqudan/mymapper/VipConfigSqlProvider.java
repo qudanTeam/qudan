@@ -60,6 +60,10 @@ public class VipConfigSqlProvider {
             VALUES("vip_name", "#{vipName,jdbcType=VARCHAR}");
         }
         
+        if (record.getVipLevel() != null) {
+            VALUES("vip_level", "#{vipLevel,jdbcType=INTEGER}");
+        }
+        
         return SQL();
     }
 
@@ -109,6 +113,10 @@ public class VipConfigSqlProvider {
         
         if (record.getVipName() != null) {
             SET("vip_name = #{vipName,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getVipLevel() != null) {
+            SET("vip_level = #{vipLevel,jdbcType=INTEGER}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

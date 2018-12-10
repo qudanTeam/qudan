@@ -41,6 +41,10 @@ public class User {
 
     private String vipName;
 
+    private String realname;
+
+    private Integer vipLevel;
+
     public Integer getId() {
         return id;
     }
@@ -191,5 +195,21 @@ public class User {
 
     public void setVipName(String vipName) {
         this.vipName = vipName == null ? null : vipName.trim();
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname == null ? null : realname.trim();
+    }
+
+    public Integer getVipLevel() {
+        return vipLevel;
+    }
+
+    public void setVipLevel(Integer vipLevel) {
+        this.vipLevel = vipLevel;
     }
 }

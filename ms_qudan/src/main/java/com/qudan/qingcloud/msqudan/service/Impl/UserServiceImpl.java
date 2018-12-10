@@ -10,6 +10,7 @@ import com.qudan.qingcloud.msqudan.mymapper.self.*;
 import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
 import org.assertj.core.util.Lists;
@@ -88,6 +89,33 @@ public class UserServiceImpl {
         data = getToken(ARE, user);
         return data;
     }
+
+
+    @HystrixCommand
+    public Map<String,Object> forget(ApiResponseEntity ARE, UserLoginRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(RB.getMobile())){
+            ARE.addInfoError("mobile.isEmpty", "手机号不能为空");
+            return null;
+        }
+        if(StringUtils.isBlank(RB.getPassword())){
+            ARE.addInfoError("password.isEmpty", "密码不能为空");
+            return null;
+        }
+        User user = userMapperSelf.selectUserByMobile(RB.getMobile());
+        if(user == null){
+            ARE.addInfoError("user.mobile.isExist", "手机号未注册");
+            return null;
+        }
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 3, true)){
+            User user_update = new User();
+            user_update.setId(user.getId());
+            user_update.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
+            userMapperSelf.updateByPrimaryKeySelective(user_update);
+        }
+        return data;
+    }
+
     @HystrixCommand
     public Map<String,Object> register(ApiResponseEntity ARE, UserLoginRB RB){
         Map<String,Object> data = Maps.newHashMap();
@@ -115,7 +143,6 @@ public class UserServiceImpl {
             user.setLastLoginTime(new Date());
             user.setStatus(0);
             user.setUserType(0);
-            user.setInviteCode(RandomUtils.generateMixString(16));
             user.setModifyTime(new Date());
             //TODO 邀请逻辑
             userMapperSelf.insertSelective(user);
@@ -130,6 +157,10 @@ public class UserServiceImpl {
             userAccount.setModifyTime(new Date());
             data = getToken(ARE, user);
             userAccountMapper.insertSelective(userAccount);
+            User user_update = new User();
+            user_update.setId(user.getId());
+            user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
+            userMapperSelf.updateByPrimaryKeySelective(user);
         }
         return data;
     }
@@ -146,6 +177,31 @@ public class UserServiceImpl {
             ARE.addInfoError("zuul.data.isEmpty", "微服务没有返回数据");
         }
         data = (Map<String, Object>)result.getData();
+        return data;
+    }
+    @HystrixCommand
+    public Map<String,Object> realname(ApiResponseEntity ARE, UserRealnameRB RB){
+        if(StringUtils.isBlank(RB.getRealname())){
+            ARE.addInfoError("realname.isEmpty", "真实姓名不能为空");
+            return null;
+        }
+        if(StringUtils.isBlank(RB.getIdNo())){
+            ARE.addInfoError("idNo.isEmpty", "身份证号不能为空");
+            return null;
+        }
+        if(StringUtils.isBlank(RB.getAlipayNo())){
+            ARE.addInfoError("alipayNo.isEmpty", "支付宝账号不能为空");
+            return null;
+        }
+        Map<String,Object> data = Maps.newHashMap();
+        User user_update = new User();
+        user_update.setId(ARE.getUserId());
+        user_update.setRealname(RB.getRealname());
+        user_update.setIdNo(RB.getIdNo());
+        user_update.setAlipayNo(RB.getAlipayNo());
+        user_update.setStatus(0);
+        user_update.setModifyTime(new Date());
+        userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
     }
 
@@ -218,6 +274,7 @@ public class UserServiceImpl {
             userVipVo.setVipExpireDate(DateUtil.getFormatDate(record.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
             userVipVo.setVipRate(vipConfig.getAddRate());
             userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
+            userVipVo.setVipLevel(vipConfig.getVipLevel());
         }
         if(userInfo.getIsAgent()){
             userAgentVo.setAgentLevel(user.getAgentLevel());
@@ -252,8 +309,6 @@ public class UserServiceImpl {
         data.put("total", total);
         return data;
     }
-
-
 
     @HystrixCommand
     public Map<String,Object> orders(ApiResponseEntity ARE, OrderParams orderParams, Integer page, Integer per_page){
@@ -333,7 +388,7 @@ public class UserServiceImpl {
     public WeixinSceneRecord getUserTempQrRecord(Integer userId, Integer shareType, String params){
         int sceneId = sceneIdService.getTempQrSequence();
         String qrcode = "http://pj7lk9wjg.bkt.clouddn.com/qr_test_code.png";
-            //TODO
+            //TODO 获取微信二维码
         String type = "";
         if(shareType == 1){
             type = "user_share_product";

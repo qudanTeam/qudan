@@ -88,6 +88,14 @@ public class UserSqlProvider {
             VALUES("vip_name", "#{vipName,jdbcType=VARCHAR}");
         }
         
+        if (record.getRealname() != null) {
+            VALUES("realname", "#{realname,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getVipLevel() != null) {
+            VALUES("vip_level", "#{vipLevel,jdbcType=INTEGER}");
+        }
+        
         return SQL();
     }
 
@@ -165,6 +173,14 @@ public class UserSqlProvider {
         
         if (record.getVipName() != null) {
             SET("vip_name = #{vipName,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getRealname() != null) {
+            SET("realname = #{realname,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getVipLevel() != null) {
+            SET("vip_level = #{vipLevel,jdbcType=INTEGER}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

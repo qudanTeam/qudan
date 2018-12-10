@@ -25,13 +25,13 @@ public interface VipConfigMapper {
         "over_time, vip_logo, ",
         "create_time, modify_time, ",
         "isenable, version, ",
-        "vip_name)",
+        "vip_name, vip_level)",
         "values (#{addRate,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, ",
         "#{startTime,jdbcType=TIMESTAMP}, #{serviceDays,jdbcType=INTEGER}, ",
         "#{overTime,jdbcType=TIMESTAMP}, #{vipLogo,jdbcType=VARCHAR}, ",
         "#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, ",
         "#{isenable,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, ",
-        "#{vipName,jdbcType=VARCHAR})"
+        "#{vipName,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(VipConfig record);
@@ -43,7 +43,7 @@ public interface VipConfigMapper {
     @Select({
         "select",
         "id, add_rate, vip_price, start_time, service_days, over_time, vip_logo, create_time, ",
-        "modify_time, isenable, version, vip_name",
+        "modify_time, isenable, version, vip_name, vip_level",
         "from vip_config",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -59,7 +59,8 @@ public interface VipConfigMapper {
         @Result(column="modify_time", property="modifyTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="isenable", property="isenable", jdbcType=JdbcType.INTEGER),
         @Result(column="version", property="version", jdbcType=JdbcType.INTEGER),
-        @Result(column="vip_name", property="vipName", jdbcType=JdbcType.VARCHAR)
+        @Result(column="vip_name", property="vipName", jdbcType=JdbcType.VARCHAR),
+        @Result(column="vip_level", property="vipLevel", jdbcType=JdbcType.INTEGER)
     })
     VipConfig selectByPrimaryKey(Integer id);
 
@@ -78,7 +79,8 @@ public interface VipConfigMapper {
           "modify_time = #{modifyTime,jdbcType=TIMESTAMP},",
           "isenable = #{isenable,jdbcType=INTEGER},",
           "version = #{version,jdbcType=INTEGER},",
-          "vip_name = #{vipName,jdbcType=VARCHAR}",
+          "vip_name = #{vipName,jdbcType=VARCHAR},",
+          "vip_level = #{vipLevel,jdbcType=INTEGER}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(VipConfig record);

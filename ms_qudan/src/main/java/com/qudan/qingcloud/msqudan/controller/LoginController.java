@@ -56,6 +56,13 @@ public class LoginController {
         return ARE.createResponseEntity();
     }
 
+    @PostMapping("/forget")
+    public ResponseEntity<Map<String, Object>> forget(@RequestBody UserLoginRB userLoginRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(userService.forget(ARE, userLoginRB));
+        return ARE.createResponseEntity();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody UserLoginRB userLoginRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
