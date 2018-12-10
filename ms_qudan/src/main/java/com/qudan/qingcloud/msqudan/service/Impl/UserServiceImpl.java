@@ -99,12 +99,12 @@ public class UserServiceImpl {
             ARE.addInfoError("password.isEmpty", "密码不能为空");
             return null;
         }
+        User user = userMapperSelf.selectUserByMobile(RB.getMobile());
+        if(user != null){
+            ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
+            return null;
+        }
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
-            User user = userMapperSelf.selectUserByMobile(RB.getMobile());
-            if(user != null){
-                ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
-                return null;
-            }
             user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
             user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
