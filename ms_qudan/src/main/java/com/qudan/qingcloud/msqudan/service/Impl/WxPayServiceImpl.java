@@ -2,9 +2,8 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.qudan.qingcloud.msqudan.controller.WxPayController;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
-import com.qudan.qingcloud.msqudan.wepay.MyWXConfig;
+import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

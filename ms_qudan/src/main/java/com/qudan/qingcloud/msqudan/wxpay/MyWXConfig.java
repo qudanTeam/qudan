@@ -1,4 +1,4 @@
-package com.qudan.qingcloud.msqudan.wepay;
+package com.qudan.qingcloud.msqudan.wxpay;
 
 import com.github.wxpay.sdk.WXPayConfig;
 

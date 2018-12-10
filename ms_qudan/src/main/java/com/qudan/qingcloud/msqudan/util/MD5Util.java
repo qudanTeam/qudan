@@ -1,7 +1,7 @@
 package com.qudan.qingcloud.msqudan.util;
 
 import com.github.wxpay.sdk.WXPayConstants;
-import com.qudan.qingcloud.msqudan.wepay.MyWXConfig;
+import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

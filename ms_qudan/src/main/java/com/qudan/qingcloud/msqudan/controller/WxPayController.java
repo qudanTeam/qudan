@@ -2,7 +2,7 @@ package com.qudan.qingcloud.msqudan.controller;
 
 import com.qudan.qingcloud.msqudan.service.Impl.WxPayServiceImpl;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
-import com.qudan.qingcloud.msqudan.wepay.MyWXConfig;
+import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
