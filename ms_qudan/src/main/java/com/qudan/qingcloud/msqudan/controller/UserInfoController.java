@@ -6,6 +6,8 @@ import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
 import com.qudan.qingcloud.msqudan.util.requestBody.ShareAddRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.UserPwRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import io.swagger.models.auth.In;
@@ -63,6 +65,15 @@ public class UserInfoController {
         Integer userId = LocalUserHelper.getUserId();
         ARE.setUserId(userId);
         ARE.setData(userService.realname(ARE, RB));
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/user/setpw")
+    public ResponseEntity<Map<String, Object>> setpw(@RequestBody UserPwRB RB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.setpw(ARE, RB));
         return ARE.createResponseEntity();
     }
 }

@@ -10,6 +10,7 @@ import com.qudan.qingcloud.msqudan.mymapper.self.*;
 import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.UserPwRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
@@ -179,6 +180,21 @@ public class UserServiceImpl {
         data = (Map<String, Object>)result.getData();
         return data;
     }
+
+    @HystrixCommand
+    public Map<String,Object> setpw(ApiResponseEntity ARE, UserPwRB RB) {
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(RB.getPassword())){
+            ARE.addInfoError("password.isEmpty", "密码不能为空");
+            return null;
+        }
+        User user_update = new User();
+        user_update.setId(ARE.getUserId());
+        userMapperSelf.updateByPrimaryKeySelective(user_update);
+        return data;
+    }
+
+
     @HystrixCommand
     public Map<String,Object> realname(ApiResponseEntity ARE, UserRealnameRB RB){
         if(StringUtils.isBlank(RB.getRealname())){
