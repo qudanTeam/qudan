@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePayModel;
@@ -37,7 +38,7 @@ public class AliPayController {
      * 生成支付链接
      */
     @PostMapping("alipay/pay")
-    public void alipay(
+    public YHResult alipay(
             @ApiParam(required = true, name = "orderNo", value = "订单号") @RequestParam(required = true,value = "orderNo")String orderNo,
             @ApiParam(required = true, name = "totalAmount", value = "支付总金额(单位为元)") @RequestParam(required = true,value = "totalAmount")String totalAmount,
             HttpServletRequest request, HttpServletResponse response
@@ -63,13 +64,25 @@ public class AliPayController {
         model.setTotalAmount(totalAmount); // 支付总金额
         model.setBody(body); // 设置商品描述
         alipayRequest.setBizModel(model);
-
-        String form = client.pageExecute(alipayRequest).getBody(); // 生成表单
-
-        response.setContentType("text/html;charset=" + aliPayConfig.getCharset());
-        response.getWriter().write(form); // 直接将完整的表单html输出到页面
-        response.getWriter().flush();
-        response.getWriter().close();
+        String payUrl = "";
+        JSONObject jsonObject = new JSONObject();
+        try {
+        	//这里使用GET的方式，这样就能生成支付链接
+            payUrl = client.pageExecute(alipayRequest, "GET").getBody(); //调用SDK生成表单
+            jsonObject.put("payUrl",payUrl);
+            return YHResult.build(200,"生成支付链接成功!",jsonObject);
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+            logggr.info("生成支付链接失败!");
+            logggr.error(e.getErrMsg());
+            return YHResult.build(500,"生成支付链接异常!");
+        }
+//        String form = client.pageExecute(alipayRequest).getBody(); // 生成表单
+//
+//        response.setContentType("text/html;charset=" + aliPayConfig.getCharset());
+//        response.getWriter().write(form); // 直接将完整的表单html输出到页面
+//        response.getWriter().flush();
+//        response.getWriter().close();
     }
 
     /**
