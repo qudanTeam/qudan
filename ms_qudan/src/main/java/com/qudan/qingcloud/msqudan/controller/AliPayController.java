@@ -39,7 +39,7 @@ public class AliPayController {
     @PostMapping("alipay/pay")
     public void alipay(
             @ApiParam(required = true, name = "orderNo", value = "订单号") @RequestParam(required = true,value = "orderNo")String orderNo,
-            @ApiParam(required = true, name = "totalAmount", value = "支付总金额") @RequestParam(required = true,value = "totalAmount")String totalAmount,
+            @ApiParam(required = true, name = "totalAmount", value = "支付总金额(单位为元)") @RequestParam(required = true,value = "totalAmount")String totalAmount,
             HttpServletRequest request, HttpServletResponse response
     )throws Exception {
 
