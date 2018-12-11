@@ -50,3 +50,11 @@ qiniu:
         image:
             bucket: qudan-idc
             url: http://pj7lk9wjg.bkt.clouddn.com/
+alipay:
+  appID: 2016091200494055
+  merchantPrivateKey: 商户私钥
+  alipayPublicKey: 支付宝公钥
+  gatewayUrl: https://openapi.alipaydev.com/gateway.do
+  sysServiceProviderId: 1234
+  notifyUrl: http://XXXX.com/notifyUrl
+  returnUrl: http://XXXX.com/returnUrl
