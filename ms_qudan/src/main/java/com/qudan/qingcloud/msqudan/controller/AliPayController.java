@@ -30,7 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/msqudan/api/")//窄化请求地址
 public class AliPayController {
-    private final Logger logggr = LoggerFactory.getLogger(AliPayController.class);
+    private final Logger logger = LoggerFactory.getLogger(AliPayController.class);
 
     @Autowired
     AliPayConfig aliPayConfig;
@@ -73,8 +73,8 @@ public class AliPayController {
             return YHResult.build(200,"生成支付链接成功!",jsonObject);
         } catch (AlipayApiException e) {
             e.printStackTrace();
-            logggr.info("生成支付链接失败!");
-            logggr.error(e.getErrMsg());
+            logger.info("生成支付链接失败!");
+            logger.error(e.getErrMsg());
             return YHResult.build(500,"生成支付链接异常!");
         }
 //        String form = client.pageExecute(alipayRequest).getBody(); // 生成表单
@@ -104,14 +104,33 @@ public class AliPayController {
             }
             params.put(name, valueStr);
         }
-        boolean signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipayPublicKey(), aliPayConfig.getCharset(), aliPayConfig.getSignType()); // 调用SDK验证签名
-
+        logger.info("params={}", params);
+        boolean signVerified = false; //调用SDK验证签名
+        try {
+            signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipayPublicKey(), aliPayConfig.getCharset(), aliPayConfig.getSignType()); // 调用SDK验证签名
+        } catch (AlipayApiException e) {
+            logger.error("【支付宝同步通知】支付宝回调通知失败 e={} params={}", e, params);
+            e.printStackTrace();
+            return YHResult.build(500,"同步验签异常!");
+        }
         // 返回界面
         if (signVerified) {
-            logggr.info("前往支付成功页面");
+            logger.info("前往支付成功页面");
+            //商户订单号
+            String out_trade_no = params.get("out_trade_no");
+            //支付宝交易号
+            String trade_no = params.get("trade_no");
+            //交易状态
+            String trade_status = params.get("trade_status");
+            // 支付成功修改订单状态
+            if (trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")) {
+
+                //业务处理，主要是更新订单状态
+            }
             return YHResult.build(200,"前往支付成功页面");
         } else {
-            logggr.info("前往支付失败页面");
+            logger.error("【支付宝同步通知】验证签名错误 params={} ", params);
+            logger.info("前往支付失败页面");
             return YHResult.build(400,"前往支付失败页面");
         }
     }
@@ -138,18 +157,33 @@ public class AliPayController {
             //valueStr = new String(valueStr.getBytes("ISO-8859-1"),"utf-8");
             params.put(name, valueStr);
         }
-        boolean signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipayPublicKey(), aliPayConfig.getCharset(), aliPayConfig.getSignType()); // 调用SDK验证签名
+        logger.info("params={}", params);
+        boolean signVerified = false; //调用SDK验证签名
+        try {
+            signVerified = AlipaySignature.rsaCheckV1(params, aliPayConfig.getAlipayPublicKey(), aliPayConfig.getCharset(), aliPayConfig.getSignType()); // 调用SDK验证签名
+        } catch (AlipayApiException e) {
+            logger.error("【支付宝异步通知】支付宝回调通知失败 e={} params={}", e, params);
+            e.printStackTrace();
+            return YHResult.build(500,"异步验签异常!");
+        }
         if (signVerified) { // 验证成功 更新订单信息
-            logggr.info("异步通知成功");
-            // 商户订单号
-            String out_trade_no = request.getParameter("out_trade_no");
-            // 交易状态
-            String trade_status = request.getParameter("trade_status");
+            logger.info("异步通知成功");
             // 修改数据库
+            //商户订单号
+            String out_trade_no = params.get("out_trade_no");
+            //支付宝交易号
+            String trade_no = params.get("trade_no");
+            //交易状态
+            String trade_status = params.get("trade_status");
+            // 支付成功修改订单状态
+            if (trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")) {
+
+                //业务处理，主要是更新订单状态
+            }
             //验签成功返回成功状态码
             return YHResult.build(200,"异步通知成功!");
         } else {
-            logggr.info("异步通知失败");
+            logger.info("异步通知失败");
             return YHResult.build(400,"异步通知失败!");
         }
     }
