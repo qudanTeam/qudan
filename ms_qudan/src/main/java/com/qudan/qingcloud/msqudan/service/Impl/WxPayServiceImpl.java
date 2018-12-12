@@ -1,8 +1,12 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.qudan.qingcloud.msqudan.util.BusinessData;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
@@ -41,6 +45,7 @@ public class WxPayServiceImpl {
     /** 加解密算法/工作模式/填充方式 */
     private static final String ALGORITHM_MODE_PADDING = "AES/ECB/PKCS5Padding";
 
+
     /**
      * 统一下单
      * @param trade_type
@@ -53,6 +58,18 @@ public class WxPayServiceImpl {
      * @return
      * @throws Exception
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public Map<String, String> dounifiedOrder(String trade_type,String product_id, String attach, String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
         Map<String, String> fail = new HashMap<>();
         MyWXConfig config = new MyWXConfig();
@@ -124,6 +141,18 @@ public class WxPayServiceImpl {
      * @param notifyData    异步通知后的XML数据
      * @return
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public String payBack(String notifyData) {
         MyWXConfig config = null;
         try {
@@ -183,6 +212,18 @@ public class WxPayServiceImpl {
      * 订单查询
      * @param out_trade_no 订单号
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public Map<String, String> orderQuery(String out_trade_no){
         logger.info("订单查询...");
         MyWXConfig config = null;
@@ -214,6 +255,18 @@ public class WxPayServiceImpl {
      * @param total_fee 总金额
      * @param refund_fee 退款金额
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doRefund(String out_trade_no,String total_fee,String refund_fee){
         logger.info("退款...");
         MyWXConfig config = null;
@@ -246,6 +299,18 @@ public class WxPayServiceImpl {
      * 退款订单查询
      * @param out_trade_no 订单号
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doRefundQuery(String out_trade_no){
         logger.info("退款订单查询...");
         MyWXConfig config = null;
@@ -272,6 +337,18 @@ public class WxPayServiceImpl {
      * 关闭订单
      * @param out_trade_no 订单号
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doOrderClose(String out_trade_no){
         logger.info("关闭订单...");
         MyWXConfig config = null;
@@ -298,6 +375,18 @@ public class WxPayServiceImpl {
      * 撤销
      * @param out_trade_no 订单号
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doOrderReverse(String out_trade_no){
         logger.info("撤销订单...");
         MyWXConfig config = null;
@@ -325,6 +414,18 @@ public class WxPayServiceImpl {
      * 长链接转短链接
      * @param long_url 长链接
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doShortUrl(String long_url){
 //        String long_url = "weixin://wxpay/bizpayurl?pr=etxB4DY";
         MyWXConfig config = null;
@@ -350,6 +451,18 @@ public class WxPayServiceImpl {
     /**
      * 下载对账单
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public void doDownloadBill(){
         logger.info("下载对账单...");
         Date now = new Date();
@@ -380,6 +493,18 @@ public class WxPayServiceImpl {
      * 刷卡支付
      * 注意：该方法没有处理return_code=FAIL的情况，暂时不考虑网络问题，这种情况直接返回错误
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public Map<String, String> microPayWithPOS(Map<String, String> reqData) throws Exception {
         logger.info("刷卡支付...");
         MyWXConfig config = null;
@@ -473,6 +598,18 @@ public class WxPayServiceImpl {
      * @return
      * @throws Exception
      */
+    @HystrixCommand(fallbackMethod = "timeoutFallbackMethod",commandProperties = {
+            //设置熔断
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //时间滚动中最小请求参数，只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            //休眠时间窗
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            //错误百分比，判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "40"),
+            //设置超时
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
+    })
     public Map<String, String> decodeRefundNotify(HttpServletRequest request) throws Exception {
         logger.info("解密退款通知...");
         MyWXConfig config = null;
@@ -503,6 +640,18 @@ public class WxPayServiceImpl {
         String responseXml = new String(cipher.doFinal(bytes),"UTF-8");
         Map<String, String> responseMap = WXPayUtil.xmlToMap(responseXml);
         return responseMap;
+    }
+
+
+    /**
+     * 超时回调
+     */
+    public BusinessData timeoutFallbackMethod(JSONObject params){
+        BusinessData businessData = new BusinessData();
+        //设置超时返回
+        businessData.setStatusCode("408");
+        businessData.setStatusMessage("服务连接超时!");
+        return businessData;
     }
 
 }
