@@ -9,7 +9,6 @@ import java.io.Serializable;
  * @author sh04397
  *
  */
-
 public class BusinessData<T> implements Serializable{
 	/**
 	 * 

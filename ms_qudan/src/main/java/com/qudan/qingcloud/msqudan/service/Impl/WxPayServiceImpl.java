@@ -45,6 +45,7 @@ public class WxPayServiceImpl {
     /** 加解密算法/工作模式/填充方式 */
     private static final String ALGORITHM_MODE_PADDING = "AES/ECB/PKCS5Padding";
 
+
     /**
      * 统一下单
      * @param trade_type
