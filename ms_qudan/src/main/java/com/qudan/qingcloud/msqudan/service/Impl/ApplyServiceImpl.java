@@ -8,6 +8,7 @@ import com.qudan.qingcloud.msqudan.entity.Product;
 import com.qudan.qingcloud.msqudan.mymapper.ApplyMapper;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
+import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.QudanHashIdUtils;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class ApplyServiceImpl {
 
     @Autowired
-    private ApplyMapper applyMapper;
+    private ApplyMapperSelf applyMapperSelf;
 
     @Autowired
     private TradeTypeMapper tradeTypeMapper;
@@ -80,6 +81,11 @@ public class ApplyServiceImpl {
             ARE.addInfoError("product.isNotExist", "不存在的产品Id");
             return false;
         }
+        Apply apply = applyMapperSelf.selectApplyByUserIdAndProductId(product.getId(), ARE.getUserId());
+        if(apply != null){
+            ARE.addInfoError("app.isExist", "不能重复申请！");
+            return false;
+        }
         return userService.checkCode(ARE, RB.getMobile(), RB.getValidcode(), 4, true);
     }
 
@@ -98,11 +104,11 @@ public class ApplyServiceImpl {
         apply.setLastOfficialQuery(null);
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());
-        applyMapper.insert(apply);
+        applyMapperSelf.insert(apply);
         Apply apply_update = new Apply();
         apply_update.setId(apply.getId());
         apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
-        applyMapper.updateByPrimaryKeySelective(apply_update);
+        applyMapperSelf.updateByPrimaryKeySelective(apply_update);
         return apply;
     }
 }
