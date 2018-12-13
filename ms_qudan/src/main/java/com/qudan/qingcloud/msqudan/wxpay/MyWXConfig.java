@@ -10,9 +10,9 @@ import java.io.*;
 public class MyWXConfig implements WXPayConfig {
 
 
-    private String appId = "wx8888888888888888";//appId
-    private String  mchId = "12888888";//商户号
-    private String key = "88888888888888888888888888888888";//密钥key
+    private String appId = "wx5937eccb3b4a99d7";//appId
+    private String  mchId = "1520779301";//商户号
+    private String key = "861f22c47a40774f26e7f44b472069e7";//密钥key
 
     private byte[] certData;
 
