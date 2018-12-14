@@ -96,6 +96,10 @@ public class UserSqlProvider {
             VALUES("vip_level", "#{vipLevel,jdbcType=INTEGER}");
         }
         
+        if (record.getFinanceStatus() != null) {
+            VALUES("finance_status", "#{financeStatus,jdbcType=INTEGER}");
+        }
+        
         return SQL();
     }
 
@@ -181,6 +185,10 @@ public class UserSqlProvider {
         
         if (record.getVipLevel() != null) {
             SET("vip_level = #{vipLevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getFinanceStatus() != null) {
+            SET("finance_status = #{financeStatus,jdbcType=INTEGER}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

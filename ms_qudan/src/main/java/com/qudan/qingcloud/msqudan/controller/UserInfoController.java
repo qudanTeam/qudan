@@ -68,6 +68,15 @@ public class UserInfoController {
         return ARE.createResponseEntity();
     }
 
+    @PostMapping("/user/finance/realname")
+    public ResponseEntity<Map<String, Object>> financeRealname(@RequestBody UserRealnameRB RB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.financeRealname(ARE, RB));
+        return ARE.createResponseEntity();
+    }
+
     @PostMapping("/user/setpw")
     public ResponseEntity<Map<String, Object>> setpw(@RequestBody UserPwRB RB) {
         ApiResponseEntity ARE = new ApiResponseEntity();

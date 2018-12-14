@@ -10,11 +10,13 @@ public class UserInfo extends User {
     private Boolean isAgent;
     private Boolean isVip;
     @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
-    private BigDecimal blance;
+    private BigDecimal blance; //可用余额
     @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
-    private BigDecimal allowTx;
+    private BigDecimal allowTx; //可提现
     @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
-    private BigDecimal waitSettle;
+    private BigDecimal waitSettle; //待结算
+    @JsonSerialize(nullsUsing = NullBigDecimalSerializer.class)
+    private BigDecimal txGoing; //提现中
     private UserAgentVo agent;
     private UserVipVo vip;
 
@@ -75,5 +77,11 @@ public class UserInfo extends User {
         return vip;
     }
 
+    public BigDecimal getTxGoing() {
+        return txGoing;
+    }
 
+    public void setTxGoing(BigDecimal txGoing) {
+        this.txGoing = txGoing;
+    }
 }

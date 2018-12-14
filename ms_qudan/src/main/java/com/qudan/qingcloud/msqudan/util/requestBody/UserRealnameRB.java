@@ -4,6 +4,7 @@ public class UserRealnameRB {
     private String realname;
     private String idNo;
     private String alipayNo;
+    private String mobile;
 
     public String getRealname() {
         return realname;
@@ -27,5 +28,13 @@ public class UserRealnameRB {
 
     public void setAlipayNo(String alipayNo) {
         this.alipayNo = alipayNo;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

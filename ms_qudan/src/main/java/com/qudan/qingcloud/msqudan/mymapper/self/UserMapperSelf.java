@@ -31,20 +31,44 @@ public interface UserMapperSelf extends UserMapper {
     })
     UserAccount selectAccountById(Integer userId);
 
+
+    /**
+     * 待提现金额
+     * @param userId
+     * @return
+     */
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE send_status = 1 AND status = 2 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE (trade_type = 2 OR trade_type = 3) AND send_status = 1 AND status = 2 AND user_id = #{userId}"
     })
     BigDecimal selectWaitTx(@Param("userId") Integer userId);
 
+
+    /**
+     * 待结算金额
+     * @param userId
+     * @return
+     */
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE send_status = 1 AND status = 1 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE (trade_type = 2 OR trade_type = 3) AND send_status = 1 AND status = 1 AND user_id = #{userId}"
     })
     BigDecimal selectWaitSettle(@Param("userId") Integer userId);
+
+
+    /**
+     * 提现中金额
+     * @param userId
+     * @return
+     */
+    @Select({
+            "SELECT SUM(price) FROM trade_type WHERE trade_type = 1 AND send_status = 1 AND status = 1 AND user_id = #{userId}"
+    })
+    BigDecimal selectTxGoing(@Param("userId") Integer userId);
 
     @Select({
         "SELECT SUM(price) FROM trade_type WHERE trade_type = 3 AND send_status = 2 AND status = 2 AND user_id = #{userId}"
     })
     BigDecimal selectAgentRevenue(@Param("userId") Integer userId);
+
 
     /**
      * 团队任务完成人数

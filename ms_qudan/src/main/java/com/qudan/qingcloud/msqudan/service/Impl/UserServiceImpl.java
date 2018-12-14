@@ -190,13 +190,13 @@ public class UserServiceImpl {
         }
         User user_update = new User();
         user_update.setId(ARE.getUserId());
+        user_update.setPassword(RB.getPassword());
         userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
     }
 
-
     @HystrixCommand
-    public Map<String,Object> realname(ApiResponseEntity ARE, UserRealnameRB RB){
+    public Map<String,Object> financeRealname(ApiResponseEntity ARE, UserRealnameRB RB){
         if(StringUtils.isBlank(RB.getRealname())){
             ARE.addInfoError("realname.isEmpty", "真实姓名不能为空");
             return null;
@@ -215,7 +215,31 @@ public class UserServiceImpl {
         user_update.setRealname(RB.getRealname());
         user_update.setIdNo(RB.getIdNo());
         user_update.setAlipayNo(RB.getAlipayNo());
-        user_update.setStatus(0);
+        user_update.setFinanceStatus(1);
+        user_update.setModifyTime(new Date());
+        userMapperSelf.updateByPrimaryKeySelective(user_update);
+        return data;
+    }
+
+
+    @HystrixCommand
+    public Map<String,Object> realname(ApiResponseEntity ARE, UserRealnameRB RB){
+        if(StringUtils.isBlank(RB.getRealname())){
+            ARE.addInfoError("realname.isEmpty", "真实姓名不能为空");
+            return null;
+        }
+        if(StringUtils.isBlank(RB.getIdNo())){
+            ARE.addInfoError("idNo.isEmpty", "身份证号不能为空");
+            return null;
+        }
+
+        Map<String,Object> data = Maps.newHashMap();
+        User user_update = new User();
+        user_update.setId(ARE.getUserId());
+        user_update.setRealname(RB.getRealname());
+        user_update.setIdNo(RB.getIdNo());
+        user_update.setRegisterMobile(RB.getMobile());
+        user_update.setStatus(1);
         user_update.setModifyTime(new Date());
         userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
@@ -277,6 +301,7 @@ public class UserServiceImpl {
         UserAccount account = userMapperSelf.selectAccountById(userId);
         userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
         userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
+        userInfo.setTxGoing(userMapperSelf.selectTxGoing(userId));
         userInfo.setBlance(account.getBlance());
 
         UserVipVo userVipVo = new UserVipVo();

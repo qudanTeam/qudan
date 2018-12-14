@@ -45,6 +45,8 @@ public class User {
 
     private Integer vipLevel;
 
+    private Integer financeStatus;
+
     public Integer getId() {
         return id;
     }
@@ -211,5 +213,13 @@ public class User {
 
     public void setVipLevel(Integer vipLevel) {
         this.vipLevel = vipLevel;
+    }
+
+    public Integer getFinanceStatus() {
+        return financeStatus;
+    }
+
+    public void setFinanceStatus(Integer financeStatus) {
+        this.financeStatus = financeStatus;
     }
 }

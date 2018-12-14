@@ -29,7 +29,8 @@ public interface UserMapper {
         "modify_time, agent_id, ",
         "recommend_invite_code, invite_code, ",
         "recommend_invite_id, vip_name, ",
-        "realname, vip_level)",
+        "realname, vip_level, ",
+        "finance_status)",
         "values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, ",
         "#{userface,jdbcType=VARCHAR}, #{isenable,jdbcType=INTEGER}, ",
         "#{registerMobile,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, ",
@@ -39,7 +40,8 @@ public interface UserMapper {
         "#{modifyTime,jdbcType=TIMESTAMP}, #{agentId,jdbcType=INTEGER}, ",
         "#{recommendInviteCode,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, ",
         "#{recommendInviteId,jdbcType=BIGINT}, #{vipName,jdbcType=VARCHAR}, ",
-        "#{realname,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER})"
+        "#{realname,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER}, ",
+        "#{financeStatus,jdbcType=INTEGER})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(User record);
@@ -53,7 +55,7 @@ public interface UserMapper {
         "id, username, password, userface, isenable, register_mobile, id_no, alipay_no, ",
         "agent_level, register_time, last_login_time, status, user_type, modify_time, ",
         "agent_id, recommend_invite_code, invite_code, recommend_invite_id, vip_name, ",
-        "realname, vip_level",
+        "realname, vip_level, finance_status",
         "from user",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -78,7 +80,8 @@ public interface UserMapper {
         @Result(column="recommend_invite_id", property="recommendInviteId", jdbcType=JdbcType.BIGINT),
         @Result(column="vip_name", property="vipName", jdbcType=JdbcType.VARCHAR),
         @Result(column="realname", property="realname", jdbcType=JdbcType.VARCHAR),
-        @Result(column="vip_level", property="vipLevel", jdbcType=JdbcType.INTEGER)
+        @Result(column="vip_level", property="vipLevel", jdbcType=JdbcType.INTEGER),
+        @Result(column="finance_status", property="financeStatus", jdbcType=JdbcType.INTEGER)
     })
     User selectByPrimaryKey(Integer id);
 
@@ -106,7 +109,8 @@ public interface UserMapper {
           "recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT},",
           "vip_name = #{vipName,jdbcType=VARCHAR},",
           "realname = #{realname,jdbcType=VARCHAR},",
-          "vip_level = #{vipLevel,jdbcType=INTEGER}",
+          "vip_level = #{vipLevel,jdbcType=INTEGER},",
+          "finance_status = #{financeStatus,jdbcType=INTEGER}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(User record);
