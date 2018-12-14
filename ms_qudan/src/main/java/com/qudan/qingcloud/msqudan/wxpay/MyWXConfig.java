@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.wxpay;
 
 import com.github.wxpay.sdk.WXPayConfig;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 
@@ -10,9 +11,9 @@ import java.io.*;
 public class MyWXConfig implements WXPayConfig {
 
 
-    private String appId = "wx8888888888888888";//appId
-    private String  mchId = "12888888";//商户号
-    private String key = "88888888888888888888888888888888";//密钥key
+    private String appId = "wx5937eccb3b4a99d7";//appId
+    private String  mchId = "1520779301";//商户号
+    private String key = "g317g180q3355G2233G3344Q998ggq88";//密钥key
 
     private byte[] certData;
 
@@ -20,8 +21,7 @@ public class MyWXConfig implements WXPayConfig {
 
     public MyWXConfig() throws Exception {
         //证书位置
-        String certPath = "src/resources/apiclient_cert.p12";
-        File file = new File(certPath);
+        File file = (ResourceUtils.getFile("classpath:wxconfig/apiclient_cert.p12"));
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
         certStream.read(this.certData);
