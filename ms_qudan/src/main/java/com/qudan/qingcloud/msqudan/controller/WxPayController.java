@@ -1,7 +1,9 @@
 package com.qudan.qingcloud.msqudan.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qudan.qingcloud.msqudan.service.Impl.WxPayServiceImpl;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
+import com.qudan.qingcloud.msqudan.util.YHResult;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,15 +43,16 @@ public class WxPayController {
      * 同时指出GET POST 默认是GET
      */
     @RequestMapping(value = "wxpay/pay", method = {RequestMethod.GET, RequestMethod.POST})
-    public String orderPay(
+    public YHResult orderPay(
             @ApiParam(required = true, name = "user_id", value = "用户ID") @RequestParam(required = true,value = "user_id")String user_id,
-            @ApiParam(required = false, name = "coupon_id", value = "代金券ID") @RequestParam(required = false,value = "coupon_id")String coupon_id,
+            @ApiParam(required = false, name = "openid", value = "微信用户标识 当交易类型为JSAPI时必传") @RequestParam(required = false,value = "openid")String openid,
             @ApiParam(required = true, name = "out_trade_no", value = "商户订单号") @RequestParam(required = true,value = "out_trade_no")String out_trade_no,
             @ApiParam(required = true, name = "total_fee", value = "订单总金额，单位为分") @RequestParam(required = true,value = "total_fee")String total_fee,
             @ApiParam(required = true, name = "trade_type", value = "交易类型 JSAPI(h5浏览器调用支付) NATIVE(扫码支付) APP(手机app内支付)") @RequestParam(required = true,value = "trade_type")String trade_type,
             @ApiParam(required = false, name = "product_id", value = "商品id 交易类型为NATIVE时必传") @RequestParam(required = false,value = "product_id")String product_id,
             HttpServletRequest req, HttpServletResponse response) throws Exception {
         logggr.info("进入微信支付申请...");
+        JSONObject jsonObject = new JSONObject();
 //        Date now = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");//可以方便地修改日期格式
 //        String hehe = dateFormat.format(now);
@@ -59,17 +62,19 @@ public class WxPayController {
 //        String user_id="1";               //77777
 //        String coupon_id="7";               //777777
 
-        String attach=user_id+","+coupon_id;
+        String attach=user_id;
         MyWXConfig config = new MyWXConfig();
 //        String spbill_create_ip = GetIPAddrUtil.getIpAddr(req);
         String spbill_create_ip="47.99.242.122";
         logggr.info(spbill_create_ip);
-        Map<String,String> result = wxPayService.dounifiedOrder(trade_type,product_id,attach,out_trade_no,total_fee,spbill_create_ip,1);
+        Map<String,String> result = wxPayService.dounifiedOrder(openid,trade_type,product_id,attach,out_trade_no,total_fee,spbill_create_ip,1);
+        if(result == null){
+            return YHResult.build(500,"签名错误");
+        }
         String nonce_str = (String)result.get("nonce_str");
         String prepay_id = (String)result.get("prepay_id");
         Long time =System.currentTimeMillis()/1000;
         String timestamp=time.toString();
-
         //签名生成算法
         MD5Util md5Util = new MD5Util();
         Map<String,String> map = new HashMap<>();
@@ -85,8 +90,15 @@ public class WxPayController {
                 "\"noncestr\":\""+nonce_str+"\",\"timestamp\":"+timestamp+"," +
                 "\"prepayid\":\""+prepay_id+"\",\"sign\":\""+sign+"\"}";
         logggr.info(resultString);
+        jsonObject.put("appid",config.getAppID());
+        jsonObject.put("partnerid",config.getMchID());
+        jsonObject.put("package","Sign=WXPay");
+        jsonObject.put("noncestr",nonce_str);
+        jsonObject.put("timestamp",timestamp);
+        jsonObject.put("prepayid",prepay_id);
+        jsonObject.put("sign",sign);
 
-        return resultString;    //给前端app返回此字符串，再调用前端的微信sdk引起微信支付
+        return YHResult.build(200,"唤起支付成功!",jsonObject);    //给前端app返回此字符串，再调用前端的微信sdk引起微信支付
 
     }
 
