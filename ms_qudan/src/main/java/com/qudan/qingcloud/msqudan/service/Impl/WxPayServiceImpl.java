@@ -87,7 +87,6 @@ public class WxPayServiceImpl {
         data.put("total_fee", total_fee);
         data.put("spbill_create_ip",spbill_create_ip);
         //异步通知地址（请注意必须是外网）
-
         data.put("notify_url", "http://47.99.242.122:8763/msqudan/api/wxpay/notify");
         data.put("nonce_str",WXPayUtil.generateNonceStr());
         /**
@@ -137,7 +136,6 @@ public class WxPayServiceImpl {
                 logger.info("订单号：{},错误信息：{}",out_trade_no,returnMsg);
                 url.append(returnMsg);
             }
-
         } catch (Exception e) {
             logger.info("调取微信支付异常！！！");
             System.out.println(e);
