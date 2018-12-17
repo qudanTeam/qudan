@@ -19,6 +19,7 @@ public class UserInfo extends User {
     private BigDecimal txGoing; //提现中
     private UserAgentVo agent;
     private UserVipVo vip;
+    private String recommendUsername;
 
 
     public Boolean getIsAgent() {
@@ -83,5 +84,13 @@ public class UserInfo extends User {
 
     public void setTxGoing(BigDecimal txGoing) {
         this.txGoing = txGoing;
+    }
+
+    public String getRecommendUsername() {
+        return recommendUsername;
+    }
+
+    public void setRecommendUsername(String recommendUsername) {
+        this.recommendUsername = recommendUsername;
     }
 }

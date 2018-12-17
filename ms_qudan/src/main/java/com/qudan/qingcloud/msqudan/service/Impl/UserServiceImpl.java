@@ -298,6 +298,13 @@ public class UserServiceImpl {
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(user, userInfo);
 
+        if(user.getRecommendInviteId() != null){
+            User recommendUser = userMapperSelf.selectById(user.getRecommendInviteId().intValue());
+            if(recommendUser != null){
+                userInfo.setRecommendUsername(recommendUser.getUsername());
+            }
+        }
+
         UserAccount account = userMapperSelf.selectAccountById(userId);
         userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
         userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
