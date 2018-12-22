@@ -43,6 +43,14 @@ public class WxResourceConfig {
                     WEIXIN_SERVER_URL = "http://qudan.dev.moore.ren/";
                     WEIXIN_SERVER_API_URL = "http://qudan.dev.moore.ren/";
                     break;
+                case "idc"://刘智的测试号
+                    WEIXIN_QUDAN_APPID = "wx5937eccb3b4a99d7";
+                    WEIXIN_QUDAN_APPSECRET = "g317g180q3355G2233G3344Q998ggq88";
+                    WEIXIN_QUDAN_TOKEN = "weixinQudan";
+                    WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
+                    WEIXIN_SERVER_URL = "http://qudan.dev.moore.ren/";
+                    WEIXIN_SERVER_API_URL = "http://qudan.dev.moore.ren/";
+                    break;
             }
         } else {
 

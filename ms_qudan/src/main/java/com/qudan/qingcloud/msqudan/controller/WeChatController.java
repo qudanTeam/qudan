@@ -1,9 +1,11 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 import com.google.common.collect.Maps;
+import com.qudan.qingcloud.msqudan.service.Impl.WeixinServiceImpl;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.ErrorDetail;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
@@ -38,6 +40,7 @@ public class WeChatController {
     @Autowired private WxMpService wxMpService;
     @Autowired private WxMpMessageRouter wxMpMessageRouter;
     private static final Logger log = LoggerFactory.getLogger(WeChatController.class);
+    @Autowired private WeixinServiceImpl weixinService;
 
     @RequestMapping(value = "/router")
     public String router(HttpServletRequest request){
@@ -119,6 +122,9 @@ public class WeChatController {
                 String openId = oAuth2AccessToken.getOpenId();
                 String token = "";
                 String unionId = "";
+                if (oAuth2AccessToken.getScope().equals(WxConsts.OAUTH2_SCOPE_BASE) ) {//静默模式
+
+                }
             }
         }catch (Throwable ex){
             log.error("授权错误", ex);

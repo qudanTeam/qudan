@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
+import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class WeixinServiceImpl {
     @Autowired
     private WxMpService wxMpService;
+
+    @Autowired
+    private WeixinMapperSelf weixinMapperSelf;
 
     public WxMpQrCodeTicket getQrTicket(int sceneid, int qrType){
         try {
@@ -25,4 +29,5 @@ public class WeixinServiceImpl {
         }
         return null;
     }
+
 }
