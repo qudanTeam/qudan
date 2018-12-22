@@ -1,14 +1,13 @@
 package com.qudan.qingcloud.msqudan.util.requestBody;
 
 public class ShareAddRB {
+    private String shareid;
 
-    private String ticket;
-
-    public String getTicket() {
-        return ticket;
+    public String getShareid() {
+        return shareid;
     }
 
-    public void setTicket(String ticket) {
-        this.ticket = ticket;
+    public void setShareid(String shareid) {
+        this.shareid = shareid;
     }
 }

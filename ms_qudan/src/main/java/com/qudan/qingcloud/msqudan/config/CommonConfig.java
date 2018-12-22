@@ -30,8 +30,21 @@ public class CommonConfig {
         return qiniuUploadImageUrl;
     }
 
+    public String getQiniuUploadImageBucket() {
+        return qiniuUploadImageBucket;
+    }
 
+    public String getQiniuAccesskey() {
+        return qiniuAccesskey;
+    }
 
+    public String getQiniuSecretkey() {
+        return qiniuSecretkey;
+    }
+
+    public void setQiniuUploadImageBucket(String qiniuUploadImageBucket) {
+        this.qiniuUploadImageBucket = qiniuUploadImageBucket;
+    }
 
     @Value("${kaptcha.textproducer.font.color}")
     private String fcolor;

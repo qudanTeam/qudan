@@ -11,6 +11,8 @@ public class UserShare {
 
     private Date shareTime;
 
+    private Integer qrCodeId;
+
     public Integer getId() {
         return id;
     }
@@ -41,5 +43,13 @@ public class UserShare {
 
     public void setShareTime(Date shareTime) {
         this.shareTime = shareTime;
+    }
+
+    public Integer getQrCodeId() {
+        return qrCodeId;
+    }
+
+    public void setQrCodeId(Integer qrCodeId) {
+        this.qrCodeId = qrCodeId;
     }
 }

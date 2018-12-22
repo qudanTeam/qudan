@@ -28,6 +28,10 @@ public class UserShareSqlProvider {
             VALUES("share_time", "#{shareTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getQrCodeId() != null) {
+            VALUES("qr_code_id", "#{qrCodeId,jdbcType=INTEGER}");
+        }
+        
         return SQL();
     }
 
@@ -45,6 +49,10 @@ public class UserShareSqlProvider {
         
         if (record.getShareTime() != null) {
             SET("share_time = #{shareTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getQrCodeId() != null) {
+            SET("qr_code_id = #{qrCodeId,jdbcType=INTEGER}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

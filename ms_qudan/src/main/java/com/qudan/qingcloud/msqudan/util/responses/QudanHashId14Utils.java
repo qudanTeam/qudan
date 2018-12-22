@@ -1,14 +1,13 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
-import io.swagger.models.auth.In;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hashids.*;
+import org.hashids.Hashids;
 
-public class QudanHashIdUtils {
-    protected final static Log logger = LogFactory.getLog(QudanHashIdUtils.class);
+public class QudanHashId14Utils {
+    protected final static Log logger = LogFactory.getLog(QudanHashId14Utils.class);
 
-    static Hashids hashids = new Hashids("msqudan", 8, "0123456789abcdefghijklmnopqrstuvwxyz");
+    static Hashids hashids = new Hashids("msqudan", 14, "0123456789abcdefghijklmnopqrstuvwxyz");
     public static String encodeHashId(Integer id){
         return hashids.encode(id);
     }

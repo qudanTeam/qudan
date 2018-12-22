@@ -1,12 +1,21 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 import com.google.common.collect.Maps;
+import com.qudan.qingcloud.msqudan.entity.User;
+import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
+import com.qudan.qingcloud.msqudan.entity.WeixinUserTemp;
+import com.qudan.qingcloud.msqudan.mymapper.WeixinUserTempMapper;
+import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.WeixinServiceImpl;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.ErrorDetail;
+import com.qudan.qingcloud.msqudan.util.responses.QudanHashId14Utils;
+import com.qudan.qingcloud.msqudan.util.responses.QudanHashIdUtils;
+import com.qudan.qingcloud.msqudan.wx.LogHadler;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -15,6 +24,8 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +45,7 @@ import java.util.Map;
 @RequestMapping(value = "/wechat")
 public class WeChatController {
 
+    protected final Log logger = LogFactory.getLog(getClass());
 
     @Autowired
     private WxMpConfigStorage wxMpConfigStorage;
@@ -41,6 +53,10 @@ public class WeChatController {
     @Autowired private WxMpMessageRouter wxMpMessageRouter;
     private static final Logger log = LoggerFactory.getLogger(WeChatController.class);
     @Autowired private WeixinServiceImpl weixinService;
+    @Autowired private WeixinUserTempMapper weixinUserTempMapper;
+
+    @Autowired
+    UserServiceImpl userService;
 
     @RequestMapping(value = "/router")
     public String router(HttpServletRequest request){
@@ -107,29 +123,75 @@ public class WeChatController {
 
     @RequestMapping(value = "/oauth")
     public ResponseEntity<Map<String, Object>> oauth(@RequestParam(name = "code")String code,
-                                                     @RequestParam(name = "type",defaultValue = "0")Integer type,
+                                                     @RequestParam(name = "type",defaultValue = "1")Integer type,
                                                      HttpServletRequest request){
-        ApiResponseEntity are = new ApiResponseEntity();
+        ApiResponseEntity ARE = new ApiResponseEntity();
         WxMpOAuth2AccessToken oAuth2AccessToken = null;
         WxMpUser wxMpUser = null;
         String ip = request.getHeader("X-Real-IP");
         log.info("ip :" + ip);
         log.info(Thread.currentThread() + ",oauth start time :"+ DateUtil.getFormatDate(new Date(),"yyyy-mm-dd HH:MM:ss.SSS"));
         try {
-            if (type.equals(0)) {//用户授权
+            if (type == 1) {//用户静默授权模式
                 Map data = new HashMap();
                 oAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
                 String openId = oAuth2AccessToken.getOpenId();
-                String token = "";
-                String unionId = "";
-                if (oAuth2AccessToken.getScope().equals(WxConsts.OAUTH2_SCOPE_BASE) ) {//静默模式
-
+                WeixinBinding weixinBinding = weixinService.selectBindingByOpenId(openId);
+                User user = null;
+                if(weixinBinding != null){
+                    user = userService.getUserById(weixinBinding.getUserId());
                 }
+                //用户为空,查看时候已经关注，关注就不用在授权
+                boolean isSubscribe = false;
+                if(user == null){
+                    try {
+                        wxMpUser = wxMpService.getUserService().userInfo(openId);
+                        logger.info("subsrcibe wxMpUser:" + wxMpUser.toString());
+                        isSubscribe = wxMpUser.getSubscribe();
+                    } catch (WxErrorException e) {
+                        logger.info("get subsrcibe wxMpUser:", e);
+                    }
+                    if(isSubscribe){
+                        WeixinUserTemp wut = new WeixinUserTemp();
+                        wut.setOpenid(wxMpUser.getOpenId());
+                        wut.setUnionid(wxMpUser.getUnionId());
+                        wut.setNickname(wxMpUser.getNickname());
+                        wut.setHeadImgUrl(wxMpUser.getHeadImgUrl());
+
+                        wut.setProvince(wxMpUser.getProvince());
+                        wut.setSex(wxMpUser.getSex());
+                        wut.setCountry(wxMpUser.getCountry());
+                        wut.setLanguage(wxMpUser.getLanguage());
+                        weixinUserTempMapper.insertSelective(wut);
+                        data.put("wutid", QudanHashId14Utils.encodeHashId(wut.getId()));
+                    } else {
+                        ARE.addInfoError("oauth.Error","need_snsapi_userinfo");
+                    }
+                } else {
+                    data = userService.getToken(ARE, user);
+                }
+            } else if(type == 2) {//用户授权模式
+                Map data = new HashMap();
+                oAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+                wxMpUser = wxMpService.oauth2getUserInfo(oAuth2AccessToken, "zh_CN");
+                WeixinUserTemp wut = new WeixinUserTemp();
+                wut.setOpenid(wxMpUser.getOpenId());
+                wut.setUnionid(wxMpUser.getUnionId());
+                wut.setNickname(wxMpUser.getNickname());
+                wut.setHeadImgUrl(wxMpUser.getHeadImgUrl());
+
+                wut.setProvince(wxMpUser.getProvince());
+                wut.setSex(wxMpUser.getSex());
+                wut.setCountry(wxMpUser.getCountry());
+                wut.setLanguage(wxMpUser.getLanguage());
+                weixinUserTempMapper.insertSelective(wut);
+                data.put("wutid", wut.getId());
             }
         }catch (Throwable ex){
             log.error("授权错误", ex);
+            ARE.addInfoError("oauth.Error","system_error");
         }
-        return are.createResponseEntity();
+        return ARE.createResponseEntity();
     }
 
 
@@ -161,6 +223,8 @@ public class WeChatController {
     private void initRouter(WxMpMessageRouter wxMpMessageRouter) {
         if (!initRouter) {
             initRouter = true;
+            wxMpMessageRouter
+                    .rule().handler(new LogHadler()).end();
         }
     }
 }

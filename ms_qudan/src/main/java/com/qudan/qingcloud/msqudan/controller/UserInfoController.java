@@ -5,10 +5,7 @@ import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
-import com.qudan.qingcloud.msqudan.util.requestBody.ShareAddRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserPwRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.*;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
@@ -37,24 +34,33 @@ public class UserInfoController {
         return ARE.createResponseEntity();
     }
 
-    @GetMapping("/user/share/qrcode")
+    @PostMapping("/user/share/qrcodeurl")
+    public ResponseEntity<Map<String, Object>> getShareCodeurl(@RequestBody  ShareRB shareRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.getShareProductQrcodeUrl(ARE, shareRB));
+        return ARE.createResponseEntity();
+    }
+
+  /*  @GetMapping("/user/share/qrcode")
     public ResponseEntity<Map<String, Object>> getShareCode(@RequestParam(value = "shareType",required = true)Integer shareType, @RequestParam(value = "pid",required = true)Integer pid) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         Integer userId = LocalUserHelper.getUserId();
         ARE.setUserId(userId);
         ARE.setData(userService.getShareProductQrcode(ARE, shareType,  pid));
         return ARE.createResponseEntity();
-    }
+    }*/
 
-    @PostMapping("/user/share/addcount")
-    public ResponseEntity<Map<String, Object>> shareAddcount(@RequestBody ShareAddRB RB) {
+    @PostMapping("/user/share/addcounturl")
+    public ResponseEntity<Map<String, Object>> shareAddcounturl(@RequestBody ShareAddRB RB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         Integer userId = LocalUserHelper.getUserId();
         ARE.setUserId(userId);
-        if(RB != null && StringUtils.isNotBlank(RB.getTicket())){
-            ARE.setData(userService.addShareTime(ARE, RB.getTicket()));
+        if(RB != null && StringUtils.isNotBlank(RB.getShareid())){
+            ARE.setData(userService.addShareTime(ARE, RB.getShareid()));
         } else {
-            ARE.addInfoError("ticket.isEmpty", "不存在的ticket");
+            ARE.addInfoError("shareid.isEmpty", "不存在的shareid");
         }
         return ARE.createResponseEntity();
     }

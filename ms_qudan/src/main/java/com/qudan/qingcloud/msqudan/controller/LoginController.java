@@ -63,17 +63,18 @@ public class LoginController {
         return ARE.createResponseEntity();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> register(@RequestBody UserLoginRB userLoginRB) {
+    @PostMapping("/register/wx")
+    public ResponseEntity<Map<String, Object>> registerWx(@RequestBody UserLoginRB userLoginRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         ARE.setData(userService.register(ARE, userLoginRB));
         return ARE.createResponseEntity();
     }
 
-    @PostMapping("/wx/login")
-    public ResponseEntity<Map<String, Object>> wxlogin(WxLoginRB wxLoginRB) {
-        ApiResponseEntity ARE = new ApiResponseEntity();
 
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserLoginRB userLoginRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(userService.register(ARE, userLoginRB));
         return ARE.createResponseEntity();
     }
 

@@ -4,15 +4,18 @@ import com.github.pagehelper.Page;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.cloudClients.UserLoginClient;
+import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.*;
 import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
+import com.qudan.qingcloud.msqudan.util.requestBody.ShareRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserPwRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +30,12 @@ import java.util.Map;
 
 @Service
 public class UserServiceImpl {
+
+    @Autowired
+    WeixinUserTempMapper weixinUserTempMapper;
+
+    @Autowired
+    WeixinBindingMapper weixinBindingMapper;
 
     @Autowired
     OtherMapperSelf otherMapperSelf;
@@ -63,6 +72,12 @@ public class UserServiceImpl {
 
     @Autowired
     AgentMapperSelf agentMapperSelf;
+
+    @Autowired
+    UserShareQrCodeMapper userShareQrCodeMapper;
+
+    @Autowired
+    CommonConfig config;
 
     public Map<String,Object> loginWithValidcode(ApiResponseEntity ARE, UserLoginRB RB, User user){
         Map<String,Object> data = Maps.newHashMap();
@@ -133,7 +148,12 @@ public class UserServiceImpl {
             ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
             return null;
         }
-        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
+        int type = 1;
+        if(RB.getWutid() != null){
+            type = 5;
+        }
+        Date date = new Date();
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), type, true)){
             user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
             user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
@@ -145,8 +165,42 @@ public class UserServiceImpl {
             user.setStatus(0);
             user.setUserType(0);
             user.setModifyTime(new Date());
-            //TODO 邀请逻辑
+            WeixinBinding binding = null;
+            if(RB.getWutid() != null){
+                WeixinUserTemp wut = weixinUserTempMapper.selectByPrimaryKey(QudanHashId14Utils.decodeHashId(RB.getWutid()));
+                user.setUsername(wut.getNickname());
+                binding = new WeixinBinding();
+                binding.setOpenid(wut.getOpenid());
+                binding.setUnionid(wut.getUnionid());
+                binding.setWechatName(wut.getNickname());
+                binding.setWechatLogo(wut.getHeadImgUrl());
+                binding.setCreateTime(date);
+                binding.setModifyTime(date);
+            }
+            //邀请逻辑
+            if(StringUtils.isNotBlank(RB.getShareid())){
+                Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+                if(qrcodeId == null){
+                    ARE.addInfoError("share.shareid.isError", "无效的分享id");
+                    return null;
+                }
+                UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
+                if(qrCode == null){
+                    ARE.addInfoError("share.shareid.isError", "无效的分享id");
+                    return null;
+                }
+                User inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+
+                if(inviteUser != null){
+                    user.setRecommendInviteCode(inviteUser.getInviteCode());
+                    user.setRecommendInviteId(inviteUser.getId().longValue());
+                }
+            }
             userMapperSelf.insertSelective(user);
+            if(binding != null){
+                binding.setUserId(user.getId());
+                weixinBindingMapper.insertSelective(binding);
+            }
 
             //生成账户
             UserAccount userAccount = new UserAccount();
@@ -156,17 +210,17 @@ public class UserServiceImpl {
             userAccount.setTx(BigDecimal.ZERO);
             userAccount.setCreateTime(new Date());
             userAccount.setModifyTime(new Date());
-            data = getToken(ARE, user);
             userAccountMapper.insertSelective(userAccount);
             User user_update = new User();
             user_update.setId(user.getId());
             user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
             userMapperSelf.updateByPrimaryKeySelective(user);
+            data = getToken(ARE, user);
         }
         return data;
     }
 
-    private Map<String,Object> getToken(ApiResponseEntity ARE, User user){
+    public Map<String,Object> getToken(ApiResponseEntity ARE, User user){
         Map<String,Object> data = Maps.newHashMap();
         YHResult result = userLoginClient.appLogin(user.getUsername(), user.getId());
         if(result == null){
@@ -263,30 +317,60 @@ public class UserServiceImpl {
     }
 
     @HystrixCommand
-    public Map<String,Object> addShareTime(ApiResponseEntity ARE, String ticket){
+    public Map<String,Object> addShareTime(ApiResponseEntity ARE, String shareid){
         Map<String,Object> data = Maps.newHashMap();
         Integer userId = ARE.getUserId();
-        WeixinSceneRecord record = weixinQrMapperSelf.getQrRecordByTicket(ticket, userId);
-        if(record == null){
-            ARE.addInfoError("ticket.isNotExist", "不存在的ticket");
+        Integer qrcodeId = QudanHashId10Utils.decodeHashId(shareid);
+        if(qrcodeId == null){
+            ARE.addInfoError("share.shareid.isError", "无效的分享id");
             return null;
         }
         UserShare userShare = new UserShare();
         userShare.setShareTime(new Date());
-        userShare.setWeixinSceneId(record.getSceneId());
+        userShare.setQrCodeId(qrcodeId);
         userShare.setUserId(userId);
         userShareMapper.insertSelective(userShare);
         return data;
     }
 
     @HystrixCommand
-    public Map<String,Object> getShareProductQrcode(ApiResponseEntity ARE,Integer type, Integer productId){
+    public Map<String,Object> getShareProductQrcodeUrl(ApiResponseEntity ARE, ShareRB RB){
+        if(StringUtils.isBlank(RB.getLoadingUrl())){
+            ARE.addInfoError("share.loadingUrl.isEmpty", "loadingUrl 不能为空");
+            return null;
+        }
+        if(RB.getShareType() == null){
+            ARE.addInfoError("share.shareType.isEmpty", "shareType 不能为空");
+            return null;
+        }
+
         Map<String,Object> data = Maps.newHashMap();
         Integer userId = ARE.getUserId();
-        String params = "pid="+productId;
-        WeixinSceneRecord record = getUserTempQrRecord(userId, type, params);
-        data.put("ticket", record.getTicket());
-        data.put("qrCode", record.getQrAddress());
+        UserShareQrCode qrCode = new UserShareQrCode();
+        qrCode.setAddressUrl(null);
+        qrCode.setCreateTime(new Date());
+        qrCode.setShareType(RB.getShareType());
+        qrCode.setPid(RB.getPid());
+        qrCode.setImgUrl(null);
+        qrCode.setUserId(userId);
+        userShareQrCodeMapper.insertSelective(qrCode);
+        String shareid = QudanHashId10Utils.encodeHashId(qrCode.getId());
+
+        String loadingUrl = StringUrl.appendUri(RB.getLoadingUrl(), "shareid="+shareid);
+        if(StringUtils.isBlank(loadingUrl)){
+            ARE.addInfoError("share.loadingUrl.isError", "loadingUrl 有问题");
+            return null;
+        }
+        String qrCodeImgUrl = MatrixToImageWriter.getQrcodeUrl(config, loadingUrl);
+        UserShareQrCode qrCode_update = new UserShareQrCode();
+        qrCode_update.setId(qrCode.getId());
+        qrCode_update.setAddressUrl(loadingUrl);
+        qrCode_update.setImgUrl(qrCodeImgUrl);
+        userShareQrCodeMapper.updateByPrimaryKeySelective(qrCode_update);
+
+        data.put("qrCodeImgUrl", qrCodeImgUrl);
+        data.put("url", loadingUrl);
+        data.put("shareid", shareid);
         return data;
     }
 
@@ -501,5 +585,9 @@ public class UserServiceImpl {
             smsSendRecordMapper.updateByPrimaryKeySelective(record_update);
         }
         return true;
+    }
+
+    public User getUserById(Integer userId){
+        return userMapperSelf.selectById(userId);
     }
 }

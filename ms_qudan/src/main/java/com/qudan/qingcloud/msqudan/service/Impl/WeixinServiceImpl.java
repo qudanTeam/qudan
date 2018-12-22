@@ -1,9 +1,11 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
+import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,4 +32,8 @@ public class WeixinServiceImpl {
         return null;
     }
 
+
+    public WeixinBinding selectBindingByOpenId(String openid){
+        return weixinMapperSelf.selectBindingByOpenId(openid);
+    }
 }
