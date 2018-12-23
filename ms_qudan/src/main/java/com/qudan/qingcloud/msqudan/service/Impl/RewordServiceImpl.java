@@ -5,9 +5,11 @@ import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Service
 public class RewordServiceImpl {
 
     @Autowired
