@@ -400,7 +400,7 @@ public class UserServiceImpl {
         userInfo.setIsAgent(user.getAgentLevel() != null && user.getAgentLevel() > 0);
         userInfo.setIsVip(StringUtils.isNotBlank(user.getVipName()));
         if(userInfo.getIsVip()){
-            VipRecord record = vipMapperSelf.selectVipById(userId);
+            VipRecord record = vipMapperSelf.selectVipByUserId(userId);
             VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(record.getVipConfigId());
             userVipVo.setVipName(vipConfig.getVipName());
             userVipVo.setVipExpireDate(DateUtil.getFormatDate(record.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -592,5 +592,9 @@ public class UserServiceImpl {
 
     public User getUserById(Integer userId){
         return userMapperSelf.selectById(userId);
+    }
+
+    public UserAccount getUserAccountByUserId(Integer userId){
+        return userMapperSelf.selectAccountById(userId);
     }
 }

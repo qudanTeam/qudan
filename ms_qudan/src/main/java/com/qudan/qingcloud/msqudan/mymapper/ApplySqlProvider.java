@@ -72,6 +72,18 @@ public class ApplySqlProvider {
             VALUES("apply_id_code", "#{applyIdCode,jdbcType=VARCHAR}");
         }
         
+        if (record.getOfficialLimit() != null) {
+            VALUES("official_limit", "#{officialLimit,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getOfficialExpire() != null) {
+            VALUES("official_expire", "#{officialExpire,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getOfficialTime() != null) {
+            VALUES("official_time", "#{officialTime,jdbcType=TIMESTAMP}");
+        }
+        
         return SQL();
     }
 
@@ -133,6 +145,18 @@ public class ApplySqlProvider {
         
         if (record.getApplyIdCode() != null) {
             SET("apply_id_code = #{applyIdCode,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getOfficialLimit() != null) {
+            SET("official_limit = #{officialLimit,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getOfficialExpire() != null) {
+            SET("official_expire = #{officialExpire,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getOfficialTime() != null) {
+            SET("official_time = #{officialTime,jdbcType=TIMESTAMP}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

@@ -45,7 +45,7 @@ public class TradeTypeSqlProvider {
         }
         
         if (record.getIndirectType() != null) {
-            VALUES("indirect_type", "#{indirectType,jdbcType=VARCHAR}");
+            VALUES("indirect_type", "#{indirectType,jdbcType=INTEGER}");
         }
         
         if (record.getSendStatus() != null) {
@@ -88,6 +88,22 @@ public class TradeTypeSqlProvider {
             VALUES("reject_reason", "#{rejectReason,jdbcType=VARCHAR}");
         }
         
+        if (record.getTxName() != null) {
+            VALUES("tx_name", "#{txName,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getTxAlipayNo() != null) {
+            VALUES("tx_alipay_no", "#{txAlipayNo,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getAgentLevel() != null) {
+            VALUES("agent_level", "#{agentLevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getAgentRate() != null) {
+            VALUES("agent_rate", "#{agentRate,jdbcType=DECIMAL}");
+        }
+        
         return SQL();
     }
 
@@ -124,7 +140,7 @@ public class TradeTypeSqlProvider {
         }
         
         if (record.getIndirectType() != null) {
-            SET("indirect_type = #{indirectType,jdbcType=VARCHAR}");
+            SET("indirect_type = #{indirectType,jdbcType=INTEGER}");
         }
         
         if (record.getSendStatus() != null) {
@@ -165,6 +181,22 @@ public class TradeTypeSqlProvider {
         
         if (record.getRejectReason() != null) {
             SET("reject_reason = #{rejectReason,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getTxName() != null) {
+            SET("tx_name = #{txName,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getTxAlipayNo() != null) {
+            SET("tx_alipay_no = #{txAlipayNo,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getAgentLevel() != null) {
+            SET("agent_level = #{agentLevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getAgentRate() != null) {
+            SET("agent_rate = #{agentRate,jdbcType=DECIMAL}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

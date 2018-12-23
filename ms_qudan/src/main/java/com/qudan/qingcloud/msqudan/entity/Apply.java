@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Apply {
@@ -32,6 +33,12 @@ public class Apply {
     private String inviteCode;
 
     private String applyIdCode;
+
+    private BigDecimal officialLimit;
+
+    private String officialExpire;
+
+    private Date officialTime;
 
     public Integer getId() {
         return id;
@@ -151,5 +158,29 @@ public class Apply {
 
     public void setApplyIdCode(String applyIdCode) {
         this.applyIdCode = applyIdCode == null ? null : applyIdCode.trim();
+    }
+
+    public BigDecimal getOfficialLimit() {
+        return officialLimit;
+    }
+
+    public void setOfficialLimit(BigDecimal officialLimit) {
+        this.officialLimit = officialLimit;
+    }
+
+    public String getOfficialExpire() {
+        return officialExpire;
+    }
+
+    public void setOfficialExpire(String officialExpire) {
+        this.officialExpire = officialExpire == null ? null : officialExpire.trim();
+    }
+
+    public Date getOfficialTime() {
+        return officialTime;
+    }
+
+    public void setOfficialTime(Date officialTime) {
+        this.officialTime = officialTime;
     }
 }

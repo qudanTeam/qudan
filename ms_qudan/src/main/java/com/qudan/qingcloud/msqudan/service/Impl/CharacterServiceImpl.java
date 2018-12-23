@@ -3,9 +3,7 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.CommonConfig;
-import com.qudan.qingcloud.msqudan.entity.AgentConfig;
-import com.qudan.qingcloud.msqudan.entity.Category;
-import com.qudan.qingcloud.msqudan.entity.VipConfig;
+import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.AgentMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
@@ -45,5 +43,13 @@ public class CharacterServiceImpl {
         List<AgentConfig> agentConfigs = agentMapperSelf.selectConfigs();
         data.put("agents", agentConfigs);
         return data;
+    }
+
+    public AgentConfig getAgentByUserId(Integer userId){
+        return agentMapperSelf.selectConfigByUserId(userId);
+    }
+
+    public VipConfig getVipByUserId(Integer userId){
+        return null;
     }
 }

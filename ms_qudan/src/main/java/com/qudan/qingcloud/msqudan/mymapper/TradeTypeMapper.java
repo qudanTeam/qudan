@@ -28,16 +28,20 @@ public interface TradeTypeMapper {
         "send_time, vip_rate, ",
         "vip_level, base_price, ",
         "relation_user_id, user_id, ",
-        "vip_price, reject_reason)",
+        "vip_price, reject_reason, ",
+        "tx_name, tx_alipay_no, ",
+        "agent_level, agent_rate)",
         "values (#{tradeType,jdbcType=INTEGER}, #{applyId,jdbcType=INTEGER}, ",
         "#{price,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, ",
         "#{modifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, ",
-        "#{account,jdbcType=INTEGER}, #{indirectType,jdbcType=VARCHAR}, ",
+        "#{account,jdbcType=INTEGER}, #{indirectType,jdbcType=INTEGER}, ",
         "#{sendStatus,jdbcType=INTEGER}, #{auditTime,jdbcType=TIMESTAMP}, ",
         "#{sendTime,jdbcType=TIMESTAMP}, #{vipRate,jdbcType=DECIMAL}, ",
         "#{vipLevel,jdbcType=SMALLINT}, #{basePrice,jdbcType=DECIMAL}, ",
         "#{relationUserId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, ",
-        "#{vipPrice,jdbcType=DECIMAL}, #{rejectReason,jdbcType=VARCHAR})"
+        "#{vipPrice,jdbcType=DECIMAL}, #{rejectReason,jdbcType=VARCHAR}, ",
+        "#{txName,jdbcType=VARCHAR}, #{txAlipayNo,jdbcType=VARCHAR}, ",
+        "#{agentLevel,jdbcType=INTEGER}, #{agentRate,jdbcType=DECIMAL})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(TradeType record);
@@ -50,7 +54,8 @@ public interface TradeTypeMapper {
         "select",
         "id, trade_type, apply_id, price, create_time, modify_time, status, account, ",
         "indirect_type, send_status, audit_time, send_time, vip_rate, vip_level, base_price, ",
-        "relation_user_id, user_id, vip_price, reject_reason",
+        "relation_user_id, user_id, vip_price, reject_reason, tx_name, tx_alipay_no, ",
+        "agent_level, agent_rate",
         "from trade_type",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -63,7 +68,7 @@ public interface TradeTypeMapper {
         @Result(column="modify_time", property="modifyTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="status", property="status", jdbcType=JdbcType.INTEGER),
         @Result(column="account", property="account", jdbcType=JdbcType.INTEGER),
-        @Result(column="indirect_type", property="indirectType", jdbcType=JdbcType.VARCHAR),
+        @Result(column="indirect_type", property="indirectType", jdbcType=JdbcType.INTEGER),
         @Result(column="send_status", property="sendStatus", jdbcType=JdbcType.INTEGER),
         @Result(column="audit_time", property="auditTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="send_time", property="sendTime", jdbcType=JdbcType.TIMESTAMP),
@@ -73,7 +78,11 @@ public interface TradeTypeMapper {
         @Result(column="relation_user_id", property="relationUserId", jdbcType=JdbcType.INTEGER),
         @Result(column="user_id", property="userId", jdbcType=JdbcType.INTEGER),
         @Result(column="vip_price", property="vipPrice", jdbcType=JdbcType.DECIMAL),
-        @Result(column="reject_reason", property="rejectReason", jdbcType=JdbcType.VARCHAR)
+        @Result(column="reject_reason", property="rejectReason", jdbcType=JdbcType.VARCHAR),
+        @Result(column="tx_name", property="txName", jdbcType=JdbcType.VARCHAR),
+        @Result(column="tx_alipay_no", property="txAlipayNo", jdbcType=JdbcType.VARCHAR),
+        @Result(column="agent_level", property="agentLevel", jdbcType=JdbcType.INTEGER),
+        @Result(column="agent_rate", property="agentRate", jdbcType=JdbcType.DECIMAL)
     })
     TradeType selectByPrimaryKey(Integer id);
 
@@ -89,7 +98,7 @@ public interface TradeTypeMapper {
           "modify_time = #{modifyTime,jdbcType=TIMESTAMP},",
           "status = #{status,jdbcType=INTEGER},",
           "account = #{account,jdbcType=INTEGER},",
-          "indirect_type = #{indirectType,jdbcType=VARCHAR},",
+          "indirect_type = #{indirectType,jdbcType=INTEGER},",
           "send_status = #{sendStatus,jdbcType=INTEGER},",
           "audit_time = #{auditTime,jdbcType=TIMESTAMP},",
           "send_time = #{sendTime,jdbcType=TIMESTAMP},",
@@ -99,7 +108,11 @@ public interface TradeTypeMapper {
           "relation_user_id = #{relationUserId,jdbcType=INTEGER},",
           "user_id = #{userId,jdbcType=INTEGER},",
           "vip_price = #{vipPrice,jdbcType=DECIMAL},",
-          "reject_reason = #{rejectReason,jdbcType=VARCHAR}",
+          "reject_reason = #{rejectReason,jdbcType=VARCHAR},",
+          "tx_name = #{txName,jdbcType=VARCHAR},",
+          "tx_alipay_no = #{txAlipayNo,jdbcType=VARCHAR},",
+          "agent_level = #{agentLevel,jdbcType=INTEGER},",
+          "agent_rate = #{agentRate,jdbcType=DECIMAL}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(TradeType record);

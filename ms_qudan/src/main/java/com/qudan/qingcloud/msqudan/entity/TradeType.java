@@ -20,7 +20,7 @@ public class TradeType {
 
     private Integer account;
 
-    private String indirectType;
+    private Integer indirectType;
 
     private Integer sendStatus;
 
@@ -41,6 +41,14 @@ public class TradeType {
     private BigDecimal vipPrice;
 
     private String rejectReason;
+
+    private String txName;
+
+    private String txAlipayNo;
+
+    private Integer agentLevel;
+
+    private BigDecimal agentRate;
 
     public Integer getId() {
         return id;
@@ -106,12 +114,12 @@ public class TradeType {
         this.account = account;
     }
 
-    public String getIndirectType() {
+    public Integer getIndirectType() {
         return indirectType;
     }
 
-    public void setIndirectType(String indirectType) {
-        this.indirectType = indirectType == null ? null : indirectType.trim();
+    public void setIndirectType(Integer indirectType) {
+        this.indirectType = indirectType;
     }
 
     public Integer getSendStatus() {
@@ -192,5 +200,37 @@ public class TradeType {
 
     public void setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason == null ? null : rejectReason.trim();
+    }
+
+    public String getTxName() {
+        return txName;
+    }
+
+    public void setTxName(String txName) {
+        this.txName = txName == null ? null : txName.trim();
+    }
+
+    public String getTxAlipayNo() {
+        return txAlipayNo;
+    }
+
+    public void setTxAlipayNo(String txAlipayNo) {
+        this.txAlipayNo = txAlipayNo == null ? null : txAlipayNo.trim();
+    }
+
+    public Integer getAgentLevel() {
+        return agentLevel;
+    }
+
+    public void setAgentLevel(Integer agentLevel) {
+        this.agentLevel = agentLevel;
+    }
+
+    public BigDecimal getAgentRate() {
+        return agentRate;
+    }
+
+    public void setAgentRate(BigDecimal agentRate) {
+        this.agentRate = agentRate;
     }
 }

@@ -7,6 +7,7 @@ public class ApplyRB {
     private String mobile;
     private String idNo;
     private String validcode;
+    private String shareid;
 
     public Integer getProductId() {
         return productId;
@@ -54,5 +55,13 @@ public class ApplyRB {
 
     public void setValidcode(String validcode) {
         this.validcode = validcode;
+    }
+
+    public String getShareid() {
+        return shareid;
+    }
+
+    public void setShareid(String shareid) {
+        this.shareid = shareid;
     }
 }

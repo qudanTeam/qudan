@@ -26,14 +26,16 @@ public interface ApplyMapper {
         "status, official_status, ",
         "last_official_query, reject_reason, ",
         "salary_status, invite_code, ",
-        "apply_id_code)",
+        "apply_id_code, official_limit, ",
+        "official_expire, official_time)",
         "values (#{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, ",
         "#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, ",
         "#{mobile,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, ",
         "#{status,jdbcType=INTEGER}, #{officialStatus,jdbcType=INTEGER}, ",
         "#{lastOfficialQuery,jdbcType=TIMESTAMP}, #{rejectReason,jdbcType=VARCHAR}, ",
         "#{salaryStatus,jdbcType=INTEGER}, #{inviteCode,jdbcType=VARCHAR}, ",
-        "#{applyIdCode,jdbcType=VARCHAR})"
+        "#{applyIdCode,jdbcType=VARCHAR}, #{officialLimit,jdbcType=DECIMAL}, ",
+        "#{officialExpire,jdbcType=VARCHAR}, #{officialTime,jdbcType=TIMESTAMP})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(Apply record);
@@ -46,7 +48,7 @@ public interface ApplyMapper {
         "select",
         "id, user_id, product_id, create_time, modify_time, mobile, name, id_no, status, ",
         "official_status, last_official_query, reject_reason, salary_status, invite_code, ",
-        "apply_id_code",
+        "apply_id_code, official_limit, official_expire, official_time",
         "from apply",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -65,7 +67,10 @@ public interface ApplyMapper {
         @Result(column="reject_reason", property="rejectReason", jdbcType=JdbcType.VARCHAR),
         @Result(column="salary_status", property="salaryStatus", jdbcType=JdbcType.INTEGER),
         @Result(column="invite_code", property="inviteCode", jdbcType=JdbcType.VARCHAR),
-        @Result(column="apply_id_code", property="applyIdCode", jdbcType=JdbcType.VARCHAR)
+        @Result(column="apply_id_code", property="applyIdCode", jdbcType=JdbcType.VARCHAR),
+        @Result(column="official_limit", property="officialLimit", jdbcType=JdbcType.DECIMAL),
+        @Result(column="official_expire", property="officialExpire", jdbcType=JdbcType.VARCHAR),
+        @Result(column="official_time", property="officialTime", jdbcType=JdbcType.TIMESTAMP)
     })
     Apply selectByPrimaryKey(Integer id);
 
@@ -87,7 +92,10 @@ public interface ApplyMapper {
           "reject_reason = #{rejectReason,jdbcType=VARCHAR},",
           "salary_status = #{salaryStatus,jdbcType=INTEGER},",
           "invite_code = #{inviteCode,jdbcType=VARCHAR},",
-          "apply_id_code = #{applyIdCode,jdbcType=VARCHAR}",
+          "apply_id_code = #{applyIdCode,jdbcType=VARCHAR},",
+          "official_limit = #{officialLimit,jdbcType=DECIMAL},",
+          "official_expire = #{officialExpire,jdbcType=VARCHAR},",
+          "official_time = #{officialTime,jdbcType=TIMESTAMP}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Apply record);
