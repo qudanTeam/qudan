@@ -6,6 +6,18 @@
     <property name="LOG_DIR" value="/data/log/msqudan/" />
     <property name="APP_NAME" value="msqudan" />
 
+    <!-- 文件输出日志(Default) -->
+    <appender name="default-log-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_DIR}/${APP_NAME}(${HOSTNAME})-default-current.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/history/${APP_NAME}(${HOSTNAME})-debug-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <Pattern>[%d{HH:mm:ss}] [%thread] |%level| %marker %logger{50} -> %X{rpid} %msg %n%ex</Pattern>
+        </encoder>
+    </appender>
+
     <!-- MyBatis日志 -->
     <appender name="mybatis-log-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_DIR}/${APP_NAME}(${HOSTNAME})-mybatis-current.log</File>
@@ -18,17 +30,37 @@
         </encoder>
     </appender>
 
+    <!-- 文件输出日志(ERROR) -->
+    <appender name="error-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_DIR}/${APP_NAME}(${HOSTNAME})-error-current.log</File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/history/${APP_NAME}(${HOSTNAME})-error-%d{yyyy-MM}.log.zip</fileNamePattern>
+            <maxHistory>12</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <Pattern>[%d{dd|HH:mm:ss}] [%thread] |%level| %marker %logger{50} -> %X{rpid} %msg %n%ex</Pattern>
+        </encoder>
+    </appender>
+
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} | msqudan | %-5level | %thread | %logger{56}.%method | %L : %msg%n</Pattern>
         </encoder>
     </appender>
 
-    <logger name="com.qudan.qingcloud.msqudan.mymapper" level="DEBUG" >
+    <logger name="com.qudan.qingcloud.msqudan.mymapper" level="INFO" >
 
     </logger>
 
     <root level="INFO">
+        <appender-ref ref="default-log-file" />
+        <appender-ref ref="mybatis-log-file" />
+        <appender-ref ref="error-file" />
         <appender-ref ref="stdout" />
     </root>
 </configuration>

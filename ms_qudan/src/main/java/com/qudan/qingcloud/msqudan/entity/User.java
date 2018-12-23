@@ -37,7 +37,7 @@ public class User {
 
     private String inviteCode;
 
-    private Long recommendInviteId;
+    private Integer recommendInviteId;
 
     private String vipName;
 
@@ -183,11 +183,11 @@ public class User {
         this.inviteCode = inviteCode == null ? null : inviteCode.trim();
     }
 
-    public Long getRecommendInviteId() {
+    public Integer getRecommendInviteId() {
         return recommendInviteId;
     }
 
-    public void setRecommendInviteId(Long recommendInviteId) {
+    public void setRecommendInviteId(Integer recommendInviteId) {
         this.recommendInviteId = recommendInviteId;
     }
 

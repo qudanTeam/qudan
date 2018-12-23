@@ -193,7 +193,7 @@ public class UserServiceImpl {
 
                 if(inviteUser != null){
                     user.setRecommendInviteCode(inviteUser.getInviteCode());
-                    user.setRecommendInviteId(inviteUser.getId().longValue());
+                    user.setRecommendInviteId(inviteUser.getId());
                 }
             }
             userMapperSelf.insertSelective(user);
@@ -383,7 +383,7 @@ public class UserServiceImpl {
         BeanUtils.copyProperties(user, userInfo);
 
         if(user.getRecommendInviteId() != null){
-            User recommendUser = userMapperSelf.selectById(user.getRecommendInviteId().intValue());
+            User recommendUser = userMapperSelf.selectById(user.getRecommendInviteId());
             if(recommendUser != null){
                 userInfo.setRecommendUsername(recommendUser.getUsername());
             }

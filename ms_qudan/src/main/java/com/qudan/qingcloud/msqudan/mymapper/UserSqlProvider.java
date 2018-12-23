@@ -81,7 +81,7 @@ public class UserSqlProvider {
         }
         
         if (record.getRecommendInviteId() != null) {
-            VALUES("recommend_invite_id", "#{recommendInviteId,jdbcType=BIGINT}");
+            VALUES("recommend_invite_id", "#{recommendInviteId,jdbcType=INTEGER}");
         }
         
         if (record.getVipName() != null) {
@@ -172,7 +172,7 @@ public class UserSqlProvider {
         }
         
         if (record.getRecommendInviteId() != null) {
-            SET("recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT}");
+            SET("recommend_invite_id = #{recommendInviteId,jdbcType=INTEGER}");
         }
         
         if (record.getVipName() != null) {

@@ -39,7 +39,7 @@ public interface UserMapper {
         "#{status,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, ",
         "#{modifyTime,jdbcType=TIMESTAMP}, #{agentId,jdbcType=INTEGER}, ",
         "#{recommendInviteCode,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, ",
-        "#{recommendInviteId,jdbcType=BIGINT}, #{vipName,jdbcType=VARCHAR}, ",
+        "#{recommendInviteId,jdbcType=INTEGER}, #{vipName,jdbcType=VARCHAR}, ",
         "#{realname,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER}, ",
         "#{financeStatus,jdbcType=INTEGER})"
     })
@@ -77,7 +77,7 @@ public interface UserMapper {
         @Result(column="agent_id", property="agentId", jdbcType=JdbcType.INTEGER),
         @Result(column="recommend_invite_code", property="recommendInviteCode", jdbcType=JdbcType.VARCHAR),
         @Result(column="invite_code", property="inviteCode", jdbcType=JdbcType.VARCHAR),
-        @Result(column="recommend_invite_id", property="recommendInviteId", jdbcType=JdbcType.BIGINT),
+        @Result(column="recommend_invite_id", property="recommendInviteId", jdbcType=JdbcType.INTEGER),
         @Result(column="vip_name", property="vipName", jdbcType=JdbcType.VARCHAR),
         @Result(column="realname", property="realname", jdbcType=JdbcType.VARCHAR),
         @Result(column="vip_level", property="vipLevel", jdbcType=JdbcType.INTEGER),
@@ -106,7 +106,7 @@ public interface UserMapper {
           "agent_id = #{agentId,jdbcType=INTEGER},",
           "recommend_invite_code = #{recommendInviteCode,jdbcType=VARCHAR},",
           "invite_code = #{inviteCode,jdbcType=VARCHAR},",
-          "recommend_invite_id = #{recommendInviteId,jdbcType=BIGINT},",
+          "recommend_invite_id = #{recommendInviteId,jdbcType=INTEGER},",
           "vip_name = #{vipName,jdbcType=VARCHAR},",
           "realname = #{realname,jdbcType=VARCHAR},",
           "vip_level = #{vipLevel,jdbcType=INTEGER},",

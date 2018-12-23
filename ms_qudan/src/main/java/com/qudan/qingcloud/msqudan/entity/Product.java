@@ -58,7 +58,7 @@ public class Product {
 
     private Integer cStart;
 
-    private String cLimit;
+    private Integer cLimit;
 
     private BigDecimal aLevelReward;
 
@@ -330,12 +330,12 @@ public class Product {
         this.cStart = cStart;
     }
 
-    public String getcLimit() {
+    public Integer getcLimit() {
         return cLimit;
     }
 
-    public void setcLimit(String cLimit) {
-        this.cLimit = cLimit == null ? null : cLimit.trim();
+    public void setcLimit(Integer cLimit) {
+        this.cLimit = cLimit;
     }
 
     public BigDecimal getaLevelReward() {

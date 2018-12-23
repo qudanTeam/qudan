@@ -38,4 +38,6 @@ public class ApplyController {
         ARE.setData(applyService.loanApply(ARE, RB));
         return ARE.createResponseEntity();
     }
+
+
 }

@@ -5,6 +5,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.entity.Apply;
 import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.entity.Product;
+import com.qudan.qingcloud.msqudan.entity.User;
 import com.qudan.qingcloud.msqudan.mymapper.ApplyMapper;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
@@ -35,6 +36,44 @@ public class ApplyServiceImpl {
 
     @Autowired
     private UserServiceImpl userService;
+
+    public Map<String,Object> settlement(ApiResponseEntity ARE, Integer applyId){
+        Apply apply = applyMapperSelf.selectByPrimaryKey(applyId);
+        User user = userService.getUserById(apply.getUserId());
+        User shareUser = null;
+        User inviteUser = null;
+        User userDL = null;
+        String code = apply.getInviteCode();
+        if(StringUtils.isNotBlank(code)){
+            Integer shareUserId = QudanHashIdUtils.decodeHashId(code);
+            if(shareUserId != null){
+                shareUser = userService.getUserById(shareUserId);
+            }
+        }
+        if(user.getRecommendInviteId() != null){
+            inviteUser = userService.getUserById(user.getRecommendInviteId());
+        }
+
+        if(inviteUser != null && inviteUser.getRecommendInviteId() != null){
+            userDL = userService.getUserById(inviteUser.getRecommendInviteId());
+        }
+
+        //是否是点分享链接的
+        boolean isShare = shareUser == null;
+        //是否用邀请人
+        boolean isInvite = inviteUser == null;
+        //是否有代理链条
+        boolean isDL = userDL == null;
+
+        if(isDL){
+
+        }
+        //业绩人
+        //奖励人
+        //分用人
+
+        return null;
+    }
 
     @HystrixCommand
     public Map<String,Object> loanApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){

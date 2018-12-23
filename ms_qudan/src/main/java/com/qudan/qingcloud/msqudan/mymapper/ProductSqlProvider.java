@@ -121,7 +121,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getcLimit() != null) {
-            VALUES("c_limit", "#{cLimit,jdbcType=VARCHAR}");
+            VALUES("c_limit", "#{cLimit,jdbcType=INTEGER}");
         }
         
         if (record.getaLevelReward() != null) {
@@ -344,7 +344,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getcLimit() != null) {
-            SET("c_limit = #{cLimit,jdbcType=VARCHAR}");
+            SET("c_limit = #{cLimit,jdbcType=INTEGER}");
         }
         
         if (record.getaLevelReward() != null) {
