@@ -48,8 +48,8 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_APPSECRET = "g317g180q3355G2233G3344Q998ggq88";
                     WEIXIN_QUDAN_TOKEN = "weixinQudan";
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
-                    WEIXIN_SERVER_URL = "http://qudan.dev.moore.ren/";
-                    WEIXIN_SERVER_API_URL = "http://qudan.dev.moore.ren/";
+                    WEIXIN_SERVER_URL = "http://msqudan.lccqj.xin";
+                    WEIXIN_SERVER_API_URL = "http://msqudan.lccqj.xin/msquan/api";
                     break;
             }
         } else {
