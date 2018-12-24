@@ -133,6 +133,109 @@ public class UserServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> registerWx(ApiResponseEntity ARE, UserLoginRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(RB.getMobile())){
+            ARE.addInfoError("mobile.isEmpty", "手机号不能为空");
+            return null;
+        }
+        if(StringUtils.isBlank(RB.getWutid())){
+            ARE.addInfoError("wutid.isEmpty", "微信信息id不能为空");
+            return null;
+        }
+
+        Date date = new Date();
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 5, true)){
+            WeixinUserTemp wut = weixinUserTempMapper.selectByPrimaryKey(QudanHashId14Utils.decodeHashId(RB.getWutid()));
+            WeixinBinding openidBind = weixinService.selectBindingByOpenId(wut.getOpenid());
+       /*     User openidUser = null;
+            if(openidBind != null){
+                openidUser = userMapperSelf.selectById(openidBind.getUserId());
+            }*/
+
+            User mobileuser = userMapperSelf.selectUserByMobile(RB.getMobile());
+          /*  WeixinBinding userBing = null;
+            if(mobileuser != null){
+                userBing = weixinService.selectBindingByUserId(mobileuser.getId());
+            }*/
+
+            User user = null;
+            WeixinBinding binding = null;
+            if(openidBind == null && mobileuser == null){
+                user = new User();
+                user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
+                user.setUserface(MatrixToImageWriter.getWeixinTx(
+                        config, wut.getHeadImgUrl()
+                ));
+                user.setIsenable(1);
+                user.setRegisterMobile(RB.getMobile());
+                user.setRegisterTime(new Date());
+                user.setLastLoginTime(new Date());
+                user.setStatus(0);
+                user.setUserType(0);
+                user.setModifyTime(new Date());
+                user.setUsername(wut.getNickname());
+
+                binding.setWechatLogo(wut.getHeadImgUrl());
+
+                //邀请逻辑,未注册 才有邀请逻辑
+                if(StringUtils.isNotBlank(RB.getShareid())){
+                    Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+                    if(qrcodeId == null){
+                        ARE.addInfoError("share.shareid.isError", "无效的分享id");
+                        return null;
+                    }
+                    UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
+                    if(qrCode == null){
+                        ARE.addInfoError("share.shareid.isError", "无效的分享id");
+                        return null;
+                    }
+                    User inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+
+                    if(inviteUser != null){
+                        user.setRecommendInviteCode(inviteUser.getInviteCode());
+                        user.setRecommendInviteId(inviteUser.getId());
+                    }
+                }
+                userMapperSelf.insertSelective(user);
+                //生成账户
+                UserAccount userAccount = new UserAccount();
+                userAccount.setUserId(user.getId());
+                userAccount.setBlance(BigDecimal.ZERO);
+                userAccount.setAllowTx(BigDecimal.ZERO);
+                userAccount.setTx(BigDecimal.ZERO);
+                userAccount.setCreateTime(new Date());
+                userAccount.setModifyTime(new Date());
+                userAccountMapper.insertSelective(userAccount);
+                User user_update = new User();
+                user_update.setId(user.getId());
+                user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
+                userMapperSelf.updateByPrimaryKeySelective(user);
+                data = getToken(ARE, user);
+            } else if(openidBind != null && mobileuser == null){
+                ARE.addInfoError("openid.binging.isExist", "微信号绑定关系已存在，不需要在绑定了!");
+                return null;
+            } else if(openidBind == null && mobileuser != null){
+                user = mobileuser;
+            } else if(openidBind != null && mobileuser != null){
+                ARE.addInfoError("openid.bingingAndMoblie.isExist", "手机号，微信号绑定关系已存在，不需要在绑定了!");
+                return null;
+            }
+
+            binding = new WeixinBinding();
+            binding.setOpenid(wut.getOpenid());
+            binding.setUnionid(wut.getUnionid());
+            binding.setWechatName(wut.getNickname());
+            binding.setWechatLogo(wut.getHeadImgUrl());
+            binding.setCreateTime(date);
+            binding.setModifyTime(date);
+            binding.setUserId(user.getId());
+            weixinBindingMapper.insertSelective(binding);
+        }
+        return data;
+    }
+
+    @HystrixCommand
     public Map<String,Object> register(ApiResponseEntity ARE, UserLoginRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(StringUtils.isBlank(RB.getMobile())){
@@ -148,12 +251,9 @@ public class UserServiceImpl {
             ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
             return null;
         }
-        int type = 1;
-        if(RB.getWutid() != null){
-            type = 5;
-        }
+
         Date date = new Date();
-        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), type, true)){
+        if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
             user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
             user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
@@ -165,18 +265,6 @@ public class UserServiceImpl {
             user.setStatus(0);
             user.setUserType(0);
             user.setModifyTime(new Date());
-            WeixinBinding binding = null;
-            if(RB.getWutid() != null){
-                WeixinUserTemp wut = weixinUserTempMapper.selectByPrimaryKey(QudanHashId14Utils.decodeHashId(RB.getWutid()));
-                user.setUsername(wut.getNickname());
-                binding = new WeixinBinding();
-                binding.setOpenid(wut.getOpenid());
-                binding.setUnionid(wut.getUnionid());
-                binding.setWechatName(wut.getNickname());
-                binding.setWechatLogo(wut.getHeadImgUrl());
-                binding.setCreateTime(date);
-                binding.setModifyTime(date);
-            }
             //邀请逻辑
             if(StringUtils.isNotBlank(RB.getShareid())){
                 Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
@@ -197,10 +285,6 @@ public class UserServiceImpl {
                 }
             }
             userMapperSelf.insertSelective(user);
-            if(binding != null){
-                binding.setUserId(user.getId());
-                weixinBindingMapper.insertSelective(binding);
-            }
 
             //生成账户
             UserAccount userAccount = new UserAccount();

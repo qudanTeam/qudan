@@ -66,7 +66,7 @@ public class LoginController {
     @PostMapping("/register/wx")
     public ResponseEntity<Map<String, Object>> registerWx(@RequestBody UserLoginRB userLoginRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();
-        ARE.setData(userService.register(ARE, userLoginRB));
+        ARE.setData(userService.registerWx(ARE, userLoginRB));
         return ARE.createResponseEntity();
     }
 

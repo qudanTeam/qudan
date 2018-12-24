@@ -6,6 +6,8 @@ import java.io.*;
 
 import javax.imageio.ImageIO;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Hashtable;
 
 import com.google.zxing.common.BitMatrix;
@@ -56,6 +58,12 @@ public class MatrixToImageWriter {
         if (!ImageIO.write(image, format, stream)) {
             throw new IOException("Could not write an image of format " + format);
         }
+    }
+
+    public static String getWeixinTx(CommonConfig config, String imgURL){
+        byte[] data = ImageUtils.GetImageDataStrFromUrl(imgURL);
+        String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/users/face/", RandomUtils.generateMixString(12), data).upload();
+        return ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
     }
 
     public static String getQrcodeUrl(CommonConfig config, String url){

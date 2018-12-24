@@ -36,4 +36,8 @@ public class WeixinServiceImpl {
     public WeixinBinding selectBindingByOpenId(String openid){
         return weixinMapperSelf.selectBindingByOpenId(openid);
     }
+
+    public WeixinBinding selectBindingByUserId(Integer userid){
+        return weixinMapperSelf.selectBindingByUserId(userid);
+    }
 }

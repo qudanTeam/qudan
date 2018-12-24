@@ -37,6 +37,26 @@ public class ImageUtils {
         return encoder.encode(data);
     }
 
+    public static final byte[] GetImageDataStrFromUrl(String imgURL) {
+        byte[] data = null;
+        try {
+            // 创建URL
+            URL url = new URL(imgURL);
+            // 创建链接
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(50* 1000);
+            InputStream inStream = conn.getInputStream();
+            data = input2byte(inStream);
+            inStream.close();
+            conn.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return data;
+    }
+
     private static final byte[] input2byte(InputStream inStream)
             throws IOException {
         ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
