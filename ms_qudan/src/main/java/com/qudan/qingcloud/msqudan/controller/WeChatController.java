@@ -186,12 +186,15 @@ public class WeChatController {
                         wut.setLanguage(wxMpUser.getLanguage());
                         weixinUserTempMapper.insertSelective(wut);
                         data.put("wutid", QudanHashId14Utils.encodeHashId(wut.getId()));
+                        ARE.setData(data);
                     } else {
                         ARE.addInfoError("oauth.Error","need_snsapi_userinfo");
                     }
                 } else {
                     data = userService.getToken(ARE, user);
+                    ARE.setData(data);
                 }
+                ARE.setData(data);
             } else if(type == 2) {//用户授权模式
                 Map data = new HashMap();
                 oAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
@@ -208,6 +211,7 @@ public class WeChatController {
                 wut.setLanguage(wxMpUser.getLanguage());
                 weixinUserTempMapper.insertSelective(wut);
                 data.put("wutid", wut.getId());
+                ARE.setData(data);
             }
         }catch (Throwable ex){
             log.error("授权错误", ex);
