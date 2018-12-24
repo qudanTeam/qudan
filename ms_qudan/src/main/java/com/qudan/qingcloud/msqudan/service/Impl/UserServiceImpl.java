@@ -175,6 +175,7 @@ public class UserServiceImpl {
                 user.setUserType(0);
                 user.setModifyTime(new Date());
                 user.setUsername(wut.getNickname());
+                user.setPassword(PasswordUtils.encodePassword("123456"));
 
                 binding.setWechatLogo(wut.getHeadImgUrl());
 
