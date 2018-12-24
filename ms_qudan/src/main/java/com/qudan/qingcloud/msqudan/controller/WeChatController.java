@@ -120,6 +120,27 @@ public class WeChatController {
         return "";
     }
 
+    @RequestMapping(value = "/getat")
+    public ResponseEntity<Map<String, Object>> getat(@RequestParam(name = "key")String key) {
+
+        ApiResponseEntity are = new ApiResponseEntity();
+
+        if (!"qudan".equals(key)) {
+            are.addInfoError(new ErrorDetail("params","key.error","参数错误"));
+            return are.createResponseEntity();
+        }
+
+        Map<String,Object> data = Maps.newHashMap();
+        try {
+            data.put("token",wxMpService.getAccessToken());
+            are.setData(data);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            are.addInfoError(new ErrorDetail("params","params.error","系统异常"));
+        }
+
+        return are.createResponseEntity();
+    }
 
     @RequestMapping(value = "/oauth")
     public ResponseEntity<Map<String, Object>> oauth(@RequestParam(name = "code")String code,
