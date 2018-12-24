@@ -45,7 +45,7 @@ public class WxResourceConfig {
                     break;
                 case "idc"://刘智的测试号
                     WEIXIN_QUDAN_APPID = "wx5937eccb3b4a99d7";
-                    WEIXIN_QUDAN_APPSECRET = "g317g180q3355G2233G3344Q998ggq88";
+                    WEIXIN_QUDAN_APPSECRET = "861f22c47a40774f26e7f44b472069e7";
                     WEIXIN_QUDAN_TOKEN = "weixinQudan";
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
                     WEIXIN_SERVER_URL = "http://msqudan.lccqj.xin";
@@ -62,7 +62,6 @@ public class WxResourceConfig {
     WxMpConfigStorage wxMpConfigStorage(){
         WxMpConfigStorage storage = new WxMpInDataSourceConfigStorage(WEIXIN_QUDAN_APPID,WEIXIN_QUDAN_APPSECRET,
                 WEIXIN_QUDAN_TOKEN,WEIXIN_QUDAN_ENCODINGAESKEY);
-
         return storage;
     }
 
