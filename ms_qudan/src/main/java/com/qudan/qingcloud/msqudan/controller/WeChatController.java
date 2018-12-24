@@ -136,6 +136,7 @@ public class WeChatController {
             are.setData(data);
         } catch (WxErrorException e) {
             e.printStackTrace();
+            log.error("获取token出错", e);
             are.addInfoError(new ErrorDetail("params","params.error","系统异常"));
         }
 
