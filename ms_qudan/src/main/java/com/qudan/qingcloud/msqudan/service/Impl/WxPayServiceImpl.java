@@ -222,7 +222,7 @@ public class WxPayServiceImpl {
                         payOrder.setOrderStatus("1");
                         Example example = new Example(PayOrder.class);//实例化
                         Example.Criteria criteria = example.createCriteria();
-                        criteria.andEqualTo(out_trade_no);
+                        criteria.andEqualTo("order_id",out_trade_no);
                         payOrderMapper.updateByExampleSelective(payOrder,example);
                         logger.info(">>>>>支付成功");
                         logger.info("微信手机支付回调成功订单号:{}",out_trade_no);
@@ -234,7 +234,7 @@ public class WxPayServiceImpl {
                         payOrder.setOrderStatus("2");
                         Example example = new Example(PayOrder.class);//实例化
                         Example.Criteria criteria = example.createCriteria();
-                        criteria.andEqualTo(out_trade_no);
+                        criteria.andEqualTo("order_id",out_trade_no);
                         payOrderMapper.updateByExampleSelective(payOrder,example);
                         logger.info("微信手机支付回调失败订单号:{}",out_trade_no);
                         xmlBack = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
