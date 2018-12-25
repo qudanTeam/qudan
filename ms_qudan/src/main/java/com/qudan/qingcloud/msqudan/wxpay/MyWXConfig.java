@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.wxpay;
 
 import com.github.wxpay.sdk.WXPayConfig;
+import org.bouncycastle.util.test.Test;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
@@ -20,10 +21,13 @@ public class MyWXConfig implements WXPayConfig {
     private static MyWXConfig INSTANCE;
 
     public MyWXConfig() throws Exception {
-        //证书位置
-        File file = (ResourceUtils.getFile("classpath:wxconfig/apiclient_cert.p12"));
-        InputStream certStream = new FileInputStream(file);
-        this.certData = new byte[(int) file.length()];
+        //证书位置(本地读法)
+//        File file = (ResourceUtils.getFile("classpath:wxconfig/apiclient_cert.p12"));
+//        InputStream certStream = new FileInputStream(file);
+//        this.certData = new byte[(int) file.length()];
+        //打包后的读法
+        InputStream certStream=Test.class.getResourceAsStream("/wxconfig/apiclient_cert.p12");
+        this.certData = new byte[certStream.available()];
         certStream.read(this.certData);
         certStream.close();
     }
