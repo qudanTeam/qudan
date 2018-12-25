@@ -1,19 +1,19 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.qudan.qingcloud.msqudan.util.BusinessData;
+import com.qudan.qingcloud.msqudan.entity.PayOrder;
+import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,6 +33,9 @@ import java.util.Map;
 public class WxPayServiceImpl {
 
     private final Logger logger = LoggerFactory.getLogger(WxPayServiceImpl.class);
+
+    @Autowired
+    private PayOrderMapper payOrderMapper;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -72,7 +75,7 @@ public class WxPayServiceImpl {
 //            //设置超时
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
 //    })
-    public Map<String, String> dounifiedOrder(String openid,String trade_type,String product_id, String attach, String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
+    public Map<String, String> dounifiedOrder(String openid,String trade_type,String product_id, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
         Map<String, String> fail = new HashMap<>();
         MyWXConfig config = new MyWXConfig();
         MD5Util md5Util = new MD5Util();
@@ -121,12 +124,35 @@ public class WxPayServiceImpl {
                     //获取预支付交易回话标志
                     Map<String,String> map = new HashMap<>();
                     String prepay_id = resp.get("prepay_id");
+                    //交易状态为NATIVE时 获取二维码
+                    if(trade_type.equals("NATIVE")){
+                        String code_url = resp.get("code_url");
+                    }
                     String signType = "MD5";
                     map.put("prepay_id",prepay_id);
                     map.put("signType",signType);
                     String sign = md5Util.getSign(map);
                     resp.put("realsign",sign);
                     url.append("prepay_id="+prepay_id+"&signType="+signType+ "&sign="+sign);
+                    //入库
+                    PayOrder payOrder = new PayOrder();
+                    //订单
+                    payOrder.setOrderId(out_trade_no);
+                    //微信支付交易类型
+                    payOrder.setTradeType(trade_type);
+                    //支付状态(待支付:0)
+                    payOrder.setOrderStatus("0");
+                    //1:微信支付，2:支付宝支付
+                    payOrder.setType("1");
+                    //用户id
+                    payOrder.setUserId(user_id);
+                    //支付金额(单位：分)
+                    payOrder.setTotalFee(total_fee);
+                    //微信支付 prepay_id
+                    payOrder.setPrepayId(prepay_id);
+                    //交易时间
+                    payOrder.setTradeTime(new Date());
+                    payOrderMapper.insert(payOrder);
                     return resp;
                 }else {
                     logger.info("订单号：{},错误信息：{}",out_trade_no,errCodeDes);
@@ -190,12 +216,26 @@ public class WxPayServiceImpl {
                          *          此处需要判断一下。后面写入库操作的时候再写
                          *
                          */
-
+                        //更新订单为成功
+                        PayOrder payOrder = new PayOrder();
+                        payOrder.setTradeTime(new Date());
+                        payOrder.setOrderStatus("1");
+                        Example example = new Example(PayOrder.class);//实例化
+                        Example.Criteria criteria = example.createCriteria();
+                        criteria.andEqualTo("orderId",out_trade_no);
+                        payOrderMapper.updateByExampleSelective(payOrder,example);
                         logger.info(">>>>>支付成功");
-
                         logger.info("微信手机支付回调成功订单号:{}",out_trade_no);
                         xmlBack = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     }else {
+                        //更新订单为失败
+                        PayOrder payOrder = new PayOrder();
+                        payOrder.setTradeTime(new Date());
+                        payOrder.setOrderStatus("2");
+                        Example example = new Example(PayOrder.class);//实例化
+                        Example.Criteria criteria = example.createCriteria();
+                        criteria.andEqualTo("orderId",out_trade_no);
+                        payOrderMapper.updateByExampleSelective(payOrder,example);
                         logger.info("微信手机支付回调失败订单号:{}",out_trade_no);
                         xmlBack = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
                     }
