@@ -195,10 +195,11 @@
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.qiniu/qiniu-java-sdk -->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>7.0.4</version>
+            <version>7.0.5</version>
         </dependency>
     </dependencies>
 
