@@ -1,9 +1,6 @@
 package com.qudan.qingcloud.msqudan.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +24,11 @@ public class JwtUtil {
     private static final String CLAIM_KEY_CREATED = "created";//创建时间
 
     //私钥解密token信息
-    public static Claims getClaims(String jwt) {
+    public static Claims getClaims(String jwt) throws SignatureException,ExpiredJwtException,StringIndexOutOfBoundsException {
         Claims claims;
-        try{
-            claims = Jwts.parser()
-                     .setSigningKey(DatatypeConverter.parseBase64Binary(APP_KEY))
-                     .parseClaimsJws(jwt).getBody();
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            claims = null;
-        }
+        claims = Jwts.parser()
+                 .setSigningKey(DatatypeConverter.parseBase64Binary(APP_KEY))
+                 .parseClaimsJws(jwt).getBody();
         return claims;
     }
 }

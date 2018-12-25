@@ -46,19 +46,17 @@ public class SpringConfig {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setOrder(3);
         registrationBean.setFilter(JwtFilter());
-        registrationBean.addUrlPatterns("/msqudan/api/user/*");
+        registrationBean.addUrlPatterns("/msqudan/api/user/*","/msqudan/api/product/*");
 
         //跳过过滤的链接 以逗号隔开
         registrationBean.addInitParameter("excludeUrl",
                 "/msqudan/api/login," +
                         "/msqudan/api/products/*," +
-                        "/msqudan/api/products/," +
-                        "/msqudan/api/product/*,"
+                        "/msqudan/api/products/s"
 
         );
         //无论有没有JWT都给通过的链接 以逗号隔开
-        registrationBean.addInitParameter("uncertainUrl",""
-/*     "/msqudan/api/"+*/
+        registrationBean.addInitParameter("uncertainUrl","/msqudan/api/product/*"
         );
         return registrationBean;
     }

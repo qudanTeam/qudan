@@ -13,6 +13,7 @@ public class ProductVo {
     private String bankQueryLink;
     private List<String> loanTag;
     private ProductConfig config;
+    private boolean isApply;
 
     public Product getProduct() {
         return product;
@@ -61,5 +62,13 @@ public class ProductVo {
 
     public void setConfig(ProductConfig config) {
         this.config = config;
+    }
+
+    public boolean isApply() {
+        return isApply;
+    }
+
+    public void setApply(boolean apply) {
+        isApply = apply;
     }
 }

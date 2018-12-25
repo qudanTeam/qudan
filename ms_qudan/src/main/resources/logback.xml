@@ -53,7 +53,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.qudan.qingcloud.msqudan.mymapper" level="INFO" >
+    <logger name="com.qudan.qingcloud.msqudan.mymapper" level="debug" >
 
     </logger>
 

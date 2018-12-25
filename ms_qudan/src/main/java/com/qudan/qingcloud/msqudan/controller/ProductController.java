@@ -2,6 +2,7 @@ package com.qudan.qingcloud.msqudan.controller;
 
 import com.qudan.qingcloud.msqudan.service.Impl.ProductServiceImpl;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
+import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,10 @@ public class ProductController {
                                                     HttpServletRequest request
     ) {
         ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        if(userId != null){
+            ARE.setUserId(userId);
+        }
         ARE.setData(productService.productDetail(ARE, id));
         return ARE.createResponseEntity();
     }

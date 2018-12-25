@@ -8,6 +8,7 @@ import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.entity.Product;
 import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
+import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductVo;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class ProductServiceImpl {
 
 
+    @Autowired
+    ApplyMapperSelf applyMapperSelf;
     @Autowired
     ProductMapperSelf productMapperSelf;
 
@@ -109,7 +112,9 @@ public class ProductServiceImpl {
             }
             productVo.setLoanTag(tags);
         }
-
+        if(ARE.getUserId() != null){
+            productVo.setApply(applyMapperSelf.selectApplyByUserIdAndProductId(product.getId(), ARE.getUserId()) == null);
+        }
         ProductConfig config = productMapperSelf.getProductConfig(id);
         productVo.setConfig(config);
         Map<String,Object> data = Maps.newHashMap();
