@@ -1,4 +1,4 @@
-package com.qudan.qingcloud.msqudan.mymapper.self;
+package com.qudan.qingcloud.msqudan.dao;
 
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.util.YHMapper;

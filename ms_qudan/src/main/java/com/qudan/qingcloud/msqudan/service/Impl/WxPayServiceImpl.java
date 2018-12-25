@@ -4,7 +4,7 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
-import com.qudan.qingcloud.msqudan.mymapper.self.PayOrderMapper;
+import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;

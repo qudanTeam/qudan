@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 public class PayOrder {
 
-    private Long id;
+    private Long sid;
     //订单号
     private String orderId;
     //微信支付所有参数JSAPI(h5浏览器调用支付) NATIVE(扫码支付) APP(手机app内支付)
