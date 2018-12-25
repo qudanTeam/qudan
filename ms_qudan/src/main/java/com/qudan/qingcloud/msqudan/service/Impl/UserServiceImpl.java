@@ -177,8 +177,6 @@ public class UserServiceImpl {
                 user.setUsername(wut.getNickname());
                 user.setPassword(PasswordUtils.encodePassword("123456"));
 
-                binding.setWechatLogo(wut.getHeadImgUrl());
-
                 //邀请逻辑,未注册 才有邀请逻辑
                 if(StringUtils.isNotBlank(RB.getShareid())){
                     Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
