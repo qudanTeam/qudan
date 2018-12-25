@@ -1,14 +1,10 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
-import com.qudan.qingcloud.msqudan.util.BusinessData;
+import com.qudan.qingcloud.msqudan.mymapper.self.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
