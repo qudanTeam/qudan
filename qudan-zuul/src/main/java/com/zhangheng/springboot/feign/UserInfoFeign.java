@@ -45,7 +45,7 @@ public interface UserInfoFeign {
 //    /**
 //     * 前端登录
 //     */
-    @RequestMapping(value = "/msvideo/user/appLogin",method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    YHResult appLogin(@RequestParam("username") String username, @RequestParam("password") String password);
+//    @RequestMapping(value = "/msvideo/user/appLogin",method = RequestMethod.POST,
+//            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    YHResult appLogin(@RequestParam("username") String username, @RequestParam("password") String password);
 }
