@@ -2,6 +2,7 @@ package com.qudan.qingcloud.msqudan.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qudan.qingcloud.msqudan.service.Impl.WxPayServiceImpl;
+import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.util.YHResult;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
@@ -45,7 +46,7 @@ public class WxPayController {
      */
     @RequestMapping(value = "wxpay/pay", method = {RequestMethod.GET, RequestMethod.POST})
     public YHResult orderPay(
-            @ApiParam(required = true, name = "user_id", value = "用户ID") @RequestParam(required = true,value = "user_id")String user_id,
+//            @ApiParam(required = true, name = "user_id", value = "用户ID") @RequestParam(required = true,value = "user_id")String user_id,
             @ApiParam(required = false, name = "openid", value = "微信用户标识 当交易类型为JSAPI时必传") @RequestParam(required = false,value = "openid")String openid,
 //            @ApiParam(required = true, name = "out_trade_no", value = "商户订单号") @RequestParam(required = true,value = "out_trade_no")String out_trade_no,
             @ApiParam(required = true, name = "total_fee", value = "订单总金额，单位为分") @RequestParam(required = true,value = "total_fee")String total_fee,
@@ -62,13 +63,13 @@ public class WxPayController {
 //        String total_fee="1";              //7777777  微信支付钱的单位为分
 //        String user_id="1";               //77777
 //        String coupon_id="7";               //777777
-
-        String attach=user_id;
+        Integer userId = LocalUserHelper.getUserId();
+        String attach=userId+"";
         MyWXConfig config = new MyWXConfig();
 //        String spbill_create_ip = GetIPAddrUtil.getIpAddr(req);
         String spbill_create_ip="47.99.242.122";
         logggr.info(spbill_create_ip);
-        Map<String,String> result = wxPayService.dounifiedOrder(openid,trade_type,product_id,attach,user_id,out_trade_no,total_fee,spbill_create_ip,1);
+        Map<String,String> result = wxPayService.dounifiedOrder(openid,trade_type,product_id,attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
         if(result == null){
             return YHResult.build(500,"签名错误");
         }
