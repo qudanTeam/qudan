@@ -390,6 +390,10 @@ public class UserServiceImpl {
             return null;
         }
         User user = userMapperSelf.selectUserByMobile(RB.getMobile());
+        if(user == null){
+            ARE.addInfoError("login.mobile.isNotExist", "不存在的手机号");
+            return null;
+        }
         if(StringUtils.isNotBlank(RB.getValidcode())){
             return loginWithValidcode(ARE, RB, user);
         }
