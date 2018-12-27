@@ -46,7 +46,7 @@ public class SpringConfig {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setOrder(3);
         registrationBean.setFilter(JwtFilter());
-        registrationBean.addUrlPatterns("/msqudan/api/user/*","/msqudan/api/product/*");
+        registrationBean.addUrlPatterns("/msqudan/api/user/*","/msqudan/api/product/*","/msqudan/api/wxpay/*");
 
         //跳过过滤的链接 以逗号隔开
         registrationBean.addInitParameter("excludeUrl",

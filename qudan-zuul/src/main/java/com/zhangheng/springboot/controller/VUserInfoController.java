@@ -1,6 +1,8 @@
 package com.zhangheng.springboot.controller;
 
+import com.zhangheng.springboot.entity.User;
 import com.zhangheng.springboot.feign.UserInfoFeign;
+import com.zhangheng.springboot.mapper.UserInfoMapper;
 import com.zhangheng.springboot.utils.JwtUtil;
 import com.zhangheng.springboot.utils.YHResult;
 import io.jsonwebtoken.Claims;
@@ -37,6 +39,9 @@ public class VUserInfoController {
     @Autowired
     private UserInfoFeign userInfoFeign;
 
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+
 
     //日志
     private final static Logger logger = LoggerFactory.getLogger(VUserInfoController.class);
@@ -60,16 +65,21 @@ public class VUserInfoController {
               /**
                * 登录根据数据库的逻辑处理
                */
-              Map<String,Object> claims = new HashMap<>();//存放用户信息(敏感信息不要放 比如密码)
-              claims.put("username",username);
-              claims.put("userId",userId);
-              long ttlMillis = 1000 * 60 * 60 * 24;//过期时间(单位毫秒)
+              User user = userInfoMapper.selectByPrimaryKey(userId);
+              if(user!=null){
+                  Map<String,Object> claims = new HashMap<>();//存放用户信息(敏感信息不要放 比如密码)
+                  claims.put("username",username);
+                  claims.put("userId",userId);
+                  long ttlMillis = 1000 * 60 * 60 * 24;//过期时间(单位毫秒)
 
-              String token  = JwtUtil.createJWT(claims, "qudan", "趣单",ttlMillis,"");
-              Map<String,Object> params = new HashMap<>();
-              params.put("token",token);
-              params.put("expiration",ttlMillis);
-              return YHResult.build(200,"登录成功!",params);
+                  String token  = JwtUtil.createJWT(claims, "qudan", "趣单",ttlMillis,"");
+                  Map<String,Object> params = new HashMap<>();
+                  params.put("token",token);
+                  params.put("expiration",ttlMillis);
+                  return YHResult.build(200,"登录成功!",params);
+              }else{
+                  return YHResult.build(400,"登录失败!");
+              }
           }catch (Exception e){
               logger.error(e.getMessage());
               logger.error("login 异常!");
