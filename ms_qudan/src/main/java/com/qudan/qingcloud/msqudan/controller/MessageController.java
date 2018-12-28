@@ -5,6 +5,7 @@ import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.apache.ibatis.annotations.Delete;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 @RequestMapping("/msqudan/api/")//窄化请求地址
 public class MessageController {
 
+    @Autowired
     public MessageServiceImpl messageService;
 
 
