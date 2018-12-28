@@ -1,17 +1,16 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 
+import com.qudan.qingcloud.msqudan.service.Impl.UserFinanceServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
+import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -22,6 +21,9 @@ public class UserCenterController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    UserFinanceServiceImpl userFinanceService;
 
     /**
      * 收入记录
@@ -87,6 +89,15 @@ public class UserCenterController {
             ARE.setUserId(userId);
             ARE.setData(userService.team(ARE, ym, ComUtils.getPage(request), ComUtils.getPerPage(request)));
         }
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("user/tx")
+    public ResponseEntity<Map<String, Object>> team(@RequestBody TxRB txRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userFinanceService.txRB(ARE, txRB));
         return ARE.createResponseEntity();
     }
 }

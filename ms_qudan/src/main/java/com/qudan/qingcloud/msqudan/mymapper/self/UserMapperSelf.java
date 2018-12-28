@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public interface UserMapperSelf extends UserMapper {
@@ -203,4 +204,10 @@ public interface UserMapperSelf extends UserMapper {
     "</script>",
     })
     List<MemberVos> selectMember(@Param("userId")Integer userId, @Param("ym")String ym);
+
+
+    @Select({
+        "SELECT count(1) FROM trade_type WHERE trade_type = 1 AND (status = 2 OR status =1) AND user_id = #{userId} AND audit_time < #{end} AND audit_time >= #{start}"
+    })
+    int countTxByTime(@Param("start")Date start , @Param("end")Date end, @Param("userId")Integer userId);
 }
