@@ -29,7 +29,7 @@ public class UserCenterController {
      * @return
      */
     @GetMapping("/user/revenues")
-    public ResponseEntity<Map<String, Object>> revenue(@RequestParam(value = "sendStatus", required = false) Integer sendStatus,
+    public ResponseEntity<Map<String, Object>> revenue(@RequestParam(value = "send_status", required = false) Integer sendStatus,
                                                        HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         if(ComUtils.validPage(ARE, request)){

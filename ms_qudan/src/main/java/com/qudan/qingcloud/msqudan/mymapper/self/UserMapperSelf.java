@@ -106,9 +106,9 @@ public interface UserMapperSelf extends UserMapper {
             "FROM apply",
             "LEFT JOIN product on p.id = apply.product_id",
             "WHERE apply.user_id = #{obj.userId}",
-            "<if test=\"obj.productStatus != null\"> AND p.product_type = #{obj.productType} </if>",
-            "<if test=\"obj.applyStatus != null\"> AND apply.status = #{applyStatus} </if>",
-            "<if test=\"obj.officialStatus != null\"> AND apply.official_status = #{officialStatus} </if>",
+            "<if test=\"obj.product_type != null\"> AND p.product_type = #{obj.product_type} </if>",
+            "<if test=\"obj.apply_status != null\"> AND apply.status = #{apply_status} </if>",
+            "<if test=\"obj.official_status != null\"> AND apply.official_status = #{official_status} </if>",
             "ORDER BY p.create_time DESC",
         "</script>",
     })
@@ -142,7 +142,7 @@ public interface UserMapperSelf extends UserMapper {
         "FROM trade_type t",
         "LEFT JOIN apply a on t.apply_id = a.id",
         "LEFT JOIN product p on p.id = a.product_id",
-        "WHERE (trade_type = 2 OR trade_type = 3) AND user_id = #{userId} AND status = 2",
+        "WHERE (trade_type = 2 OR trade_type = 3 OR trade_type = 5) AND user_id = #{userId} AND status = 2",
         "AND user_id = #{userId}",
             "<if test=\"sendStatus != null\"> AND send_status = #{sendStatus} </if>",
         "ORDER BY t.audit_time DESC",
@@ -172,7 +172,7 @@ public interface UserMapperSelf extends UserMapper {
             "FROM trade_type",
             "WHERE ",
             "user_id = #{userId}",
-            "AND status = 2 AND trade_type = 3",
+            "trade_type = 3",
             "<if test=\"ym != null and ym is not null\"> AND date_format(audit_time, '%Y-%m-%d') = #{ym}; </if>",
         "</script>",
     })
@@ -187,14 +187,19 @@ public interface UserMapperSelf extends UserMapper {
             "ru.username recommendName,",
             "SUM(price)",
         "FROM trade_type t",
-        "left join user relu on relu.id = t.relation_user_id",
-        "LEFT JOIN user ru on ru.id = relu.recommend_invite_id", //推荐人一定A的团队成员，要不然不能产生分佣
+        "left join user relu on relu.id = t.relation_user_id",//业绩人
+        "LEFT JOIN user ru on ru.id = relu.recommend_invite_id", //推荐人一定是A的团队成员，要不然不能产生分佣
         "LEFT JOIN apply on apply.id = t.apply_id",
         "WHERE ",
-            "user_id = #{userId}",
-            "AND status = 2 AND trade_type = 3",
+            "t.user_id = #{userId}",
+            "trade_type = 3",
             "<if test=\"ym != null and ym is not null\"> AND date_format(audit_time, '%Y-%m-%d') = #{ym}; </if>",
-            "GROUP BY relu.username,relu.mobile,relu.register_time,ru.username ORDER BY relu.register_time DESC",
+            "GROUP BY " +
+                    "relu.username,",
+                    "relu.mobile,",
+                    "relu.register_time,",
+                    "ru.username ORDER ",
+            "BY relu.register_time DESC",
     "</script>",
     })
     List<MemberVos> selectMember(@Param("userId")Integer userId, @Param("ym")String ym);

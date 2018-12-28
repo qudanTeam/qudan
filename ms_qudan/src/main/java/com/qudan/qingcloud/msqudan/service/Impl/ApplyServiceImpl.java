@@ -265,7 +265,7 @@ public class ApplyServiceImpl {
             return false;
         }
         if(StringUtils.isBlank(RB.getValidcode())){
-            ARE.addInfoError("validcode.isEmpty", "手机号不能为空");
+            ARE.addInfoError("validcode.isEmpty", "验证码不能为空");
             return false;
         }
         if(StringUtils.isBlank(RB.getName())){
@@ -276,14 +276,20 @@ public class ApplyServiceImpl {
             ARE.addInfoError("product.isEmpty", "产品id不能为空");
             return false;
         }
+        User user = userService.getUserById(ARE.getUserId());
+        if(user.getStatus() == null || user.getStatus() != 3){
+            ARE.addInfoError("status.isEmpty", "未实名或者审核未通过");
+            return false;
+        }
+
         Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
         if(product == null){
             ARE.addInfoError("product.isNotExist", "不存在的产品Id");
             return false;
         }
-        Apply apply = applyMapperSelf.selectApplyByUserIdAndProductId(product.getId(), ARE.getUserId());
+        Apply apply = applyMapperSelf.selectApplyByUsernameAndIdNo(RB.getName(), RB.getIdNo());
         if(apply != null){
-            ARE.addInfoError("app.isExist", "不能重复申请！");
+            ARE.addInfoError("apply.isExist", "身份证或者姓名已申请过"+(product.getProductType()==1?"此信用卡":"贷款"));
             return false;
         }
         return userService.checkCode(ARE, RB.getMobile(), RB.getValidcode(), 4, true);

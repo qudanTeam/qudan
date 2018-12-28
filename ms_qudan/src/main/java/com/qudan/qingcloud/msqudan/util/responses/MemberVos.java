@@ -1,5 +1,7 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ public class MemberVos {
     private String mobile;
     private BigDecimal revenue;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date registerTime;
     private String recommendName;
 

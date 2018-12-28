@@ -523,6 +523,11 @@ public class UserServiceImpl {
             list = Lists.newArrayList();
         } else {
             total =  ((Page) list).getTotal();
+            for (RevenueRecord vo : list){
+                if(vo.getProductLogo()!= null){
+                    vo.setProductLogo(ComUtils.addPrefixToImg(vo.getProductLogo(), config.getQiniuImageUrl()));
+                }
+            }
         }
         data.put("rows", list);
         data.put("total", total);
@@ -532,7 +537,7 @@ public class UserServiceImpl {
     @HystrixCommand
     public Map<String,Object> orders(ApiResponseEntity ARE, OrderParams orderParams, Integer page, Integer per_page){
         Map<String,Object> data = Maps.newHashMap();
-        if(orderParams.getProductType() == null){
+        if(orderParams.getProduct_type() == null){
             ARE.addInfoError("productType.isEmpty", "商品类型不能为空");
         }
         orderParams.setUserId(ARE.getUserId());

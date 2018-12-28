@@ -1,19 +1,23 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class RevenueRecord {
-    private String auditTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date auditTime;
     private String productName;
     private BigDecimal revenue;
     private Integer sendStatus;
     private String productLogo;
 
-    public String getAuditTime() {
+    public Date getAuditTime() {
         return auditTime;
     }
 
-    public void setAuditTime(String auditTime) {
+    public void setAuditTime(Date auditTime) {
         this.auditTime = auditTime;
     }
 
