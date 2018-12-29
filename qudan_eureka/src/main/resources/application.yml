@@ -19,7 +19,7 @@ eureka:
 spring:
   application:
     name: qudanEureka
-  boot:
-    admin:
-      client:
-        url: http://47.99.242.122:7086
+#  boot:
+#    admin:
+#      client:
+#        url: http://47.99.242.122:7086
