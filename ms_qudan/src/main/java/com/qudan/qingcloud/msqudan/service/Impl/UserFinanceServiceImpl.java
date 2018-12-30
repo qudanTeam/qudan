@@ -32,7 +32,6 @@ public class UserFinanceServiceImpl {
     @Autowired
     TradeTypeMapper tradeTypeMapper;
 
-    //TODO 代理发放排行旁
     //TODO 商品搜索记录
     //TODO 记录商品搜索记录
     //TODO 成为VIP

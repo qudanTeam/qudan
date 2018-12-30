@@ -144,7 +144,7 @@ public interface UserMapperSelf extends UserMapper {
         "LEFT JOIN apply a on t.apply_id = a.id",
         "LEFT JOIN product p on p.id = a.product_id",
         "WHERE (trade_type = 2 OR trade_type = 3 OR trade_type = 5) AND user_id = #{userId} AND status = 2",
-        "AND user_id = #{userId}",
+        "AND t.user_id = #{userId}",
             "<if test=\"sendStatus != null\"> AND send_status = #{sendStatus} </if>",
         "ORDER BY t.audit_time DESC",
         "</script>",
