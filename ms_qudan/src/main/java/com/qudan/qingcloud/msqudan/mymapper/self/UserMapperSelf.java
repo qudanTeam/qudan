@@ -143,7 +143,7 @@ public interface UserMapperSelf extends UserMapper {
         "FROM trade_type t",
         "LEFT JOIN apply a on t.apply_id = a.id",
         "LEFT JOIN product p on p.id = a.product_id",
-        "WHERE (trade_type = 2 OR trade_type = 3 OR trade_type = 5) AND user_id = #{userId} AND status = 2",
+        "WHERE (trade_type = 2 OR trade_type = 3 OR trade_type = 5) AND t.user_id = #{userId} AND t.status = 2",
         "AND t.user_id = #{userId}",
             "<if test=\"sendStatus != null\"> AND send_status = #{sendStatus} </if>",
         "ORDER BY t.audit_time DESC",
@@ -194,7 +194,7 @@ public interface UserMapperSelf extends UserMapper {
         "WHERE ",
             "t.user_id = #{userId}",
             "trade_type = 3",
-            "<if test=\"ym != null and ym is not null\"> AND date_format(audit_time, '%Y-%m-%d') = #{ym}; </if>",
+            "<if test=\"ym != null and ym is not null\"> AND date_format(t.audit_time, '%Y-%m-%d') = #{ym}; </if>",
             "GROUP BY " +
                     "relu.username,",
                     "relu.mobile,",
