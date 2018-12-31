@@ -597,6 +597,9 @@ public class UserServiceImpl {
             } else {
                 total =  ((Page) members).getTotal();
             }
+        } else {
+            members = Lists.newArrayList();
+            revenue = BigDecimal.ZERO;
         }
         data.put("rows", members);
         data.put("total", total);

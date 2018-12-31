@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.config;
 
+import com.github.pagehelper.PageHelper;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.servlet.Filter;
+import java.util.Properties;
 
 
 @Configuration

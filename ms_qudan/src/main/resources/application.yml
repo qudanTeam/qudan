@@ -1,5 +1,10 @@
 jwt:
     secretkey: qudan_key
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 #图形验证码
 kaptcha:
 #  session:

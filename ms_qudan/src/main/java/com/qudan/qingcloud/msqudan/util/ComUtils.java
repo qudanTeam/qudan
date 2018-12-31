@@ -26,6 +26,7 @@ public class ComUtils {
     }
 
     public static void startPage(Integer page ,Integer perPage){
+        PageHelper.clearPage();
         PageHelper.startPage(page, perPage);
     }
 
