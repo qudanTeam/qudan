@@ -110,8 +110,8 @@ public interface UserMapperSelf extends UserMapper {
             "LEFT JOIN product  p on p.id = apply.product_id",
             "WHERE apply.user_id = #{obj.userId}",
             "<if test=\"obj.product_type != null\"> AND p.product_type = #{obj.product_type} </if>",
-            "<if test=\"obj.apply_status != null\"> AND apply.status = #{apply_status} </if>",
-            "<if test=\"obj.official_status != null\"> AND apply.official_status = #{official_status} </if>",
+            "<if test=\"obj.apply_status != null\"> AND apply.status = #{obj.apply_status} </if>",
+            "<if test=\"obj.official_status != null\"> AND apply.official_status = #{obj.official_status} </if>",
             "ORDER BY p.create_time DESC",
         "</script>",
     })
