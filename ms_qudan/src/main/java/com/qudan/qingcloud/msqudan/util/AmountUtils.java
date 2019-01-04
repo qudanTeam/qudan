@@ -1,5 +1,9 @@
 package com.qudan.qingcloud.msqudan.util;
 
+import com.qudan.qingcloud.msqudan.controller.WxPayController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 /**
@@ -7,6 +11,8 @@ import java.math.BigDecimal;
  */
 public class AmountUtils {
 
+
+    private final Logger logggr = LoggerFactory.getLogger(AmountUtils.class);
     /** 金额为分的格式 */
     public static final String CURRENCY_FEN_REGEX = "\\-?[0-9]+";
 
@@ -100,6 +106,7 @@ public class AmountUtils {
         } else {
             amLong = Long.valueOf((currency.substring(0, index + 1)).replace(".", "") + "00");
         }
+
         return amLong.toString();
     }
 }
