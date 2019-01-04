@@ -95,7 +95,7 @@ public class WxPayServiceImpl {
         data.put("body", body);
         data.put("out_trade_no", out_trade_no);
         //金额元转分
-        data.put("total_fee", AmountUtils.changeY2F(Long.getLong(total_fee)));
+        data.put("total_fee", AmountUtils.changeY2F(total_fee));
         data.put("spbill_create_ip",spbill_create_ip);
         //异步通知地址（请注意必须是外网）
         data.put("notify_url", "http://msqudan.myhshop.top/msqudan/api/wxpay/notify");
