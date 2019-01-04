@@ -7,6 +7,7 @@ import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
+import com.qudan.qingcloud.msqudan.util.AmountUtils;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
@@ -93,7 +94,8 @@ public class WxPayServiceImpl {
         String body="订单支付";
         data.put("body", body);
         data.put("out_trade_no", out_trade_no);
-        data.put("total_fee", total_fee);
+        //金额元转分
+        data.put("total_fee", AmountUtils.changeY2F(total_fee));
         data.put("spbill_create_ip",spbill_create_ip);
         //异步通知地址（请注意必须是外网）
         data.put("notify_url", "http://msqudan.myhshop.top/msqudan/api/wxpay/notify");
