@@ -3,8 +3,10 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.qudan.qingcloud.msqudan.dao.WeixinBindingMapper;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
+import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +39,9 @@ public class WxPayServiceImpl {
 
     @Autowired
     private PayOrderMapper payOrderMapper;
+
+    @Autowired
+    private WeixinBindingMapper weixinBindingMapper;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -52,7 +58,7 @@ public class WxPayServiceImpl {
 
     /**
      * 统一下单
-     * @param openid
+     *
      * @param trade_type
      * @param product_id
      * @param attach
@@ -75,7 +81,7 @@ public class WxPayServiceImpl {
 //            //设置超时
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
 //    })
-    public Map<String, String> dounifiedOrder(String openid,String trade_type,String product_id, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
+    public Map<String, String> dounifiedOrder(String trade_type,String product_id, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
         Map<String, String> fail = new HashMap<>();
         MyWXConfig config = new MyWXConfig();
         MD5Util md5Util = new MD5Util();
@@ -90,7 +96,7 @@ public class WxPayServiceImpl {
         data.put("total_fee", total_fee);
         data.put("spbill_create_ip",spbill_create_ip);
         //异步通知地址（请注意必须是外网）
-        data.put("notify_url", "http://msqudan.lccqj.xin/msqudan/api/wxpay/notify");
+        data.put("notify_url", "http://msqudan.myhshop.top/msqudan/api/wxpay/notify");
         data.put("nonce_str",WXPayUtil.generateNonceStr());
         /**
          * 交易类型 JSAPI、NATIVE、APP
@@ -105,8 +111,17 @@ public class WxPayServiceImpl {
         if(!StringUtils.isEmpty(product_id)){
             data.put("product_id",product_id);//如果类型为NATIVE 此参数必传
         }
-        if(!StringUtils.isEmpty(openid)){
-            data.put("openid",openid);
+        if("JSAPI".equals(trade_type)){
+            //获取openid 根据userid
+            Example example = new Example(WeixinBinding.class);//实例化
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("userId",user_id);
+            List<WeixinBinding> weixinBindings = weixinBindingMapper.selectByExample(criteria);
+            if(null != weixinBindings && weixinBindings.size() > 0){
+                WeixinBinding weixinBinding = weixinBindings.get(0);
+                data.put("openid",weixinBinding.getOpenid());
+                logger.info("openid："+weixinBinding.getOpenid());
+            }
         }
 //        data.put("sign", md5Util.getSign(data));
         StringBuffer url= new StringBuffer();
