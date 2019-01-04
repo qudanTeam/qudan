@@ -54,7 +54,7 @@ qiniu:
     upload:
         image:
             bucket: qudan-idc
-            url: http://pj7lk9wjg.bkt.clouddn.com/
+            url: http://qudanmedia.myhshop.top/
 alipay:
   appID: 2016091200494055
   merchantPrivateKey: 商户私钥
