@@ -90,12 +90,14 @@ public class WxPayController {
         //签名生成算法
         MD5Util md5Util = new MD5Util();
         Map<String,String> map = new HashMap<>();
-        map.put("appid",config.getAppID());
-        map.put("partnerid",config.getMchID());
-        map.put("package","Sign=WXPay");
-        map.put("noncestr",nonce_str);
-        map.put("timestamp",timestamp);
-        map.put("prepayid",prepay_id);
+        map.put("appId",config.getAppID());
+        map.put("nonceStr",nonce_str);
+        map.put("package", "prepay_id="+prepay_id);
+        map.put("signType", "MD5");
+        map.put("timeStamp",timestamp);
+//        map.put("partnerid",config.getMchID());
+//        map.put("package","Sign=WXPay");
+//        map.put("prepayid",prepay_id);
         String sign = md5Util.getSign(map);
 
         String resultString="{\"appid\":\""+config.getAppID()+"\",\"partnerid\":\""+config.getMchID()+"\",\"package\":\"Sign=WXPay\"," +
