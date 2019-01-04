@@ -3,10 +3,10 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.qudan.qingcloud.msqudan.dao.WeixinBindingMapper;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
+import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class WxPayServiceImpl {
     private PayOrderMapper payOrderMapper;
 
     @Autowired
-    private WeixinBindingMapper weixinBindingMapper;
+    private WeixinMapperSelf weixinBindingMapper;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -113,15 +113,9 @@ public class WxPayServiceImpl {
         }
         if("JSAPI".equals(trade_type)){
             //获取openid 根据userid
-            Example example = new Example(WeixinBinding.class);//实例化
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("userId",user_id);
-            List<WeixinBinding> weixinBindings = weixinBindingMapper.selectByExample(criteria);
-            if(null != weixinBindings && weixinBindings.size() > 0){
-                WeixinBinding weixinBinding = weixinBindings.get(0);
+            WeixinBinding weixinBinding = weixinBindingMapper.selectBindingByUserId(Integer.parseInt(user_id));
                 data.put("openid",weixinBinding.getOpenid());
                 logger.info("openid："+weixinBinding.getOpenid());
-            }
         }
 //        data.put("sign", md5Util.getSign(data));
         StringBuffer url= new StringBuffer();
