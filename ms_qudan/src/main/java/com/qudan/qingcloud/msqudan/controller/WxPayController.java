@@ -76,9 +76,14 @@ public class WxPayController {
         String nonce_str = (String)result.get("nonce_str");
         String prepay_id = (String)result.get("prepay_id");
         String code_url ="";
+        String mwebUrl = "";
         //交易状态为NATIVE时 获取二维码
         if(trade_type.equals("NATIVE")){
              code_url = (String)result.get("code_url");
+        }
+        //交易状态为H5
+        if(trade_type.equals("MWEB")){
+             mwebUrl = (String)result.get("mweb_url");
         }
         Long time =System.currentTimeMillis()/1000;
         String timestamp=time.toString();
@@ -105,6 +110,7 @@ public class WxPayController {
         jsonObject.put("prepayid",prepay_id);
         jsonObject.put("sign",sign);
         jsonObject.put("code_url",code_url);
+        jsonObject.put("mweb_url",mwebUrl);
 
         return YHResult.build(200,"唤起支付成功!",jsonObject);    //给前端app返回此字符串，再调用前端的微信sdk引起微信支付
 
