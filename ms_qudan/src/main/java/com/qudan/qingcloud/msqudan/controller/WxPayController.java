@@ -47,7 +47,7 @@ public class WxPayController {
     @RequestMapping(value = "wxpay/pay", method = {RequestMethod.GET, RequestMethod.POST})
     public YHResult orderPay(
 //            @ApiParam(required = true, name = "user_id", value = "用户ID") @RequestParam(required = true,value = "user_id")String user_id,
-            @ApiParam(required = false, name = "openid", value = "微信用户标识 当交易类型为JSAPI时必传") @RequestParam(required = false,value = "openid")String openid,
+//            @ApiParam(required = false, name = "openid", value = "微信用户标识 当交易类型为JSAPI时必传") @RequestParam(required = false,value = "openid")String openid,
 //            @ApiParam(required = true, name = "out_trade_no", value = "商户订单号") @RequestParam(required = true,value = "out_trade_no")String out_trade_no,
             @ApiParam(required = true, name = "total_fee", value = "订单总金额，单位为分") @RequestParam(required = true,value = "total_fee")String total_fee,
             @ApiParam(required = true, name = "trade_type", value = "交易类型 JSAPI(h5浏览器调用支付) NATIVE(扫码支付) APP(手机app内支付)") @RequestParam(required = true,value = "trade_type")String trade_type,
@@ -69,7 +69,7 @@ public class WxPayController {
 //        String spbill_create_ip = GetIPAddrUtil.getIpAddr(req);
         String spbill_create_ip="47.99.242.122";
         logggr.info(spbill_create_ip);
-        Map<String,String> result = wxPayService.dounifiedOrder(openid,trade_type,product_id,attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
+        Map<String,String> result = wxPayService.dounifiedOrder(trade_type,product_id,attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
         if(result == null){
             return YHResult.build(500,"签名错误");
         }
