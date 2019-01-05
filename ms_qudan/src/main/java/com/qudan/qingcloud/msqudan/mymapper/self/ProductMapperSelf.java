@@ -87,7 +87,7 @@ public interface ProductMapperSelf extends ProductMapper{
     @Select({
         "SELECT CAT.* FROM category CAT",
         "LEFT JOIN product_category_relation RELA on RELA.category_id = CAT.id",
-        "LEFT JOIN product PRO ON PRO.id = RELA.id",
+        "LEFT JOIN product PRO ON PRO.id = RELA.product_id",
         "WHERE PRO.id = #{productId} AND PRO.id IS NOT NULL"
     })
     List<Category> selectCatByProductId(@Param("productId")Integer productId);
