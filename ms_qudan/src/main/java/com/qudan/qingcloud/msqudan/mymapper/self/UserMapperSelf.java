@@ -180,6 +180,36 @@ public interface UserMapperSelf extends UserMapper {
     })
     BigDecimal countRevenuePrice(@Param("userId")Integer userId, @Param("ym")String ym);
 
+   /* @Select({
+        "<script>",
+            "SELECT",
+                "relu.username name, ",
+                "relu.mobile mobile,",
+                "relu.register_time registerTime,",
+                "ru.username recommendName,",
+                "SUM(t.price)",
+            "FROM user ru ",
+            "left join user relu on ru.id = relu.recommend_invite_id",//业绩人
+            "left join trade_type on relu.id = t.relation_user_id",
+            "LEFT JOIN apply on apply.id = t.apply_id",
+            "WHERE ",
+                "ru.user_id = #{userId}",
+                "AND (",
+                    "(t.id IS NOT NULL AND t.trade_type = 3) ",
+                    "OR ",
+                    "(t.id IS NULL) ",
+                ")",
+                "<if test=\"ym != null and ym != ''\"> AND date_format(t.audit_time, '%Y-%m') = #{ym} </if>",
+                "GROUP BY ",
+                    "relu.username,",
+                    "relu.mobile,",
+                    "relu.register_time,",
+                    "ru.username ORDER ",
+                "BY relu.register_time DESC",
+        "</script>",
+    })
+    List<MemberVos> selectMembers(@Param("userId")Integer userId, @Param("ym")String ym);*/
+
     @Select({
     "<script>",
         "SELECT ",
@@ -194,7 +224,7 @@ public interface UserMapperSelf extends UserMapper {
         "LEFT JOIN apply on apply.id = t.apply_id",
         "WHERE ",
             "t.user_id = #{userId}",
-            "AND trade_type = 3",
+            "AND trade_type = 3 OR trade",
             "<if test=\"ym != null and ym != ''\"> AND date_format(t.audit_time, '%Y-%m') = #{ym} </if>",
             "GROUP BY ",
                     "relu.username,",

@@ -600,21 +600,17 @@ public class UserServiceImpl {
             return null;
         }
 
-        int count = userMapperSelf.countRevenuePeople(ARE.getUserId(), ym);
+        int count = userMapperSelf.countInviteCt(ARE.getUserId());
         BigDecimal revenue = userMapperSelf.countRevenuePrice(ARE.getUserId(), ym);
         List<MemberVos> members = null;
         long total = 0;
-        if(count > 0){
-            ComUtils.startPage(page, per_page);
-            members = userMapperSelf.selectMember(ARE.getUserId(), ym);
-            if(CollectionUtils.isEmpty(members)){
-                members = Lists.newArrayList();
-            } else {
-                total =  ((Page) members).getTotal();
-            }
-        } else {
+        ComUtils.startPage(page, per_page);
+        members = userMapperSelf.selectMember(ARE.getUserId(), ym);
+        if(CollectionUtils.isEmpty(members)){
             members = Lists.newArrayList();
             revenue = BigDecimal.ZERO;
+        } else {
+            total =  ((Page) members).getTotal();
         }
         data.put("rows", members);
         data.put("total", total);

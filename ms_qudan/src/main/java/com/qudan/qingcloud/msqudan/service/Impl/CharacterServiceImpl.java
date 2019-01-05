@@ -10,7 +10,6 @@ import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
-import com.qudan.qingcloud.msqudan.util.responses.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
