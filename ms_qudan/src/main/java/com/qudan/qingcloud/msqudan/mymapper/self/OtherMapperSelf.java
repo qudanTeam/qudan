@@ -10,7 +10,7 @@ public interface OtherMapperSelf {
 
 
     @Select({
-        "SELECT * FROM sms_send_record WHERE code = #{code} AND send_type = #{type} ORDER BY id DESC"
+        "SELECT * FROM sms_send_record WHERE code = #{code} AND send_type = #{type} AND mobile = #{mobile} ORDER BY id DESC"
     })
     SmsSendRecord selectByCodeAndType(@Param("code") String code, @Param("mobile")String mobile, @Param("type")Integer type);
 }
