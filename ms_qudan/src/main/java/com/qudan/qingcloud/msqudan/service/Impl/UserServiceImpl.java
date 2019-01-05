@@ -179,7 +179,8 @@ public class UserServiceImpl {
                 user.setRegisterMobile(RB.getMobile());
                 user.setRegisterTime(new Date());
                 user.setLastLoginTime(new Date());
-                user.setStatus(0);
+                user.setStatus(1);
+                user.setFinanceStatus(1);
                 user.setUserType(0);
                 user.setModifyTime(new Date());
                 user.setUsername(wut.getNickname());
@@ -273,7 +274,8 @@ public class UserServiceImpl {
             user.setRegisterMobile(RB.getMobile());
             user.setRegisterTime(new Date());
             user.setLastLoginTime(new Date());
-            user.setStatus(0);
+            user.setStatus(1);
+            user.setFinanceStatus(1);
             user.setUserType(0);
             user.setModifyTime(new Date());
             //邀请逻辑
@@ -367,7 +369,7 @@ public class UserServiceImpl {
         user_update.setRealname(RB.getRealname());
         user_update.setIdNo(RB.getIdNo());
         user_update.setAlipayNo(RB.getAlipayNo());
-        user_update.setFinanceStatus(1);
+        user_update.setFinanceStatus(2);
         user_update.setModifyTime(new Date());
         userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
@@ -391,7 +393,7 @@ public class UserServiceImpl {
         user_update.setRealname(RB.getRealname());
         user_update.setIdNo(RB.getIdNo());
         user_update.setRegisterMobile(RB.getMobile());
-        user_update.setStatus(1);
+        user_update.setStatus(2);
         user_update.setModifyTime(new Date());
         userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
@@ -605,7 +607,7 @@ public class UserServiceImpl {
         List<MemberVos> members = null;
         long total = 0;
         ComUtils.startPage(page, per_page);
-        members = userMapperSelf.selectMember(ARE.getUserId(), ym);
+        members = userMapperSelf.selectMembers(ARE.getUserId(), ym);
         if(CollectionUtils.isEmpty(members)){
             members = Lists.newArrayList();
             revenue = BigDecimal.ZERO;

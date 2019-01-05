@@ -52,11 +52,14 @@ public class SpringConfig {
         registrationBean.addInitParameter("excludeUrl",
                 "/msqudan/api/login," +
                         "/msqudan/api/products/*," +
-                        "/msqudan/api/products/s"
+                        "/msqudan/api/products/"
 
         );
         //无论有没有JWT都给通过的链接 以逗号隔开
-        registrationBean.addInitParameter("uncertainUrl","/msqudan/api/product/*"
+        registrationBean.addInitParameter("uncertainUrl",
+                "/msqudan/api/product/*,"
+                + "/msqudan/api/apply/loan,"
+                + "/msqudan/api/apply/card"
         );
         return registrationBean;
     }

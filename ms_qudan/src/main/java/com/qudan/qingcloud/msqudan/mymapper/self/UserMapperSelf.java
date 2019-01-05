@@ -180,17 +180,17 @@ public interface UserMapperSelf extends UserMapper {
     })
     BigDecimal countRevenuePrice(@Param("userId")Integer userId, @Param("ym")String ym);
 
-   /* @Select({
+    @Select({
         "<script>",
             "SELECT",
                 "relu.username name, ",
-                "relu.mobile mobile,",
+                "relu.register_mobile mobile,",
                 "relu.register_time registerTime,",
                 "ru.username recommendName,",
                 "SUM(t.price)",
             "FROM user ru ",
-            "left join user relu on ru.id = relu.recommend_invite_id",//业绩人
-            "left join trade_type on relu.id = t.relation_user_id",
+            "left join user relu on ru.id = relu.recommend_invite_id",
+            "left join trade_type on relu.id = t.relation_user_id",//业绩人
             "LEFT JOIN apply on apply.id = t.apply_id",
             "WHERE ",
                 "ru.user_id = #{userId}",
@@ -203,18 +203,18 @@ public interface UserMapperSelf extends UserMapper {
                 "GROUP BY ",
                     "relu.username,",
                     "relu.mobile,",
-                    "relu.register_time,",
+                    "relu.register_mobile,",
                     "ru.username ORDER ",
                 "BY relu.register_time DESC",
         "</script>",
     })
-    List<MemberVos> selectMembers(@Param("userId")Integer userId, @Param("ym")String ym);*/
+    List<MemberVos> selectMembers(@Param("userId")Integer userId, @Param("ym")String ym);
 
     @Select({
     "<script>",
         "SELECT ",
             "relu.username name, ",
-            "relu.mobile mobile,",
+            "relu.register_mobile mobile,",
             "relu.register_time registerTime,",
             "ru.username recommendName,",
             "SUM(price)",

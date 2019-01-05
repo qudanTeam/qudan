@@ -55,8 +55,7 @@ public class ApplyServiceImpl {
         User user = userService.getUserById(apply.getUserId());
         log.info("applyid:"+applyId);
         if(user == null){
-            ARE.addInfoError("apply.user.isEmpty", "apply.user.isEmpty");
-            return null;
+            log.info("用户为空");
         }
         log.info("apply.userid:"+apply.getUserId());
         User shareUser = null;
@@ -77,7 +76,8 @@ public class ApplyServiceImpl {
                 shareUser = userService.getUserById(shareUserId);
             }
         }
-        if(user.getRecommendInviteId() != null){
+
+        if(user != null && user.getRecommendInviteId() != null){
             inviteUser = userService.getUserById(user.getRecommendInviteId());
         }
 
@@ -85,9 +85,13 @@ public class ApplyServiceImpl {
             userDL = userService.getUserById(inviteUser.getRecommendInviteId());
         }
 
+        if(shareUser != null && shareUser.getRecommendInviteId() != null){
+            userDL = userService.getUserById(shareUser.getRecommendInviteId());
+        }
+
         //是否是点分享链接的
         boolean isShare = shareUser != null;
-        //是否用邀请人
+        //是否有邀请人
         boolean isInvite = inviteUser != null;
         //是否有代理链条
         boolean isDL = userDL != null;
@@ -98,12 +102,19 @@ public class ApplyServiceImpl {
         VipConfig vipConfig = null;
         if(isDL){
             agentConfig = characterService.getAgentByUserId(userDL.getId());
-            return null;
         }
 
         //如果邀请人和 分享人都存在， 邀请人和分享人必须为同一个人， 才能形成代理链条
         if(isInvite && isShare && !inviteUser.getId().equals(shareUser.getId())){
             log.info("邀请人和 分享人都存在， 邀请人和分享人必须为同一个人， 才能形成代理链条!");
+            isDL = false;
+        }
+        if(isDL && isShare && shareUser.getAgentLevel() != null && shareUser.getAgentLevel() > 0){
+            log.info("有代理链条，但是中间人shareUser是代理，也不能形成代理链条");
+            isDL = false;
+        }
+        if(isDL && isInvite && inviteUser.getAgentLevel() != null && inviteUser.getAgentLevel() > 0){
+            log.info("有代理链条，但是中间人inviteUser是代理，也不能形成代理链条");
             isDL = false;
         }
 
@@ -117,6 +128,7 @@ public class ApplyServiceImpl {
         BigDecimal agentPrice = null;
         UserAccount shareAccount = null;
         UserAccount dlAccount = null;
+        UserAccount userAccount = null;
 
         log.info("apply.basePrice:"+basePrice.toString());
         if(isShare){
@@ -126,6 +138,9 @@ public class ApplyServiceImpl {
         if(isDL){
             agentPrice = basePrice.multiply(agentConfig.getRelatedRate());
             dlAccount = userService.getUserAccountByUserId(shareUser.getId());
+        }
+        if(user != null){
+            userAccount = userService.getUserAccountByUserId(user.getId());
         }
 
         TradeType taskTrade = null; //任务奖励记录
@@ -159,6 +174,7 @@ public class ApplyServiceImpl {
                     basePrice,
                     userDL.getId()//受益人
             );
+            teamTrade.setAccount(dlAccount.getId());
             teamTrade.setAgentLevel(agentConfig.getLevel());
             teamTrade.setAgentRate(agentConfig.getRelatedRate());
             teamTrade.setRelationUserId(inviteUser.getId());//业绩人
@@ -184,9 +200,36 @@ public class ApplyServiceImpl {
                     basePrice,
                     userDL.getId()//受益人
             );
+            teamTrade.setAccount(dlAccount.getId());
             teamTrade.setAgentLevel(agentConfig.getLevel());
             teamTrade.setAgentRate(agentConfig.getRelatedRate());
             teamTrade.setRelationUserId(inviteUser.getId());//业绩人
+            teamTrade.setPrice(agentPrice);
+        }
+
+        if(isDL && !isInvite && isShare){
+            //业绩人 shareUserId
+            //完成任务奖励人 shareUserId ,没有VIP 加成
+            //分用人 userDL
+            taskTrade = createTradeByApply(apply,
+                    QudanConstant.TRADE_TYPE.TASK_REWORD.getType(),
+                    date,
+                    basePrice,
+                    user.getId()//受益人
+            );
+            taskTrade.setAccount(userAccount.getId());
+            taskTrade.setPrice(basePrice);
+
+            teamTrade = createTradeByApply(apply,
+                    QudanConstant.TRADE_TYPE.TEAM_REWORD.getType(),
+                    date,
+                    basePrice,
+                    userDL.getId()//受益人
+            );
+            teamTrade.setAccount(dlAccount.getId());
+            teamTrade.setAgentLevel(agentConfig.getLevel());
+            teamTrade.setAgentRate(agentConfig.getRelatedRate());
+            teamTrade.setRelationUserId(shareUser.getId());//业绩人
             teamTrade.setPrice(agentPrice);
         }
 
@@ -271,10 +314,12 @@ public class ApplyServiceImpl {
             ARE.addInfoError("product.isEmpty", "产品id不能为空");
             return false;
         }
-        User user = userService.getUserById(ARE.getUserId());
-        if(user.getStatus() == null || user.getStatus() != 3){
-            ARE.addInfoError("status.isEmpty", "未实名或者审核未通过");
-            return false;
+        if(ARE.getUserId() != null){
+            User user = userService.getUserById(ARE.getUserId());
+            if(user.getStatus() == null || user.getStatus() != 3){
+                ARE.addInfoError("status.isEmpty", "未实名或者审核未通过");
+                return false;
+            }
         }
 
         Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
