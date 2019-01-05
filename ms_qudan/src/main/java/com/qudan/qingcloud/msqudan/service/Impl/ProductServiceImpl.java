@@ -89,6 +89,10 @@ public class ProductServiceImpl {
         List<ShareManager> shares = productMapperSelf.getShareManagerList(id);
         if(CollectionUtils.isEmpty(shares)){
             shares = Lists.newArrayList();
+        } else {
+            for (ShareManager shareManager : shares){
+                shareManager.setShareImg(ComUtils.addPrefixToImg(shareManager.getShareImg(), config.getQiniuImageUrl()));
+            }
         }
         productVo.setShares(shares);
         product.setLogo(ComUtils.addPrefixToImg(product.getLogo(), config.getQiniuImageUrl()));
