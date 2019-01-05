@@ -17,6 +17,8 @@ import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import java.util.Map;
 
 @Service
 public class UserServiceImpl {
-
+    protected final Log logger = LogFactory.getLog(getClass());
     @Autowired
     WeixinUserTempMapper weixinUserTempMapper;
 
@@ -143,6 +145,8 @@ public class UserServiceImpl {
             ARE.addInfoError("wutid.isEmpty", "微信信息id不能为空");
             return null;
         }
+        logger.info("-------------wutid:"+RB.getWutid());
+        logger.info("-------------shareid:"+RB.getShareid());
 
         Date date = new Date();
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 5, true)){
