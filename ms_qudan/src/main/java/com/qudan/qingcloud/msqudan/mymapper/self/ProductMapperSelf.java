@@ -58,6 +58,7 @@ public interface ProductMapperSelf extends ProductMapper{
                 "pro.expire_begin expireBegin,",
                 "pro.expire_end expireEnd,",
                 "pro.day_rate dayRate,",
+                "pro.commission commission,",
                 "pro.month_rate monthRate",
             "FROM product pro",
             "WHERE ",

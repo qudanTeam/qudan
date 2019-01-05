@@ -8,6 +8,7 @@ public class ProductListVo {
     private Integer productType;
     private String logo;
     private BigDecimal baseSalary;
+    private BigDecimal commission;
     private String specialTag;
     private String specialTxt;
     private Integer amountLine;
@@ -138,5 +139,13 @@ public class ProductListVo {
 
     public void setMonthRate(BigDecimal monthRate) {
         this.monthRate = monthRate;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
     }
 }
