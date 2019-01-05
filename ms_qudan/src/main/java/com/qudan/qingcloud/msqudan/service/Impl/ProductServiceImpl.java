@@ -40,7 +40,7 @@ public class ProductServiceImpl {
         List<HotProductVo> hotProductVos  = productMapperSelf.getHotProduct(type);
         for (HotProductVo vo : hotProductVos){
             vo.setLogo(config.getQiniuImageUrl()+vo.getLogo());
-            vo.setRecommendCount(1144);//TODO，推荐次数未界定
+            vo.setRecommendCount(productMapperSelf.getRecommendCt(vo.getProductId()));
         }
         Map<String,Object> data = Maps.newHashMap();
         data.put("hots", hotProductVos);

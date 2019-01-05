@@ -11,6 +11,7 @@ public class HotProductVo {
     private BigDecimal salary;
     private Integer recommendCount;
     private BigDecimal salaryAmount;
+    private BigDecimal commission;
 
     public Integer getProductId() {
         return productId;
@@ -74,5 +75,13 @@ public class HotProductVo {
 
     public void setSortVal(Integer sortVal) {
         this.sortVal = sortVal;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
     }
 }

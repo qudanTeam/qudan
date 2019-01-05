@@ -6,6 +6,7 @@ import com.qudan.qingcloud.msqudan.entity.ShareManager;
 import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -21,6 +22,7 @@ public interface ProductMapperSelf extends ProductMapper{
             "pro.logo logo,",
             "pro.base_salary baseSalary,",
             "pro.sort_val sortVal,",
+            "pro.commission commission,",
             "SUM(trade.price) salaryAmount",
         "FROM product pro",
         "LEFT JOIN apply ON apply.product_id = pro.id",
@@ -40,6 +42,10 @@ public interface ProductMapperSelf extends ProductMapper{
     })
     List<HotProductVo> getHotProduct(@Param("type")Integer type);
 
+    @Select({
+        "SELECT count(1) FROM user_share_qr_code WHERE pid = #{pid}"
+    })
+    int getRecommendCt(@Param("pid")Integer pid);
 
     @Select({
         "<script>",
