@@ -81,6 +81,9 @@ public class UserServiceImpl {
     @Autowired
     CommonConfig config;
 
+    @Autowired
+    CharacterServiceImpl characterService;
+
     public Map<String,Object> loginWithValidcode(ApiResponseEntity ARE, UserLoginRB RB, User user){
         Map<String,Object> data = Maps.newHashMap();
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 2, true)){
@@ -166,6 +169,7 @@ public class UserServiceImpl {
             User user = null;
             WeixinBinding binding = null;
             if(openidBind == null && mobileuser == null){
+                User inviteUser = null;
                 user = new User();
                 user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
                 user.setUserface(MatrixToImageWriter.getWeixinTx(
@@ -193,7 +197,7 @@ public class UserServiceImpl {
                         ARE.addInfoError("share.shareid.isError", "无效的分享id");
                         return null;
                     }
-                    User inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                    inviteUser = userMapperSelf.selectById(qrCode.getUserId());
 
                     if(inviteUser != null){
                         user.setRecommendInviteCode(inviteUser.getInviteCode());
@@ -214,6 +218,9 @@ public class UserServiceImpl {
                 user_update.setId(user.getId());
                 user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
                 userMapperSelf.updateByPrimaryKeySelective(user_update);
+                if(inviteUser != null){
+                    characterService.becomeAgent(inviteUser.getId());
+                }
                 data = getToken(ARE, user);
             } else if(openidBind != null && mobileuser == null){
                 ARE.addInfoError("openid.binging.isExist", "微信号绑定关系已存在，不需要在绑定了!");
@@ -257,6 +264,7 @@ public class UserServiceImpl {
 
         Date date = new Date();
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
+            User inviteUser = null;
             user = new User();
             user.setUsername("编号"+RandomUtils.generateNumString(4));
             user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
@@ -280,7 +288,7 @@ public class UserServiceImpl {
                     ARE.addInfoError("share.shareid.isError", "无效的分享id");
                     return null;
                 }
-                User inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                inviteUser = userMapperSelf.selectById(qrCode.getUserId());
 
                 if(inviteUser != null){
                     user.setRecommendInviteCode(inviteUser.getInviteCode());
@@ -302,6 +310,9 @@ public class UserServiceImpl {
             user_update.setId(user.getId());
             user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
             userMapperSelf.updateByPrimaryKeySelective(user_update);
+            if(inviteUser != null){
+                characterService.becomeAgent(inviteUser.getId());
+            }
             data = getToken(ARE, user);
         }
         return data;

@@ -9,7 +9,7 @@ public class Agent {
 
     private Integer level;
 
-    private Integer beignAgentTime;
+    private Date beignAgentTime;
 
     private Date createTime;
 
@@ -39,11 +39,11 @@ public class Agent {
         this.level = level;
     }
 
-    public Integer getBeignAgentTime() {
+    public Date getBeignAgentTime() {
         return beignAgentTime;
     }
 
-    public void setBeignAgentTime(Integer beignAgentTime) {
+    public void setBeignAgentTime(Date beignAgentTime) {
         this.beignAgentTime = beignAgentTime;
     }
 

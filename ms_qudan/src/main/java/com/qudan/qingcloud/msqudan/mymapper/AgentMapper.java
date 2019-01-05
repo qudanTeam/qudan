@@ -24,7 +24,7 @@ public interface AgentMapper {
         "beign_agent_time, create_time, ",
         "modify_time)",
         "values (#{userId,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, ",
-        "#{beignAgentTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, ",
+        "#{beignAgentTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, ",
         "#{modifyTime,jdbcType=TIMESTAMP})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
@@ -44,7 +44,7 @@ public interface AgentMapper {
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="user_id", property="userId", jdbcType=JdbcType.INTEGER),
         @Result(column="level", property="level", jdbcType=JdbcType.INTEGER),
-        @Result(column="beign_agent_time", property="beignAgentTime", jdbcType=JdbcType.INTEGER),
+        @Result(column="beign_agent_time", property="beignAgentTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="modify_time", property="modifyTime", jdbcType=JdbcType.TIMESTAMP)
     })
@@ -57,7 +57,7 @@ public interface AgentMapper {
         "update agent",
         "set user_id = #{userId,jdbcType=INTEGER},",
           "level = #{level,jdbcType=INTEGER},",
-          "beign_agent_time = #{beignAgentTime,jdbcType=INTEGER},",
+          "beign_agent_time = #{beignAgentTime,jdbcType=TIMESTAMP},",
           "create_time = #{createTime,jdbcType=TIMESTAMP},",
           "modify_time = #{modifyTime,jdbcType=TIMESTAMP}",
         "where id = #{id,jdbcType=INTEGER}"

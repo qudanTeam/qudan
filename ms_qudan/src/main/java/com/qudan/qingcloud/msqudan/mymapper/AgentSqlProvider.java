@@ -25,7 +25,7 @@ public class AgentSqlProvider {
         }
         
         if (record.getBeignAgentTime() != null) {
-            VALUES("beign_agent_time", "#{beignAgentTime,jdbcType=INTEGER}");
+            VALUES("beign_agent_time", "#{beignAgentTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getCreateTime() != null) {
@@ -52,7 +52,7 @@ public class AgentSqlProvider {
         }
         
         if (record.getBeignAgentTime() != null) {
-            SET("beign_agent_time = #{beignAgentTime,jdbcType=INTEGER}");
+            SET("beign_agent_time = #{beignAgentTime,jdbcType=TIMESTAMP}");
         }
         
         if (record.getCreateTime() != null) {

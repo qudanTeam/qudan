@@ -211,4 +211,19 @@ public interface UserMapperSelf extends UserMapper {
         "SELECT count(1) FROM trade_type WHERE trade_type = 1 AND (status = 2 OR status =1) AND user_id = #{userId} AND audit_time < #{end} AND audit_time >= #{start}"
     })
     int countTxByTime(@Param("start")Date start , @Param("end")Date end, @Param("userId")Integer userId);
+
+    @Select({
+        "SELECT COUNT(1) FROM user_share WHERE user_id = #{userId}"
+    })
+    int countShareCt(Integer userId);
+
+    @Select({
+        "SELECT COUNT(1) FROM apply WHERE invite_code = #{inviteCode} AND status = 2 AND official_status =2"
+    })
+    int countTaskDoneCt(String inviteCode);
+
+    @Select({
+        "SELECT COUNT(1) FROM user WHERE recommend_invite_id = #{userId}"
+    })
+    int countInviteCt(Integer userId);
 }
