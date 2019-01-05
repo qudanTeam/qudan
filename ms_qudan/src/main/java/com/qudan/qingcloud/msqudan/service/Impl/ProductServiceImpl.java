@@ -98,6 +98,7 @@ public class ProductServiceImpl {
         product.setCardLongImg(ComUtils.addPrefixToImg(product.getCardLongImg(), config.getQiniuImageUrl()));
         product.setProductShowImg(ComUtils.addPrefixToImg(product.getProductShowImg(), config.getQiniuImageUrl()));
         product.setCardProgressImg(ComUtils.addPrefixToImg(product.getCardProgressImg(), config.getQiniuImageUrl()));
+        product.setProductPoster(ComUtils.addPrefixToImg(product.getProductPoster(), config.getQiniuImageUrl()));
         productVo.setProduct(product);
 
         List<Category> categories = productMapperSelf.selectCatByProductId(id);

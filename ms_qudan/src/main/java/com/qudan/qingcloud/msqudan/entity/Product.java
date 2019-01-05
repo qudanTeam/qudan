@@ -114,6 +114,16 @@ public class Product {
 
     private String unit;
 
+    private String jlUnite;
+
+    private BigDecimal productProfitPrice;
+
+    private Byte cardKind;
+
+    private String productPoster;
+
+    private String productLink;
+
     public Integer getId() {
         return id;
     }
@@ -552,5 +562,45 @@ public class Product {
 
     public void setUnit(String unit) {
         this.unit = unit == null ? null : unit.trim();
+    }
+
+    public String getJlUnite() {
+        return jlUnite;
+    }
+
+    public void setJlUnite(String jlUnite) {
+        this.jlUnite = jlUnite == null ? null : jlUnite.trim();
+    }
+
+    public BigDecimal getProductProfitPrice() {
+        return productProfitPrice;
+    }
+
+    public void setProductProfitPrice(BigDecimal productProfitPrice) {
+        this.productProfitPrice = productProfitPrice;
+    }
+
+    public Byte getCardKind() {
+        return cardKind;
+    }
+
+    public void setCardKind(Byte cardKind) {
+        this.cardKind = cardKind;
+    }
+
+    public String getProductPoster() {
+        return productPoster;
+    }
+
+    public void setProductPoster(String productPoster) {
+        this.productPoster = productPoster == null ? null : productPoster.trim();
+    }
+
+    public String getProductLink() {
+        return productLink;
+    }
+
+    public void setProductLink(String productLink) {
+        this.productLink = productLink == null ? null : productLink.trim();
     }
 }

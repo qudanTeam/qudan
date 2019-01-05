@@ -17,6 +17,7 @@ public class ProductListVo {
     private String expireUnit;
     private Integer expireBegin;
     private Integer expireEnd;
+    private String productPoster;
 
     private BigDecimal dayRate;
     private BigDecimal monthRate;
@@ -147,5 +148,14 @@ public class ProductListVo {
 
     public void setCommission(BigDecimal commission) {
         this.commission = commission;
+    }
+
+    public String getProductPoster() {
+
+        return productPoster;
+    }
+
+    public void setProductPoster(String productPoster) {
+        this.productPoster = productPoster;
     }
 }

@@ -232,6 +232,26 @@ public class ProductSqlProvider {
             VALUES("unit", "#{unit,jdbcType=VARCHAR}");
         }
         
+        if (record.getJlUnite() != null) {
+            VALUES("jl_unite", "#{jlUnite,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductProfitPrice() != null) {
+            VALUES("product_profit_price", "#{productProfitPrice,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getCardKind() != null) {
+            VALUES("card_kind", "#{cardKind,jdbcType=TINYINT}");
+        }
+        
+        if (record.getProductPoster() != null) {
+            VALUES("\"product_ poster\"", "#{productPoster,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductLink() != null) {
+            VALUES("product_link", "#{productLink,jdbcType=LONGVARCHAR}");
+        }
+        
         return SQL();
     }
 
@@ -453,6 +473,26 @@ public class ProductSqlProvider {
         
         if (record.getUnit() != null) {
             SET("unit = #{unit,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getJlUnite() != null) {
+            SET("jl_unite = #{jlUnite,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductProfitPrice() != null) {
+            SET("product_profit_price = #{productProfitPrice,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getCardKind() != null) {
+            SET("card_kind = #{cardKind,jdbcType=TINYINT}");
+        }
+        
+        if (record.getProductPoster() != null) {
+            SET("\"product_ poster\" = #{productPoster,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductLink() != null) {
+            SET("product_link = #{productLink,jdbcType=LONGVARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");
