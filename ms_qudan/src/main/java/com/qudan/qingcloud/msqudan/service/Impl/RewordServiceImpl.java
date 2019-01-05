@@ -15,7 +15,7 @@ public class RewordServiceImpl {
     @Autowired
     ProductMapperSelf productMapperSelf;
 
-    public BigDecimal getBasePrice(Product product, ProductConfig config){
+    public BigDecimal getBasePrice(Product product){
         return product.getBaseSalary();
     }
 

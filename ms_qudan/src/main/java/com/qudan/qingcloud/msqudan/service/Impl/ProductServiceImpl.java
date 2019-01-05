@@ -115,7 +115,10 @@ public class ProductServiceImpl {
         if(ARE.getUserId() != null){
             productVo.setApply(applyMapperSelf.selectApplyByUserIdAndProductId(product.getId(), ARE.getUserId()) == null);
         }
-        ProductConfig config = productMapperSelf.getProductConfig(id);
+        List<ProductConfig> config = productMapperSelf.getProductConfig(id);
+        if(CollectionUtils.isEmpty(config)){
+            config = Lists.newArrayList();
+        }
         productVo.setConfig(config);
         Map<String,Object> data = Maps.newHashMap();
         data.put("detail", productVo);

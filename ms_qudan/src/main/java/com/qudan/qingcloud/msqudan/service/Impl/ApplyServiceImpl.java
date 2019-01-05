@@ -69,12 +69,7 @@ public class ApplyServiceImpl {
             return null;
         }
         log.info("apply.productid:"+product.getId());
-        ProductConfig productConfig = productMapperSelf.getProductConfig(apply.getProductId());
-        if(product == null){
-            ARE.addInfoError("apply.productConfig.isEmpty", "apply.productConfig.isEmpty");
-            return null;
-        }
-        log.info("apply.productConfigId:"+productConfig.getId());
+
 
         if(StringUtils.isNotBlank(code)){
             Integer shareUserId = QudanHashIdUtils.decodeHashId(code);
@@ -117,7 +112,7 @@ public class ApplyServiceImpl {
         }
 
 
-        BigDecimal basePrice = rewordService.getBasePrice(product, productConfig);
+        BigDecimal basePrice = rewordService.getBasePrice(product);
         BigDecimal vipPrice = null;
         BigDecimal agentPrice = null;
         UserAccount shareAccount = null;

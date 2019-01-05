@@ -77,7 +77,7 @@ public interface ProductMapperSelf extends ProductMapper{
     @Select({
             "SELECT * FROM product_config WHERE  product_id = #{productId}"
     })
-   ProductConfig getProductConfig(@Param("productId")Integer productId);
+   List<ProductConfig> getProductConfig(@Param("productId")Integer productId);
 
     @Select({
         "SELECT * FROM share_manager WHERE is_show = 1 AND product_id = #{productId}"
