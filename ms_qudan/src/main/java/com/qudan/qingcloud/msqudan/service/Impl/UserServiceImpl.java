@@ -213,7 +213,7 @@ public class UserServiceImpl {
                 User user_update = new User();
                 user_update.setId(user.getId());
                 user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
-                userMapperSelf.updateByPrimaryKeySelective(user);
+                userMapperSelf.updateByPrimaryKeySelective(user_update);
                 data = getToken(ARE, user);
             } else if(openidBind != null && mobileuser == null){
                 ARE.addInfoError("openid.binging.isExist", "微信号绑定关系已存在，不需要在绑定了!");
@@ -301,7 +301,7 @@ public class UserServiceImpl {
             User user_update = new User();
             user_update.setId(user.getId());
             user_update.setInviteCode(QudanHashIdUtils.encodeHashId(user.getId()));
-            userMapperSelf.updateByPrimaryKeySelective(user);
+            userMapperSelf.updateByPrimaryKeySelective(user_update);
             data = getToken(ARE, user);
         }
         return data;
