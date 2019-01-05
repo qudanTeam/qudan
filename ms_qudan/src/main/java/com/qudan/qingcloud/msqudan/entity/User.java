@@ -1,8 +1,11 @@
 package com.qudan.qingcloud.msqudan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
+    @JsonIgnore
     private Integer id;
 
     private String username;
