@@ -106,7 +106,7 @@ public class CharacterServiceImpl {
                 agent_update.setModifyTime(date);
                 agentMapper.updateByPrimaryKeySelective(agent_update);
             }
-            userMapperSelf.updateByPrimaryKeySelective(user);
+            userMapperSelf.updateByPrimaryKeySelective(user_update);
         }
     }
 
