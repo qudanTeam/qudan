@@ -245,7 +245,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getProductPoster() != null) {
-            VALUES("\"product_ poster\"", "#{productPoster,jdbcType=VARCHAR}");
+            VALUES("product_poster", "#{productPoster,jdbcType=VARCHAR}");
         }
         
         if (record.getProductLink() != null) {
@@ -488,7 +488,7 @@ public class ProductSqlProvider {
         }
         
         if (record.getProductPoster() != null) {
-            SET("\"product_ poster\" = #{productPoster,jdbcType=VARCHAR}");
+            SET("product_poster = #{productPoster,jdbcType=VARCHAR}");
         }
         
         if (record.getProductLink() != null) {

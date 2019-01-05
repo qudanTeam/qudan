@@ -48,7 +48,7 @@ public interface ProductMapper {
         "preferential, special_tag, ",
         "special_txt, unit, ",
         "jl_unite, product_profit_price, ",
-        "card_kind, \"product_ poster\", ",
+        "card_kind, product_poster, ",
         "product_link)",
         "values (#{productName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, ",
         "#{productType,jdbcType=INTEGER}, #{isHot,jdbcType=INTEGER}, ",
@@ -99,7 +99,7 @@ public interface ProductMapper {
         "product_show_img, burundian, settlement_type, expire_unit, how_settle, expire_begin, ",
         "expire_end, commission_standard, share_title, card_progress_img, base_right, ",
         "preferential, special_tag, special_txt, unit, jl_unite, product_profit_price, ",
-        "card_kind, \"product_ poster\", product_link",
+        "card_kind, product_poster, product_link",
         "from product",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -162,7 +162,7 @@ public interface ProductMapper {
         @Result(column="jl_unite", property="jlUnite", jdbcType=JdbcType.VARCHAR),
         @Result(column="product_profit_price", property="productProfitPrice", jdbcType=JdbcType.DECIMAL),
         @Result(column="card_kind", property="cardKind", jdbcType=JdbcType.TINYINT),
-        @Result(column="product_ poster", property="productPoster", jdbcType=JdbcType.VARCHAR),
+        @Result(column="product_poster", property="productPoster", jdbcType=JdbcType.VARCHAR),
         @Result(column="product_link", property="productLink", jdbcType=JdbcType.LONGVARCHAR)
     })
     Product selectByPrimaryKey(Integer id);
@@ -229,7 +229,7 @@ public interface ProductMapper {
           "jl_unite = #{jlUnite,jdbcType=VARCHAR},",
           "product_profit_price = #{productProfitPrice,jdbcType=DECIMAL},",
           "card_kind = #{cardKind,jdbcType=TINYINT},",
-          "\"product_ poster\" = #{productPoster,jdbcType=VARCHAR},",
+          "product_poster = #{productPoster,jdbcType=VARCHAR},",
           "product_link = #{productLink,jdbcType=LONGVARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -294,7 +294,7 @@ public interface ProductMapper {
           "jl_unite = #{jlUnite,jdbcType=VARCHAR},",
           "product_profit_price = #{productProfitPrice,jdbcType=DECIMAL},",
           "card_kind = #{cardKind,jdbcType=TINYINT},",
-          "\"product_ poster\" = #{productPoster,jdbcType=VARCHAR}",
+          "product_poster = #{productPoster,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Product record);
