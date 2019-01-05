@@ -258,7 +258,7 @@ public class UserServiceImpl {
         Date date = new Date();
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){
             user = new User();
-            user.setUsername("编号"+RandomUtils.generateNumString(4));
+            user.setUsername(null);
             user.setPassword(PasswordUtils.encodePassword(RB.getPassword()));
             user.setUserface("");
             user.setIsenable(1);
