@@ -116,8 +116,13 @@ public class WxPayServiceImpl {
         if("JSAPI".equals(trade_type)){
             //获取openid 根据userid
             WeixinBinding weixinBinding = weixinBindingMapper.selectBindingByUserId(Integer.parseInt(user_id));
+            if(null != weixinBinding){
                 data.put("openid",weixinBinding.getOpenid());
                 logger.info("openid："+weixinBinding.getOpenid());
+                fail.put("status","400");
+                fail.put("msg","openid为空!");
+                return fail;
+            }
         }
 //        data.put("sign", md5Util.getSign(data));
         StringBuffer url= new StringBuffer();
