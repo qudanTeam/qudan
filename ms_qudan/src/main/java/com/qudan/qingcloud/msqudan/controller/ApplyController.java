@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.controller;
 
+import com.qudan.qingcloud.msqudan.entity.Apply;
 import com.qudan.qingcloud.msqudan.service.Impl.ApplyServiceImpl;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
@@ -36,6 +37,7 @@ public class ApplyController {
         ARE.setData(applyService.loanApply(ARE, RB));
         return ARE.createResponseEntity();
     }
+
 
     @GetMapping("/settle/trigger")
     public ResponseEntity<Map<String, Object>> loanApply(@Param("applyid")Integer applyId) {

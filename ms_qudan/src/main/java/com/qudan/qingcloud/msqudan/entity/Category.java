@@ -17,6 +17,14 @@ public class Category {
 
     private String getLink;
 
+    private Byte needVerifyCode;
+
+    private Byte needMobileVerifyCode;
+
+    private String verifyCodeLink;
+
+    private String mobileVerifyCodeLink;
+
     public Integer getId() {
         return id;
     }
@@ -71,5 +79,37 @@ public class Category {
 
     public void setGetLink(String getLink) {
         this.getLink = getLink == null ? null : getLink.trim();
+    }
+
+    public Byte getNeedVerifyCode() {
+        return needVerifyCode;
+    }
+
+    public void setNeedVerifyCode(Byte needVerifyCode) {
+        this.needVerifyCode = needVerifyCode;
+    }
+
+    public Byte getNeedMobileVerifyCode() {
+        return needMobileVerifyCode;
+    }
+
+    public void setNeedMobileVerifyCode(Byte needMobileVerifyCode) {
+        this.needMobileVerifyCode = needMobileVerifyCode;
+    }
+
+    public String getVerifyCodeLink() {
+        return verifyCodeLink;
+    }
+
+    public void setVerifyCodeLink(String verifyCodeLink) {
+        this.verifyCodeLink = verifyCodeLink == null ? null : verifyCodeLink.trim();
+    }
+
+    public String getMobileVerifyCodeLink() {
+        return mobileVerifyCodeLink;
+    }
+
+    public void setMobileVerifyCodeLink(String mobileVerifyCodeLink) {
+        this.mobileVerifyCodeLink = mobileVerifyCodeLink == null ? null : mobileVerifyCodeLink.trim();
     }
 }

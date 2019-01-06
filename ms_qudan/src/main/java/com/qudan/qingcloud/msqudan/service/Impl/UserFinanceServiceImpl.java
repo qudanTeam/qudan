@@ -32,9 +32,18 @@ public class UserFinanceServiceImpl {
     @Autowired
     TradeTypeMapper tradeTypeMapper;
 
+
     //TODO 商品搜索记录
     //TODO 记录商品搜索记录
     //TODO 成为VIP
+
+    public Map<String,Object> becomeVip(Integer userId, Integer vipId){
+        User user = userMapperSelf.selectById(userId);
+        if(user.getVipLevel() != null){
+
+        }
+        return null;
+    }
 
     // 提现申请
     public Map<String,Object> txRB(ApiResponseEntity ARE, TxRB txRB){

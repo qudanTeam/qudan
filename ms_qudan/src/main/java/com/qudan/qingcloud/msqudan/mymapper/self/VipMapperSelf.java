@@ -25,4 +25,9 @@ public interface VipMapperSelf extends VipConfigMapper{
             "SELECT * FROM vip_config WHERE id = (SELECT id FROM vip_record WHERE user_id = #{userId} AND end_time > #{date} AND start_time < #{date} ORDER BY ID DESC LIMIT 1)"
     })
     VipConfig selectVipConfigByUserId(@Param("userId") Integer userId, @Param("Date")Date date);
+
+    @Select({
+        "SELECT * FROM vip_record WHERE user_id = #{userId}"
+    })
+    VipRecord getVipRecordById(@Param("userId")Integer userId);
 }

@@ -28,6 +28,12 @@ public class BankServiceImpl {
         List<Category> banks = bankMapperSelf.categories(1);
         for (Category category : banks){
             category.setLogo(config.getQiniuImageUrl() + category.getLogo());
+            if(category.getNeedMobileVerifyCode() == null){
+                category.setNeedMobileVerifyCode(new Byte("0"));
+            }
+            if(category.getNeedVerifyCode() == null){
+                category.setNeedVerifyCode(new Byte("0"));
+            }
         }
         data.put("banks", banks);
         return data;

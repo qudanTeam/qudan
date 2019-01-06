@@ -40,6 +40,22 @@ public class CategorySqlProvider {
             VALUES("get_link", "#{getLink,jdbcType=VARCHAR}");
         }
         
+        if (record.getNeedVerifyCode() != null) {
+            VALUES("need_verify_code", "#{needVerifyCode,jdbcType=TINYINT}");
+        }
+        
+        if (record.getNeedMobileVerifyCode() != null) {
+            VALUES("need_mobile_verify_code", "#{needMobileVerifyCode,jdbcType=TINYINT}");
+        }
+        
+        if (record.getVerifyCodeLink() != null) {
+            VALUES("verify_code_link", "#{verifyCodeLink,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getMobileVerifyCodeLink() != null) {
+            VALUES("mobile_verify_code_link", "#{mobileVerifyCodeLink,jdbcType=VARCHAR}");
+        }
+        
         return SQL();
     }
 
@@ -69,6 +85,22 @@ public class CategorySqlProvider {
         
         if (record.getGetLink() != null) {
             SET("get_link = #{getLink,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getNeedVerifyCode() != null) {
+            SET("need_verify_code = #{needVerifyCode,jdbcType=TINYINT}");
+        }
+        
+        if (record.getNeedMobileVerifyCode() != null) {
+            SET("need_mobile_verify_code = #{needMobileVerifyCode,jdbcType=TINYINT}");
+        }
+        
+        if (record.getVerifyCodeLink() != null) {
+            SET("verify_code_link = #{verifyCodeLink,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getMobileVerifyCodeLink() != null) {
+            SET("mobile_verify_code_link = #{mobileVerifyCodeLink,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

@@ -22,10 +22,14 @@ public interface CategoryMapper {
     @Insert({
         "insert into category (name, create_time, ",
         "modify_time, category_type, ",
-        "logo, get_link)",
+        "logo, get_link, need_verify_code, ",
+        "need_mobile_verify_code, verify_code_link, ",
+        "mobile_verify_code_link)",
         "values (#{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, ",
         "#{modifyTime,jdbcType=TIMESTAMP}, #{categoryType,jdbcType=INTEGER}, ",
-        "#{logo,jdbcType=VARCHAR}, #{getLink,jdbcType=VARCHAR})"
+        "#{logo,jdbcType=VARCHAR}, #{getLink,jdbcType=VARCHAR}, #{needVerifyCode,jdbcType=TINYINT}, ",
+        "#{needMobileVerifyCode,jdbcType=TINYINT}, #{verifyCodeLink,jdbcType=VARCHAR}, ",
+        "#{mobileVerifyCodeLink,jdbcType=VARCHAR})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(Category record);
@@ -36,7 +40,8 @@ public interface CategoryMapper {
 
     @Select({
         "select",
-        "id, name, create_time, modify_time, category_type, logo, get_link",
+        "id, name, create_time, modify_time, category_type, logo, get_link, need_verify_code, ",
+        "need_mobile_verify_code, verify_code_link, mobile_verify_code_link",
         "from category",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -47,7 +52,11 @@ public interface CategoryMapper {
         @Result(column="modify_time", property="modifyTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="category_type", property="categoryType", jdbcType=JdbcType.INTEGER),
         @Result(column="logo", property="logo", jdbcType=JdbcType.VARCHAR),
-        @Result(column="get_link", property="getLink", jdbcType=JdbcType.VARCHAR)
+        @Result(column="get_link", property="getLink", jdbcType=JdbcType.VARCHAR),
+        @Result(column="need_verify_code", property="needVerifyCode", jdbcType=JdbcType.TINYINT),
+        @Result(column="need_mobile_verify_code", property="needMobileVerifyCode", jdbcType=JdbcType.TINYINT),
+        @Result(column="verify_code_link", property="verifyCodeLink", jdbcType=JdbcType.VARCHAR),
+        @Result(column="mobile_verify_code_link", property="mobileVerifyCodeLink", jdbcType=JdbcType.VARCHAR)
     })
     Category selectByPrimaryKey(Integer id);
 
@@ -61,7 +70,11 @@ public interface CategoryMapper {
           "modify_time = #{modifyTime,jdbcType=TIMESTAMP},",
           "category_type = #{categoryType,jdbcType=INTEGER},",
           "logo = #{logo,jdbcType=VARCHAR},",
-          "get_link = #{getLink,jdbcType=VARCHAR}",
+          "get_link = #{getLink,jdbcType=VARCHAR},",
+          "need_verify_code = #{needVerifyCode,jdbcType=TINYINT},",
+          "need_mobile_verify_code = #{needMobileVerifyCode,jdbcType=TINYINT},",
+          "verify_code_link = #{verifyCodeLink,jdbcType=VARCHAR},",
+          "mobile_verify_code_link = #{mobileVerifyCodeLink,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Category record);
