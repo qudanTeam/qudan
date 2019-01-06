@@ -119,6 +119,7 @@ public class WxPayServiceImpl {
             if(null != weixinBinding){
                 data.put("openid",weixinBinding.getOpenid());
                 logger.info("openid："+weixinBinding.getOpenid());
+            } else {
                 fail.put("status","400");
                 fail.put("msg","openid为空!");
                 return fail;
