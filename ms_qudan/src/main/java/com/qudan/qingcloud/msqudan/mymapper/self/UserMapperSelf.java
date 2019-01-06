@@ -190,10 +190,10 @@ public interface UserMapperSelf extends UserMapper {
                 "SUM(t.price)",
             "FROM user ru ",
             "left join user relu on ru.id = relu.recommend_invite_id",
-            "left join trade_type on relu.id = t.relation_user_id",//业绩人
+            "left join trade_type t on relu.id = t.relation_user_id",//业绩人
             "LEFT JOIN apply on apply.id = t.apply_id",
             "WHERE ",
-                "ru.user_id = #{userId}",
+                "ru.id = #{userId}",
                 "AND (",
                     "(t.id IS NOT NULL AND t.trade_type = 3) ",
                     "OR ",
@@ -202,8 +202,8 @@ public interface UserMapperSelf extends UserMapper {
                 "<if test=\"ym != null and ym != ''\"> AND date_format(t.audit_time, '%Y-%m') = #{ym} </if>",
                 "GROUP BY ",
                     "relu.username,",
-                    "relu.mobile,",
                     "relu.register_mobile,",
+                    "relu.register_time,",
                     "ru.username ORDER ",
                 "BY relu.register_time DESC",
         "</script>",

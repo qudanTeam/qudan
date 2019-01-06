@@ -16,9 +16,9 @@ public class BannerController {
     BannerServiceImpl bannerService;
 
     @GetMapping("/banners")
-    public ResponseEntity<Map<String, Object>> banners() {
+    public ResponseEntity<Map<String, Object>> banners(@RequestParam(value = "position", required = false)Integer position) {
         ApiResponseEntity ARE = new ApiResponseEntity();
-        ARE.setData(bannerService.getBanners(ARE));
+        ARE.setData(bannerService.getBanners(ARE, position));
         return ARE.createResponseEntity();
     }
 

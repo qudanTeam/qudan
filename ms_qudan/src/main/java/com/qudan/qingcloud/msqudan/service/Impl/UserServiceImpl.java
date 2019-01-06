@@ -228,6 +228,13 @@ public class UserServiceImpl {
                 return null;
             } else if(openidBind == null && mobileuser != null){
                 user = mobileuser;
+                User user_update = new User();
+                user_update.setId(user.getId());
+                user_update.setUsername(wut.getNickname());
+                user_update.setUserface(MatrixToImageWriter.getWeixinTx(
+                        config, wut.getHeadImgUrl()
+                ));
+                userMapperSelf.updateByPrimaryKeySelective(user_update);
             } else if(openidBind != null && mobileuser != null){
                 ARE.addInfoError("openid.bingingAndMoblie.isExist", "手机号，微信号绑定关系已存在，不需要在绑定了!");
                 return null;
