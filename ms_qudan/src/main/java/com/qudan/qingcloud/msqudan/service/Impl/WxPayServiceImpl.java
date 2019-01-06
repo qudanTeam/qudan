@@ -5,7 +5,9 @@ import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
+import com.qudan.qingcloud.msqudan.entity.VipConfig;
 import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
+import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import com.qudan.qingcloud.msqudan.util.AmountUtils;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
@@ -23,6 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +46,12 @@ public class WxPayServiceImpl {
 
     @Autowired
     private WeixinMapperSelf weixinBindingMapper;
+
+    @Autowired
+    VipMapperSelf vipMapperSelf;
+
+    @Autowired
+    UserFinanceServiceImpl userFinanceService;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -233,6 +242,23 @@ public class WxPayServiceImpl {
                          *          此处需要判断一下。后面写入库操作的时候再写
                          *
                          */
+                        try {
+                            PayOrder py = vipMapperSelf.getFeeByOrderId(out_trade_no);
+                            if(py == null){
+                                logger.error("------------------订单号out_trade_no:" + out_trade_no + ", 找不到订单");
+                                throw new RuntimeException("订单号不存在");
+                            }
+                            BigDecimal vipFee = new BigDecimal(py.getTotalFee()).divide(new BigDecimal(100) , 2 ,BigDecimal.ROUND_HALF_UP);
+                            logger.info("---------vipFee:", vipFee.toString());
+                            VipConfig vipConfig = vipMapperSelf.getVipConfigByFee(vipFee);
+                            if(vipConfig == null){
+                                throw new RuntimeException("根据金额找不到VIPCONFIG");
+                            }
+                            userFinanceService.becomeVip(Integer.valueOf(py.getUserId()), vipConfig.getId());
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                            logger.error("成为VIP业务逻辑执行错误", ex);
+                        }
                         //更新订单为成功
                         PayOrder payOrder = new PayOrder();
                         payOrder.setTradeTime(new Date());

@@ -120,9 +120,7 @@ public class WxPayController {
         jsonObject.put("sign",sign);
         jsonObject.put("code_url",code_url);
         jsonObject.put("mweb_url",mwebUrl);
-
         return YHResult.build(200,"唤起支付成功!",jsonObject);    //给前端app返回此字符串，再调用前端的微信sdk引起微信支付
-
     }
 
     /**

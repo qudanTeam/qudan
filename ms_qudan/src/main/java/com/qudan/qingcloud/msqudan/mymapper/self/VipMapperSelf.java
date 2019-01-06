@@ -1,11 +1,13 @@
 package com.qudan.qingcloud.msqudan.mymapper.self;
 
+import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.entity.VipConfig;
 import com.qudan.qingcloud.msqudan.entity.VipRecord;
 import com.qudan.qingcloud.msqudan.mymapper.VipConfigMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -29,5 +31,15 @@ public interface VipMapperSelf extends VipConfigMapper{
     @Select({
         "SELECT * FROM vip_record WHERE user_id = #{userId}"
     })
-    VipRecord getVipRecordById(@Param("userId")Integer userId);
+    VipRecord getVipRecordByUserId(@Param("userId")Integer userId);
+
+    @Select({
+        "SELECT * FROM vip_config WHERE vip_price = #{fee}"
+    })
+    VipConfig getVipConfigByFee(@Param("fee")BigDecimal fee);
+
+    @Select({
+        "SELECT * FROM pay_order WHERE order_id = #{orderId}"
+    })
+    PayOrder getFeeByOrderId(@Param("orderId")String orderId);
 }

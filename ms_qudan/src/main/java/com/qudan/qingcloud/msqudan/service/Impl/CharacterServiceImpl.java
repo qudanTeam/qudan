@@ -35,6 +35,27 @@ public class CharacterServiceImpl {
     @Autowired
     AgentMapper agentMapper;
 
+    public Map<String,Object> vipCheck(ApiResponseEntity ARE, Integer vipId){
+        Date date = new Date();
+        Map<String,Object> data = Maps.newHashMap();
+        User user = userMapperSelf.selectById(ARE.getUserId());
+        VipRecord vipRecord = vipMapperSelf.getVipRecordByUserId(ARE.getUserId());
+        VipConfig config = vipMapperSelf.selectByPrimaryKey(vipId);
+        if(config == null){
+            ARE.addInfoError("vip.isNotExist", "不存在的VIP等级");
+            return null;
+        }
+        boolean isVip = false;
+        if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
+            isVip = true;
+        }
+        if(isVip && user.getVipLevel() < config.getVipLevel()){
+            ARE.addInfoError("vip.overCurrent", "当期VIP等级已经超过需要购买的VIP等级");
+            return null;
+        }
+        return null;
+    }
+
     @HystrixCommand
     public Map<String,Object> vips(ApiResponseEntity ARE){
         Map<String,Object> data = Maps.newHashMap();

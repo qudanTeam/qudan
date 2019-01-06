@@ -4,9 +4,11 @@ import com.google.common.collect.Maps;
 import com.qudan.qingcloud.msqudan.service.Impl.CharacterServiceImpl;
 import com.qudan.qingcloud.msqudan.util.DateFormatUtil;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.RandomUtils;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.RankVo;
+import org.apache.ibatis.annotations.Param;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,14 @@ public class CharacterController {
     public ResponseEntity<Map<String, Object>> vips() {
         ApiResponseEntity ARE = new ApiResponseEntity();
         ARE.setData(characterService.vips(ARE));
+        return ARE.createResponseEntity();
+    }
+
+    @GetMapping("/user/vip/check")
+    public ResponseEntity<Map<String, Object>> vipCheck(@Param("vip_id")Integer vipId) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setUserId(LocalUserHelper.getUserId());
+        ARE.setData(characterService.vipCheck(ARE, vipId));
         return ARE.createResponseEntity();
     }
 

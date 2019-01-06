@@ -489,6 +489,7 @@ public class UserServiceImpl {
     @HystrixCommand
     public Map<String,Object> getUserInfo(ApiResponseEntity ARE){
         Map<String,Object> data = Maps.newHashMap();
+        Date date = new Date();
         Integer userId = ARE.getUserId();
         User user = userMapperSelf.selectById(userId);
         UserInfo userInfo = new UserInfo();
@@ -510,12 +511,16 @@ public class UserServiceImpl {
         UserVipVo userVipVo = new UserVipVo();
         UserAgentVo userAgentVo = new UserAgentVo();
         userInfo.setIsAgent(user.getAgentLevel() != null && user.getAgentLevel() > 0);
-        userInfo.setIsVip(StringUtils.isNotBlank(user.getVipName()));
+        VipRecord vipRecord = vipMapperSelf.getVipRecordByUserId(userId);
+        boolean isVip = false;
+        if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
+            isVip = true;
+        }
+        userInfo.setIsVip(isVip);
         if(userInfo.getIsVip()){
-            VipRecord record = vipMapperSelf.selectVipByUserId(userId);
-            VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(record.getVipConfigId());
+            VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(vipRecord.getVipConfigId());
             userVipVo.setVipName(vipConfig.getVipName());
-            userVipVo.setVipExpireDate(DateUtil.getFormatDate(record.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+            userVipVo.setVipExpireDate(DateUtil.getFormatDate(vipRecord.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
             userVipVo.setVipRate(vipConfig.getAddRate());
             userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
             userVipVo.setVipLevel(vipConfig.getVipLevel());

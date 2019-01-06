@@ -2,13 +2,15 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 
 import com.google.common.collect.Maps;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
-import com.qudan.qingcloud.msqudan.entity.TradeType;
-import com.qudan.qingcloud.msqudan.entity.User;
-import com.qudan.qingcloud.msqudan.entity.UserAccount;
+import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.UserAccountMapper;
+import com.qudan.qingcloud.msqudan.mymapper.VipConfigMapper;
+import com.qudan.qingcloud.msqudan.mymapper.VipRecordMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
+import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateFormatUtil;
+import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
@@ -32,17 +34,78 @@ public class UserFinanceServiceImpl {
     @Autowired
     TradeTypeMapper tradeTypeMapper;
 
+    @Autowired
+    VipConfigMapper vipConfigMapper;
+
+    @Autowired
+    VipMapperSelf vipMapperSelf;
+
+    @Autowired
+    VipRecordMapper vipRecordMapper;
+
+
 
     //TODO 商品搜索记录
     //TODO 记录商品搜索记录
     //TODO 成为VIP
 
     public Map<String,Object> becomeVip(Integer userId, Integer vipId){
-        User user = userMapperSelf.selectById(userId);
-        if(user.getVipLevel() != null){
+        Map<String,Object> data = Maps.newHashMap();
 
+        Date date = new Date();
+        User user = userMapperSelf.selectById(userId);
+        VipConfig vipConfig = vipConfigMapper.selectByPrimaryKey(vipId);
+        VipRecord vipRecord = null;
+        if(user.getVipLevel() != null && user.getVipLevel() > 0) {
+            vipRecord = vipMapperSelf.selectVipByUserId(userId);
+        } else {
+            vipRecord = new VipRecord();
         }
-        return null;
+        boolean isVip = false;
+        if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
+            isVip = true;
+        }
+
+        TradeType tradeType = new TradeType();
+        tradeType.setTradeType(QudanConstant.TRADE_TYPE.VIP_PAY.getType());
+        tradeType.setIndirectType(null);
+        tradeType.setPrice(vipConfig.getVipPrice());
+        tradeType.setApplyId(null);
+        tradeType.setCreateTime(date);
+        tradeType.setModifyTime(date);
+        tradeType.setSendStatus(2);
+        tradeType.setStatus(2);
+        tradeType.setBasePrice(vipConfig.getVipPrice());
+        tradeType.setUserId(userId);
+        tradeType.setAccount(null);
+        tradeType.setVipLevel(vipConfig.getVipLevel().shortValue());
+        tradeTypeMapper.insertSelective(tradeType);
+
+        if(!isVip){
+            vipRecord.setStartTime(date);
+        }
+        if(isVip && vipConfig.getVipLevel() < user.getVipLevel()){
+            throw new RuntimeException("当期VIP等级已经超过需要购买的VIP等级");
+        }
+        if(isVip &&  vipConfig.getVipLevel() == user.getVipLevel()){
+            vipRecord.setEndTime(DateUtil.getPerDate(vipRecord.getEndTime(), "d", vipConfig.getServiceDays()));
+        } else {
+            vipRecord.setEndTime(DateUtil.getPerDate(date, "d", vipConfig.getServiceDays()));
+        }
+        vipRecord.setUserId(userId);
+        vipRecord.setTradeId(tradeType.getId());
+        vipRecord.setVipConfigId(vipId);
+        if(vipRecord.getId() == null){
+            vipRecordMapper.insertSelective(vipRecord);
+        } else {
+            vipRecordMapper.updateByPrimaryKeySelective(vipRecord);
+        }
+        User user_update = new User();
+        user_update.setId(userId);
+        user_update.setVipLevel(vipConfig.getVipLevel());
+        user_update.setVipName(vipConfig.getVipName());
+        userMapperSelf.updateByPrimaryKeySelective(user_update);
+        return data;
     }
 
     // 提现申请
