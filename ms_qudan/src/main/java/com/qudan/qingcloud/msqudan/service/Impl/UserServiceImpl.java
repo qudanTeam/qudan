@@ -235,6 +235,7 @@ public class UserServiceImpl {
                         config, wut.getHeadImgUrl()
                 ));
                 userMapperSelf.updateByPrimaryKeySelective(user_update);
+                data = getToken(ARE, user);
             } else if(openidBind != null && mobileuser != null){
                 ARE.addInfoError("openid.bingingAndMoblie.isExist", "手机号，微信号绑定关系已存在，不需要在绑定了!");
                 return null;
