@@ -6,6 +6,7 @@ import com.qudan.qingcloud.msqudan.entity.ShareManager;
 import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
 import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
 import com.qudan.qingcloud.msqudan.mymapper.ProductMapper;
+import com.qudan.qingcloud.msqudan.util.responses.ProductSimple;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -99,4 +100,20 @@ public interface ProductMapperSelf extends ProductMapper{
         "WHERE PRO.id = #{productId} AND PRO.id IS NOT NULL"
     })
     List<Category> selectCatByProductId(@Param("productId")Integer productId);
+
+    @Select({
+            "SELECT ",
+            "p.id productId,",
+            "p.product_link productLink,",
+            "C.get_link getLink,",
+            "C.need_verify_code needVerifyCode,",
+            "C.need_mobile_verify_code needMobileVerifyCode,",
+            "C.verify_code_link verifyCodeLink, ",
+            "C.mobile_verify_code_link mobileVerifyCodeLink",
+            "FROM product  p ",
+            "LEFT JOIN product_category_relation PCR ON PCR.product_id = p.id",
+            "LEFT JOIN category C ON C.id = PCR.category_id",
+            "WHERE p.id = #{productId}",
+    })
+    ProductSimple selectSimpleByProductId(@Param("productId")Integer productId);
 }

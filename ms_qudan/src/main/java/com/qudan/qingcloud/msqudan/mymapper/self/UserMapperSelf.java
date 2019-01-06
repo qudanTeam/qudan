@@ -99,6 +99,9 @@ public interface UserMapperSelf extends UserMapper {
     @Select({
         "<script>",
             "SELECT ",
+                "p.id productId,",
+                "apply.id applyId,",
+                "p.product_type productType,",
                 "p.product_name productName,",
                 "p.logo productLogo,",
                 "apply.mobile mobile,",
@@ -123,6 +126,8 @@ public interface UserMapperSelf extends UserMapper {
         "</script>",
     })
     List<OrderVos> applyRecords(@Param("obj")OrderParams params);
+
+    
 
     @Select({
         "<script>",

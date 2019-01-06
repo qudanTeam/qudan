@@ -35,6 +35,7 @@ public class ProductServiceImpl {
     @Autowired
     CommonConfig config;
 
+
     @HystrixCommand
     public Map<String,Object> hotProducts(ApiResponseEntity ARE, Integer type){
         List<HotProductVo> hotProductVos  = productMapperSelf.getHotProduct(type);
@@ -79,6 +80,11 @@ public class ProductServiceImpl {
         return data;
     }
 
+    public Map<String,Object> productSimple(ApiResponseEntity ARE, Integer id){
+        Map<String,Object> data = Maps.newHashMap();
+        data.put("simple", productMapperSelf.selectSimpleByProductId(id));
+        return data;
+    }
 
     public Map<String,Object> productDetail(ApiResponseEntity ARE, Integer id){
         ProductVo productVo = new ProductVo();

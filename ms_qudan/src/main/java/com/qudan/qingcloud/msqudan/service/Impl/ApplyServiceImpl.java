@@ -9,10 +9,7 @@ import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
-import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
-import com.qudan.qingcloud.msqudan.util.responses.QudanHashId10Utils;
-import com.qudan.qingcloud.msqudan.util.responses.QudanHashId12Utils;
-import com.qudan.qingcloud.msqudan.util.responses.QudanHashIdUtils;
+import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -279,7 +276,7 @@ public class ApplyServiceImpl {
     public Map<String,Object> loanApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
-            createByRB(RB, ARE.getUserId());
+            createByRB(RB, ARE.getUserId(),data);
         }
         return data;
     }
@@ -288,7 +285,7 @@ public class ApplyServiceImpl {
     public Map<String,Object> cardApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
-            createByRB(RB, ARE.getUserId());
+            createByRB(RB, ARE.getUserId(), data);
         }
         return data;
     }
@@ -327,15 +324,15 @@ public class ApplyServiceImpl {
             ARE.addInfoError("product.isNotExist", "不存在的产品Id");
             return false;
         }
-        Apply apply = applyMapperSelf.selectApplyByUsernameAndIdNo(RB.getName(), RB.getIdNo());
+        Apply apply = applyMapperSelf.selectApplyIdNo( RB.getIdNo(), RB.getProductId());
         if(apply != null){
-            ARE.addInfoError("apply.isExist", "身份证或者姓名已申请过"+(product.getProductType()==1?"此信用卡":"贷款"));
+            ARE.addInfoError("apply.isExist", "身份证已申请过"+(product.getProductType()==1?"该信用卡":"贷款"));
             return false;
         }
         return userService.checkCode(ARE, RB.getMobile(), RB.getValidcode(), 4, true);
     }
 
-    private Apply createByRB(ApplyRB RB, Integer userId){
+    private Apply createByRB(ApplyRB RB, Integer userId, Map<String,Object> data){
         Date date = new Date();
         Apply apply = new Apply();
         apply.setUserId(userId);
@@ -364,6 +361,8 @@ public class ApplyServiceImpl {
         apply_update.setId(apply.getId());
         apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
         applyMapperSelf.updateByPrimaryKeySelective(apply_update);
+        ProductSimple productSimple = productMapperSelf.selectSimpleByProductId(apply.getProductId());
+        data.put("productLink", productSimple.getProductLink());
         return apply;
     }
 

@@ -38,7 +38,6 @@ public class ApplyController {
         return ARE.createResponseEntity();
     }
 
-
     @GetMapping("/settle/trigger")
     public ResponseEntity<Map<String, Object>> loanApply(@Param("applyid")Integer applyId) {
         ApiResponseEntity ARE = new ApiResponseEntity();

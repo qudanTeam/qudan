@@ -30,6 +30,14 @@ public class ProductController {
         return ARE.createResponseEntity();
     }
 
+    @GetMapping("/product/{id}/simple")
+    public ResponseEntity<Map<String, Object>> simpleProduct(@PathVariable("id")Integer id,
+                                                             HttpServletRequest request) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(productService.productSimple(ARE, id));
+        return ARE.createResponseEntity();
+    }
+
     /**
      * 商品列表，搜索
      * @param type
