@@ -503,7 +503,8 @@ public class UserServiceImpl {
         }
 
         UserAccount account = userMapperSelf.selectAccountById(userId);
-        userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
+        //userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
+        userInfo.setAllowTx(account.getAllowTx());
         userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
         userInfo.setTxGoing(userMapperSelf.selectTxGoing(userId));
         userInfo.setBlance(account.getBlance());
