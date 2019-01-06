@@ -62,7 +62,7 @@ public class UserFinanceServiceImpl {
             vipRecord = new VipRecord();
         }
         boolean isVip = false;
-        if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
+        if(vipRecord.getEndTime() != null && vipRecord.getEndTime().compareTo(date) > 0){
             isVip = true;
         }
 

@@ -25,7 +25,7 @@ public class SpringConfig {
         Properties p = new Properties();
         p.setProperty("offsetAsPageNum", "true");
         p.setProperty("rowBoundsWithCount", "true");
-        p.setProperty("reasonable", "true");
+        p.setProperty("reasonable", "false");
         p.setProperty("dialect","mysql");
         pageHelper.setProperties(p);
         return pageHelper;
