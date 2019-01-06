@@ -68,10 +68,17 @@ public class WxPayController {
         MyWXConfig config = new MyWXConfig();
 //        String spbill_create_ip = GetIPAddrUtil.getIpAddr(req);
         String spbill_create_ip="47.99.242.122";
-        logggr.info(spbill_create_ip);
+//        logggr.info(spbill_create_ip);
         Map<String,String> result = wxPayService.dounifiedOrder(trade_type,product_id,attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
-        if(result == null){
-            return YHResult.build(500,"签名错误");
+//        if(result == null){
+//            return YHResult.build(500,"签名错误");
+//        }
+        if(result.containsKey("status")){
+            if("400".equals(result.get("status"))){
+                logggr.info("openid为空,请先微信授权!");
+                return YHResult.build(400,"openid为空,请先微信授权!");
+            }
+
         }
         String nonce_str = (String)result.get("nonce_str");
         String prepay_id = (String)result.get("prepay_id");
