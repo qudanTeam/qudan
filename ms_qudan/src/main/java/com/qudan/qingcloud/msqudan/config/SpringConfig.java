@@ -1,5 +1,6 @@
 package com.qudan.qingcloud.msqudan.config;
 
+import com.github.pagehelper.PageHelper;
 import com.qudan.qingcloud.msqudan.base.JwtFilter;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -10,10 +11,25 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.Properties;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan
 public class SpringConfig {
+
+    @Bean
+    public PageHelper pageHelper() {
+        System.out.println("MyBatisConfiguration.pageHelper()");
+        PageHelper pageHelper = new PageHelper();
+        Properties p = new Properties();
+        p.setProperty("offsetAsPageNum", "true");
+        p.setProperty("rowBoundsWithCount", "true");
+        p.setProperty("reasonable", "true");
+        p.setProperty("dialect","mysql");
+        pageHelper.setProperties(p);
+        return pageHelper;
+    }
 
     @Bean
     public FilterRegistrationBean crossFilterregistration() {

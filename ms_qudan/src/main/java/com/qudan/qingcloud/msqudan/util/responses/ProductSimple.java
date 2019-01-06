@@ -7,7 +7,7 @@ public class ProductSimple {
     private Integer needMobileVerifyCode;
     private String verifyCodeLink;
     private String mobileVerifyCodeLink;
-    private Integer productLink;
+    private String productLink;
 
     public Integer getProductId() {
         return productId;
@@ -57,11 +57,11 @@ public class ProductSimple {
         this.mobileVerifyCodeLink = mobileVerifyCodeLink;
     }
 
-    public Integer getProductLink() {
+    public String getProductLink() {
         return productLink;
     }
 
-    public void setProductLink(Integer productLink) {
+    public void setProductLink(String productLink) {
         this.productLink = productLink;
     }
 }
