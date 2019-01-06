@@ -7,6 +7,7 @@ import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.mymapper.BannerMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.BankMapperSelf;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
+import com.qudan.qingcloud.msqudan.util.responses.BankSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,20 @@ public class BankServiceImpl {
             }
         }
         data.put("banks", banks);
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> bankDetail(ApiResponseEntity ARE, Integer catId){
+        Map<String,Object> data = Maps.newHashMap();
+        BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(catId);
+        if(bankSimple.getNeedMobileVerifyCode() == null){
+            bankSimple.setNeedMobileVerifyCode(0);
+        }
+        if(bankSimple.getNeedVerifyCode() == null){
+            bankSimple.setNeedVerifyCode(0);
+        }
+        data.put("bank", bankSimple);
         return data;
     }
 }

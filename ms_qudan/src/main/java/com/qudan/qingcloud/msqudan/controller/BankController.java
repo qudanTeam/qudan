@@ -6,11 +6,9 @@ import com.qudan.qingcloud.msqudan.service.Impl.UserFinanceServiceImpl;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -34,6 +32,14 @@ public class BankController {
     public ResponseEntity<Map<String, Object>> testVip(@RequestParam("user_id")Integer user_id, @RequestParam("vip_id")Integer vipId) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         userFinanceService.becomeVip(user_id, vipId);
+        return ARE.createResponseEntity();
+    }
+
+    @GetMapping("/bank/{id}/")
+    public ResponseEntity<Map<String, Object>> simpleProduct(@PathVariable("id")Integer id,
+                                                             HttpServletRequest request) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(bankService.bankDetail(ARE, id));
         return ARE.createResponseEntity();
     }
 }
