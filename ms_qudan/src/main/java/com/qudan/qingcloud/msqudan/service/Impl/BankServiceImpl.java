@@ -41,6 +41,17 @@ public class BankServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> trggierMobileVerify(ApiResponseEntity ARE, Integer bankId){
+        BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(bankId);
+        if(bankSimple.getNeedMobileVerifyCode() != null && bankSimple.getNeedMobileVerifyCode() == 1){
+
+        } else {
+            ARE.addInfoError("mobileverify.notneed", "不需要手机验证码");
+        }
+        return null;
+    }
+
+    @HystrixCommand
     public Map<String,Object> bankDetail(ApiResponseEntity ARE, Integer catId){
         Map<String,Object> data = Maps.newHashMap();
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(catId);

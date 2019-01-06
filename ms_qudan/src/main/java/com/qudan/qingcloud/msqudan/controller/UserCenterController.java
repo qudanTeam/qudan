@@ -25,6 +25,14 @@ public class UserCenterController {
     @Autowired
     UserFinanceServiceImpl userFinanceService;
 
+
+    @GetMapping("/user/verify/trigger")
+    public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestParam(value = "bank_id", required = false) Integer bankId,
+                                                       HttpServletRequest request) {
+
+        return null;
+    }
+
     /**
      * 收入记录
      * sendStatus 1-待结算，2已结算

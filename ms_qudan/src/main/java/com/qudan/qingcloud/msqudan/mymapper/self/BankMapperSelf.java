@@ -19,6 +19,7 @@ public interface BankMapperSelf {
 
     @Select({
             "SELECT ",
+            "C.id bankId,",
             "C.get_link getLink,",
             "C.need_verify_code needVerifyCode,",
             "C.need_mobile_verify_code needMobileVerifyCode,",
