@@ -49,7 +49,7 @@ public class CharacterServiceImpl {
         if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
             isVip = true;
         }
-        if(isVip && user.getVipLevel() < config.getVipLevel()){
+        if(isVip && user.getVipLevel() > config.getVipLevel()){
             ARE.addInfoError("vip.overCurrent", "当期VIP等级已经超过需要购买的VIP等级");
             return null;
         }

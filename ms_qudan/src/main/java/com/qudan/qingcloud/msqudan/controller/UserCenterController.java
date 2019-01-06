@@ -6,6 +6,7 @@ import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.LocalUserHelper;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
+import com.qudan.qingcloud.msqudan.util.requestBody.QueryBankRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserCenterController {
 
 
     @GetMapping("/user/verify/trigger")
-    public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestParam(value = "bank_id", required = false) Integer bankId,
+    public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestParam(value = "bank_id", required = false) QueryBankRB RB,
                                                        HttpServletRequest request) {
 
         return null;

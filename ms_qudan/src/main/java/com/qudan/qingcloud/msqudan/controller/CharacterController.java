@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -36,7 +37,7 @@ public class CharacterController {
     }
 
     @GetMapping("/user/vip/check")
-    public ResponseEntity<Map<String, Object>> vipCheck(@Param("vip_id")Integer vipId) {
+    public ResponseEntity<Map<String, Object>> vipCheck(@RequestParam("vip_id")Integer vipId) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         ARE.setUserId(LocalUserHelper.getUserId());
         ARE.setData(characterService.vipCheck(ARE, vipId));
