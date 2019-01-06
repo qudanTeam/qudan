@@ -163,4 +163,18 @@ public class WxPayController {
         }
     }
 
+    /**
+     * 长链接转短连接doShortUrl
+     */
+    @RequestMapping(value = "wxpay/doShortUrl", method = {RequestMethod.GET, RequestMethod.POST})
+    public YHResult doShortUrl(
+            @ApiParam(required = true, name = "long_url", value = "长链接") @RequestParam(required = true,value = "long_url")String long_url,
+            HttpServletRequest req, HttpServletResponse response
+    ){
+        Map<String, String> shortUrl = wxPayService.doShortUrl(long_url);
+        return YHResult.build(200,"调用成功!",shortUrl);
+
+    }
+
+
 }

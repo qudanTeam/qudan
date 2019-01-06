@@ -518,7 +518,7 @@ public class WxPayServiceImpl {
 //            //设置超时
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
 //    })
-    public void doShortUrl(String long_url){
+    public Map<String, String> doShortUrl(String long_url){
 //        String long_url = "weixin://wxpay/bizpayurl?pr=etxB4DY";
         MyWXConfig config = null;
         try {
@@ -534,10 +534,12 @@ public class WxPayServiceImpl {
         try {
             Map<String, String> r = wxpay.shortUrl(data);
             logger.info("长链接转短链接:"+r);
+            return  r;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("长链接转短链接异常返回:"+e.getMessage());
         }
+        return null;
     }
 
     /**
