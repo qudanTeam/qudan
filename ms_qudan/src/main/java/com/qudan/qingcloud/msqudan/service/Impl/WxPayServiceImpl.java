@@ -248,7 +248,7 @@ public class WxPayServiceImpl {
                                 logger.error("------------------订单号out_trade_no:" + out_trade_no + ", 找不到订单");
                                 throw new RuntimeException("订单号不存在");
                             }
-                            BigDecimal vipFee = new BigDecimal(py.getTotalFee()).divide(new BigDecimal(100) , 2 ,BigDecimal.ROUND_HALF_UP);
+                            BigDecimal vipFee = new BigDecimal(py.getTotalFee());
                             logger.info("---------vipFee:", vipFee.toString());
                             VipConfig vipConfig = vipMapperSelf.getVipConfigByFee(vipFee);
                             if(vipConfig == null){
