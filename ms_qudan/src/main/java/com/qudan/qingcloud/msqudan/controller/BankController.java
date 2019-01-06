@@ -35,7 +35,7 @@ public class BankController {
         return ARE.createResponseEntity();
     }
 
-    @GetMapping("/bank/{id}/")
+    @GetMapping("/bank/{id}")
     public ResponseEntity<Map<String, Object>> simpleProduct(@PathVariable("id")Integer id,
                                                              HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
