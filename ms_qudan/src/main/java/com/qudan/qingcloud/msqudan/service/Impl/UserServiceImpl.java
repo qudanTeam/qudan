@@ -604,6 +604,18 @@ public class UserServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> txDetail(ApiResponseEntity ARE,Integer txId){
+        Map<String,Object> data = Maps.newHashMap();
+        TxRecord txRecord = userMapperSelf.selectTxRecordById(ARE.getUserId(), txId);
+        if(txRecord == null){
+            ARE.addInfoError("tx.detailError", "提现记录不存在");
+            return null;
+        }
+        data.put("tx", txRecord);
+        return data;
+    }
+
+    @HystrixCommand
     public Map<String,Object> team(ApiResponseEntity ARE,String ym, Integer page, Integer per_page){
         Map<String,Object> data = Maps.newHashMap();
         if(StringUtils.isNotBlank(ym)){

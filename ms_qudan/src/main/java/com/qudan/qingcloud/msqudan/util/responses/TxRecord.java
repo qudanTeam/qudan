@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 public class TxRecord {
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Integer id;
+
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date txDate;
     private String revenue;
     private Integer status;
@@ -41,5 +43,13 @@ public class TxRecord {
 
     public void setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

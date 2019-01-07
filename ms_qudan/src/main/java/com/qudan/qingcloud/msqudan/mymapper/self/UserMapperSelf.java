@@ -144,6 +144,18 @@ public interface UserMapperSelf extends UserMapper {
     })
     List<TxRecord> selectTxRecord(@Param("userId")Integer userId, @Param("status")Integer status);
 
+    @Select({
+
+        "SELECT",
+        "create_time txDate,",
+        "price revenue,",
+        "status status,",
+        "reject_reason rejectReason",
+        "FROM trade_type",
+        "WHERE trade_type = 1 AND user_id = #{id} AND txId = #{txId}",
+    })
+    TxRecord selectTxRecordById(@Param("userId")Integer userId, @Param("status")Integer txId);
+
 
     @Select({
         "<script>",

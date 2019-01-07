@@ -400,7 +400,7 @@ public class ApplyServiceImpl {
         apply.setIdNo(RB.getIdNo());
         apply.setStatus(1);
         apply.setOfficialStatus(0);
-        apply.setIsSettle(1);
+        apply.setIsSettle(0);
         apply.setLastOfficialQuery(null);
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());

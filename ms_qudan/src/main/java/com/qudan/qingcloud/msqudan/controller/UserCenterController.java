@@ -85,7 +85,14 @@ public class UserCenterController {
         return ARE.createResponseEntity();
     }
 
-
+    @GetMapping("/user/txrecord/{id}")
+    public ResponseEntity<Map<String, Object>> txDetail(@PathVariable("id")Integer id) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.txDetail(ARE, id));
+        return ARE.createResponseEntity();
+    }
 
     /**
      * 团队佣金
