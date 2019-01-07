@@ -255,6 +255,7 @@ public class UserFinanceServiceImpl {
         tradeType.setTxAlipayNo(user.getAlipayNo());
 
         tradeTypeMapper.insertSelective(tradeType);
+        data.put("id", tradeType.getId());
         return data;
     }
 }
