@@ -135,6 +135,15 @@ public class CharacterServiceImpl {
     }
 
     public VipConfig getVipByUserId(Integer userId){
+        Date date = new Date();
+        VipRecord vipRecord = vipMapperSelf.getVipRecordByUserId(userId);
+        boolean isVip = false;
+        if(vipRecord  != null && vipRecord.getEndTime().compareTo(date) > 0){
+            isVip = true;
+        }
+        if(isVip){
+            return vipMapperSelf.selectByPrimaryKey(vipRecord.getVipConfigId());
+        }
         return null;
     }
 }
