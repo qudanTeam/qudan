@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.controller;
 
 
+import com.qudan.qingcloud.msqudan.service.Impl.BankServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.UserFinanceServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
@@ -28,10 +29,11 @@ public class UserCenterController {
 
 
     @GetMapping("/user/verify/trigger")
-    public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestParam(value = "bank_id", required = false) QueryBankRB RB,
+    public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestBody QueryBankRB RB,
                                                        HttpServletRequest request) {
-
-        return null;
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        userFinanceService.mobileTrigger(ARE, RB);
+        return ARE.createResponseEntity();
     }
 
     /**

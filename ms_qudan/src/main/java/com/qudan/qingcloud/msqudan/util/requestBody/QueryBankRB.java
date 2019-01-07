@@ -4,6 +4,8 @@ public class QueryBankRB {
     private String idno;
     private Integer bankId;
     private String name;
+    private String cookieStr;
+    private String imgCode;
 
     public String getIdno() {
         return idno;
@@ -27,5 +29,21 @@ public class QueryBankRB {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCookieStr() {
+        return cookieStr;
+    }
+
+    public void setCookieStr(String cookieStr) {
+        this.cookieStr = cookieStr;
+    }
+
+    public String getImgCode() {
+        return imgCode;
+    }
+
+    public void setImgCode(String imgCode) {
+        this.imgCode = imgCode;
     }
 }

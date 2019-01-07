@@ -1,20 +1,28 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
 import com.google.common.collect.Maps;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
+import com.qudan.qingcloud.msqudan.controller.UserController;
 import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.UserAccountMapper;
 import com.qudan.qingcloud.msqudan.mymapper.VipConfigMapper;
 import com.qudan.qingcloud.msqudan.mymapper.VipRecordMapper;
+import com.qudan.qingcloud.msqudan.mymapper.self.BankMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateFormatUtil;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.requestBody.QueryBankRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
+import com.qudan.qingcloud.msqudan.util.responses.BankSimple;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +32,7 @@ import java.util.Map;
 
 @Service
 public class UserFinanceServiceImpl {
-
+    private final Logger log = LoggerFactory.getLogger(UserFinanceServiceImpl.class);
     @Autowired
     UserMapperSelf userMapperSelf;
 
@@ -43,11 +51,73 @@ public class UserFinanceServiceImpl {
     @Autowired
     VipRecordMapper vipRecordMapper;
 
+    @Autowired
+    BankMapperSelf bankMapperSelf;
+
 
 
     //TODO 商品搜索记录
     //TODO 记录商品搜索记录
     //TODO 成为VIP
+
+    public Map<String,Object>queryCardInfo(ApiResponseEntity ARE, QueryBankRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+
+        return data;
+    }
+
+    public  Map<String,Object> mobileTrigger(ApiResponseEntity ARE, QueryBankRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(RB.getBankId() == null){
+            ARE.addInfoError("bankId.isEmpty", "bankId不能为空");
+            return null;
+        }
+        BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(bankSimple == null){
+            ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
+            return null;
+        }
+        if(bankSimple.getMobileVerifyCodeLink().indexOf("xyk.cebbank") > -1){ //光大
+            if(StringUtils.isBlank(RB.getIdno())){
+                ARE.addInfoError("idno.isNotExist", "身份证不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getName())){
+                ARE.addInfoError("name.isNotExist", "姓名不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getCookieStr())){
+                ARE.addInfoError("cookieStr.isNotExist", "cookieStr不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getImgCode())){
+                ARE.addInfoError("imgCode.isNotExist", "imgCode不能为空");
+                return null;
+            }
+            if(!triggerGDMobileVerify(RB)){
+                ARE.addInfoError("mobileCode.error", "验证码获取错误");
+                return null;
+            }
+        }
+        return data;
+    }
+
+    public boolean triggerGDMobileVerify(QueryBankRB RB){
+        try {
+            HttpResponse<String> response = Unirest.post("https://xyk.cebbank.com/home/fz/application_get_activityCode.htm")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .header("Cookie", RB.getCookieStr())
+                    .body("id_no="+ RB.getIdno() + "&ver_code="+ RB.getImgCode() +"&id_Type=A" + "&name="+RB.getName())
+                    .asString();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            log.error("触发验证码失败", ex);
+            return false;
+        }
+        return true;
+    }
+
 
     public Map<String,Object> becomeVip(Integer userId, Integer vipId){
         Map<String,Object> data = Maps.newHashMap();
