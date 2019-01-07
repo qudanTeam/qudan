@@ -41,6 +41,7 @@ public class AliPayController {
     public YHResult alipay(
             @ApiParam(required = true, name = "orderNo", value = "订单号") @RequestParam(required = true,value = "orderNo")String orderNo,
             @ApiParam(required = true, name = "totalAmount", value = "支付总金额(单位为元)") @RequestParam(required = true,value = "totalAmount")String totalAmount,
+            @ApiParam(required = true, name = "productCode", value = "PC支付 FAST_INSTANT_TRADE_PAY, APP支付 QUICK_MSECURITY_PAY, 移动H5支付 QUICK_WAP_PAY") @RequestParam(required = true,value = "productCode")String productCode,
             HttpServletRequest request, HttpServletResponse response
     )throws Exception {
 
@@ -48,7 +49,7 @@ public class AliPayController {
 //        String orderNo = DateUtil.getCurrentDateStr(); // 生成订单号
 //        String totalAmount = money; // 支付总金额
         String subject = "趣单"; // 订单名称
-        String body = "趣单支付宝"; // 商品描述
+        String body = "趣单VIP"; // 商品描述
 
         // 封装请求客户端
         AlipayClient client = new DefaultAlipayClient(aliPayConfig.getGatewayUrl(), aliPayConfig.getAppID(), aliPayConfig.getMerchantPrivateKey(), aliPayConfig.getFormat(), aliPayConfig.getCharset(), aliPayConfig.getAlipayPublicKey(), aliPayConfig.getSignType());
@@ -58,7 +59,8 @@ public class AliPayController {
         alipayRequest.setReturnUrl(aliPayConfig.getReturnUrl());
         alipayRequest.setNotifyUrl(aliPayConfig.getNotifyUrl());
         AlipayTradePayModel model = new AlipayTradePayModel();
-        model.setProductCode("FAST_INSTANT_TRADE_PAY"); // 设置销售产品码
+        //PC支付 FAST_INSTANT_TRADE_PAY, APP支付 QUICK_MSECURITY_PAY, 移动H5支付 QUICK_WAP_PAY
+        model.setProductCode(productCode); // 设置销售产品码
         model.setOutTradeNo(orderNo); // 设置订单号
         model.setSubject(subject); // 订单名称
         model.setTotalAmount(totalAmount); // 支付总金额
