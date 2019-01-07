@@ -54,6 +54,10 @@ public class ApplyServiceImpl {
             ARE.addInfoError("apply.isEmpty", "申请记录不存在");
             return null;
         }
+        if(apply.getIsSettle() == 1){
+            ARE.addInfoError("apply.isSettle", "团队佣金和完成任务奖励已结算");
+            return null;
+        }
         User user = userService.getUserById(apply.getUserId());
         if(user == null){
             log.info("用户为空");
@@ -310,6 +314,7 @@ public class ApplyServiceImpl {
         apply_update.setId(apply.getId());
         apply_update.setOfficialStatus(2);
         apply_update.setStatus(2);
+        apply_update.setIsSettle(1);
         if(product.getProductType() == 1){
             apply_update.setOfficialLimit(new BigDecimal(200000));
         } else {

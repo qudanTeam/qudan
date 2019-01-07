@@ -40,6 +40,10 @@ public class Apply {
 
     private Date officialTime;
 
+    private Double loanMoney;
+
+    private Integer isSettle;
+
     public Integer getId() {
         return id;
     }
@@ -182,5 +186,21 @@ public class Apply {
 
     public void setOfficialTime(Date officialTime) {
         this.officialTime = officialTime;
+    }
+
+    public Double getLoanMoney() {
+        return loanMoney;
+    }
+
+    public void setLoanMoney(Double loanMoney) {
+        this.loanMoney = loanMoney;
+    }
+
+    public Integer getIsSettle() {
+        return isSettle;
+    }
+
+    public void setIsSettle(Integer isSettle) {
+        this.isSettle = isSettle;
     }
 }
