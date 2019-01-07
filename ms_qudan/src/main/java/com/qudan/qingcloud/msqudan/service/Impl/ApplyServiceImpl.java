@@ -377,7 +377,7 @@ public class ApplyServiceImpl {
         tradeType.setTradeType(type);
         tradeType.setCreateTime(date);
         tradeType.setModifyTime(date);
-        tradeType.setStatus(1);
+        tradeType.setStatus(2);
         if(type == QudanConstant.TRADE_TYPE.TI_XIAN.getType()){
             tradeType.setIndirectType(null);
             tradeType.setPrice(basePrice);
