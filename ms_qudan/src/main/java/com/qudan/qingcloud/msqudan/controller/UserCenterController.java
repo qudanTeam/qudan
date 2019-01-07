@@ -28,11 +28,19 @@ public class UserCenterController {
     UserFinanceServiceImpl userFinanceService;
 
 
-    @GetMapping("/user/verify/trigger")
+    @PostMapping("/user/verify/trigger")
     public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestBody QueryBankRB RB,
                                                        HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         userFinanceService.mobileTrigger(ARE, RB);
+        return ARE.createResponseEntity();
+    }
+
+    @PostMapping("/user/process")
+    public ResponseEntity<Map<String, Object>> process(@RequestBody QueryBankRB RB,
+                                                             HttpServletRequest request) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        userFinanceService.queryCardInfo(ARE, RB);
         return ARE.createResponseEntity();
     }
 

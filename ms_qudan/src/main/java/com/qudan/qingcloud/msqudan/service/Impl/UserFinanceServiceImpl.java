@@ -62,7 +62,34 @@ public class UserFinanceServiceImpl {
 
     public Map<String,Object>queryCardInfo(ApiResponseEntity ARE, QueryBankRB RB){
         Map<String,Object> data = Maps.newHashMap();
-
+        if(RB.getBankId() == null){
+            ARE.addInfoError("bankId.isEmpty", "bankId不能为空");
+            return null;
+        }
+        BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(bankSimple == null){
+            ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
+            return null;
+        }
+        if(bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1) { //光大
+            if(StringUtils.isBlank(RB.getIdno())){
+                ARE.addInfoError("idno.isEmpty", "身份证不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getName())){
+                ARE.addInfoError("name.isEmpty", "姓名不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getImgCode())){
+                ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getActivityCode())){
+                ARE.addInfoError("activityCode.isEmpty", "activityCode不能为空");
+                return null;
+            }
+        }
+        data.put("status", 3);
         return data;
     }
 
@@ -74,24 +101,24 @@ public class UserFinanceServiceImpl {
         }
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
         if(bankSimple == null){
-            ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
+            ARE.addInfoError("bankId.isEmpty", "银行信息不存在");
             return null;
         }
-        if(bankSimple.getMobileVerifyCodeLink().indexOf("xyk.cebbank") > -1){ //光大
+        if(bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1){ //光大
             if(StringUtils.isBlank(RB.getIdno())){
-                ARE.addInfoError("idno.isNotExist", "身份证不能为空");
+                ARE.addInfoError("idno.isEmpty", "身份证不能为空");
                 return null;
             }
             if(StringUtils.isBlank(RB.getName())){
-                ARE.addInfoError("name.isNotExist", "姓名不能为空");
+                ARE.addInfoError("name.isEmpty", "姓名不能为空");
                 return null;
             }
             if(StringUtils.isBlank(RB.getCookieStr())){
-                ARE.addInfoError("cookieStr.isNotExist", "cookieStr不能为空");
+                ARE.addInfoError("cookieStr.isEmpty", "cookieStr不能为空");
                 return null;
             }
             if(StringUtils.isBlank(RB.getImgCode())){
-                ARE.addInfoError("imgCode.isNotExist", "imgCode不能为空");
+                ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
                 return null;
             }
             if(!triggerGDMobileVerify(RB)){
