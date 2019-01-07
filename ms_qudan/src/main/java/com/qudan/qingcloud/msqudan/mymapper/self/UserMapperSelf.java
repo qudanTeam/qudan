@@ -152,9 +152,9 @@ public interface UserMapperSelf extends UserMapper {
         "status status,",
         "reject_reason rejectReason",
         "FROM trade_type",
-        "WHERE trade_type = 1 AND user_id = #{id} AND txId = #{txId}",
+        "WHERE trade_type = 1 AND user_id = #{userId} AND id = #{txId}",
     })
-    TxRecord selectTxRecordById(@Param("userId")Integer userId, @Param("status")Integer txId);
+    TxRecord selectTxRecordById(@Param("userId")Integer userId, @Param("txId")Integer txId);
 
 
     @Select({
