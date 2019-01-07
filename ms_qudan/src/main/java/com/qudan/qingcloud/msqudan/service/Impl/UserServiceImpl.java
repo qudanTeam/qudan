@@ -270,6 +270,8 @@ public class UserServiceImpl {
             ARE.addInfoError("user.mobile.isExist", "已存在的手机号");
             return null;
         }
+        logger.info("-------------wutid:"+RB.getWutid());
+        logger.info("-------------shareid:"+RB.getShareid());
 
         Date date = new Date();
         if(checkCode(ARE, RB.getMobile(), RB.getValidcode(), 1, true)){

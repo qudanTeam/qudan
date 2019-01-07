@@ -149,7 +149,9 @@ public class ApplyServiceImpl {
         if(user != null){
             userAccount = userService.getUserAccountByUserId(user.getId());
             userVipConfig = characterService.getVipByUserId(user.getId());
-            userVipPrice = basePrice.multiply(userVipConfig.getAddRate());
+            if(userVipConfig != null){
+                userVipPrice = basePrice.multiply(userVipConfig.getAddRate());
+            }
         }
 
         TradeType taskTrade = null; //任务奖励记录
@@ -398,6 +400,7 @@ public class ApplyServiceImpl {
         apply.setIdNo(RB.getIdNo());
         apply.setStatus(1);
         apply.setOfficialStatus(0);
+        apply.setIsSettle(1);
         apply.setLastOfficialQuery(null);
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());
@@ -410,7 +413,7 @@ public class ApplyServiceImpl {
                 log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
             }
         }
-        applyMapperSelf.insert(apply);
+        applyMapperSelf.insertSelective(apply);
         Apply apply_update = new Apply();
         apply_update.setId(apply.getId());
         apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
