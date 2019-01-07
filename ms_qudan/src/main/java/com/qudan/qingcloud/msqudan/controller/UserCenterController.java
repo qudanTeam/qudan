@@ -32,7 +32,7 @@ public class UserCenterController {
     public ResponseEntity<Map<String, Object>> mobileTrigger(@RequestBody QueryBankRB RB,
                                                        HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
-        userFinanceService.mobileTrigger(ARE, RB);
+        ARE.setData(userFinanceService.mobileTrigger(ARE, RB));
         return ARE.createResponseEntity();
     }
 
@@ -40,7 +40,7 @@ public class UserCenterController {
     public ResponseEntity<Map<String, Object>> process(@RequestBody QueryBankRB RB,
                                                              HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
-        userFinanceService.queryCardInfo(ARE, RB);
+        ARE.setData(userFinanceService.queryCardInfo(ARE, RB));
         return ARE.createResponseEntity();
     }
 
