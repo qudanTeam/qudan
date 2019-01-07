@@ -48,9 +48,17 @@ public class ApplyServiceImpl {
 
     @Transactional
     public Map<String,Object> settlement(ApiResponseEntity ARE, Integer applyId){
-        Apply apply = applyMapperSelf.selectByPrimaryKey(applyId);
-        User user = userService.getUserById(apply.getUserId());
         log.info("applyid:"+applyId);
+        Apply apply = applyMapperSelf.selectByPrimaryKey(applyId);
+        if(apply == null){
+            ARE.addInfoError("apply.isEmpty", "申请记录不存在");
+            return null;
+        }
+        if(apply.getIsSettle() == 1){
+            ARE.addInfoError("apply.isSettle", "团队佣金和完成任务奖励已结算");
+            return null;
+        }
+        User user = userService.getUserById(apply.getUserId());
         if(user == null){
             log.info("用户为空");
         }
@@ -97,6 +105,7 @@ public class ApplyServiceImpl {
 
         AgentConfig agentConfig = null;
         VipConfig vipConfig = null;
+        VipConfig userVipConfig = null;
         if(isDL){
             agentConfig = characterService.getAgentByUserId(userDL.getId());
         }
@@ -123,6 +132,7 @@ public class ApplyServiceImpl {
         BigDecimal basePrice = rewordService.getBasePrice(product);
         BigDecimal vipPrice = null;
         BigDecimal agentPrice = null;
+        BigDecimal userVipPrice = null;
         UserAccount shareAccount = null;
         UserAccount dlAccount = null;
         UserAccount userAccount = null;
@@ -138,6 +148,8 @@ public class ApplyServiceImpl {
         }
         if(user != null){
             userAccount = userService.getUserAccountByUserId(user.getId());
+            userVipConfig = characterService.getVipByUserId(user.getId());
+            userVipPrice = basePrice.multiply(userVipConfig.getAddRate());
         }
 
         TradeType taskTrade = null; //任务奖励记录
@@ -180,7 +192,7 @@ public class ApplyServiceImpl {
 
         if(isDL && isInvite && !isShare){
             //业绩人 inviteUserId
-            //完成任务奖励人 user ,自己拿奖励没有VIP 加成
+            //完成任务奖励人 user
             //分用人 userDL
             taskTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TASK_REWORD.getType(),
@@ -188,8 +200,15 @@ public class ApplyServiceImpl {
                     basePrice,
                     user.getId()//受益人
             );
-            taskTrade.setAccount(shareAccount.getId());
-            taskTrade.setPrice(basePrice);
+            taskTrade.setAccount(userAccount.getId());
+            if(userVipConfig != null){
+                taskTrade.setVipPrice(userVipPrice);
+                taskTrade.setVipLevel(userVipConfig.getVipLevel().shortValue());
+                taskTrade.setVipRate(userVipConfig.getAddRate());
+                taskTrade.setPrice(userVipPrice.add(basePrice));
+            } else {
+                taskTrade.setPrice(basePrice);
+            }
 
             teamTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TEAM_REWORD.getType(),
@@ -206,16 +225,23 @@ public class ApplyServiceImpl {
 
         if(isDL && !isInvite && isShare){
             //业绩人 shareUserId
-            //完成任务奖励人 shareUserId ,没有VIP 加成
+            //完成任务奖励人 shareUserId
             //分用人 userDL
             taskTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TASK_REWORD.getType(),
                     date,
                     basePrice,
-                    user.getId()//受益人
+                    shareUser.getId()//受益人
             );
-            taskTrade.setAccount(userAccount.getId());
-            taskTrade.setPrice(basePrice);
+            taskTrade.setAccount(shareAccount.getId());
+            if(vipConfig != null){
+                taskTrade.setVipPrice(vipPrice);
+                taskTrade.setVipLevel(vipConfig.getVipLevel().shortValue());
+                taskTrade.setVipRate(vipConfig.getAddRate());
+                taskTrade.setPrice(vipPrice.add(basePrice));
+            } else {
+                taskTrade.setPrice(basePrice);
+            }
 
             teamTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TEAM_REWORD.getType(),
@@ -238,7 +264,7 @@ public class ApplyServiceImpl {
                     QudanConstant.TRADE_TYPE.TASK_REWORD.getType(),
                     date,
                     basePrice,
-                    user.getId()//受益人
+                    shareUser.getId()//受益人
             );
             taskTrade.setAccount(shareAccount.getId());
             taskTrade.setPrice(basePrice);
@@ -251,6 +277,33 @@ public class ApplyServiceImpl {
                 taskTrade.setPrice(basePrice);
             }
         }
+
+        if(!isDL && !isShare){
+            if(user == null){
+                ARE.addInfoError("userAndShare.isEmpty", "没有分享人也没有user情况是不存在的请检查数据");
+                return null;
+            }
+            //业绩人 没有
+            //完成任务奖励人 user
+            //分佣人 没有
+            taskTrade = createTradeByApply(apply,
+                    QudanConstant.TRADE_TYPE.TASK_REWORD.getType(),
+                    date,
+                    basePrice,
+                    user.getId()//受益人
+            );
+            taskTrade.setAccount(userAccount.getId());
+            taskTrade.setPrice(basePrice);
+            if(userVipConfig != null){
+                taskTrade.setVipPrice(userVipPrice);
+                taskTrade.setVipLevel(userVipConfig.getVipLevel().shortValue());
+                taskTrade.setVipRate(userVipConfig.getAddRate());
+                taskTrade.setPrice(userVipPrice.add(basePrice));
+            } else {
+                taskTrade.setPrice(basePrice);
+            }
+        }
+
         if(taskTrade != null){
             tradeTypeMapper.insertSelective(taskTrade);
         }
@@ -261,6 +314,7 @@ public class ApplyServiceImpl {
         apply_update.setId(apply.getId());
         apply_update.setOfficialStatus(2);
         apply_update.setStatus(2);
+        apply_update.setIsSettle(1);
         if(product.getProductType() == 1){
             apply_update.setOfficialLimit(new BigDecimal(200000));
         } else {
@@ -377,7 +431,7 @@ public class ApplyServiceImpl {
         tradeType.setTradeType(type);
         tradeType.setCreateTime(date);
         tradeType.setModifyTime(date);
-        tradeType.setStatus(1);
+        tradeType.setStatus(2);
         if(type == QudanConstant.TRADE_TYPE.TI_XIAN.getType()){
             tradeType.setIndirectType(null);
             tradeType.setPrice(basePrice);

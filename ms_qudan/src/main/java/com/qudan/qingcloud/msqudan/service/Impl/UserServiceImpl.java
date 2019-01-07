@@ -521,7 +521,7 @@ public class UserServiceImpl {
         if(userInfo.getIsVip()){
             VipConfig vipConfig = vipMapperSelf.selectByPrimaryKey(vipRecord.getVipConfigId());
             userVipVo.setVipName(vipConfig.getVipName());
-            userVipVo.setVipExpireDate(DateUtil.getFormatDate(vipRecord.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+            userVipVo.setVipExpireDate(DateUtil.getFormatDate(vipRecord.getEndTime(), "yyyy-MM-dd"));
             userVipVo.setVipRate(vipConfig.getAddRate());
             userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
             userVipVo.setVipLevel(vipConfig.getVipLevel());

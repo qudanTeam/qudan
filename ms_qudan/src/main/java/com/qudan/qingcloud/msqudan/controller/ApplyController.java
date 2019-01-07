@@ -39,7 +39,7 @@ public class ApplyController {
     }
 
     @GetMapping("/settle/trigger")
-    public ResponseEntity<Map<String, Object>> loanApply(@Param("applyid")Integer applyId) {
+    public ResponseEntity<Map<String, Object>> loanApply(@RequestParam("applyid")Integer applyId) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         Integer userId = LocalUserHelper.getUserId();
         ARE.setUserId(userId);

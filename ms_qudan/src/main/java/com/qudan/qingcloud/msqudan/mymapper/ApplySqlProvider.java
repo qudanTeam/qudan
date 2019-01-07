@@ -84,6 +84,14 @@ public class ApplySqlProvider {
             VALUES("official_time", "#{officialTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getLoanMoney() != null) {
+            VALUES("loan_money", "#{loanMoney,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getIsSettle() != null) {
+            VALUES("is_settle", "#{isSettle,jdbcType=INTEGER}");
+        }
+        
         return SQL();
     }
 
@@ -157,6 +165,14 @@ public class ApplySqlProvider {
         
         if (record.getOfficialTime() != null) {
             SET("official_time = #{officialTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getLoanMoney() != null) {
+            SET("loan_money = #{loanMoney,jdbcType=DOUBLE}");
+        }
+        
+        if (record.getIsSettle() != null) {
+            SET("is_settle = #{isSettle,jdbcType=INTEGER}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");
