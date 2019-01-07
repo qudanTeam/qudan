@@ -220,7 +220,11 @@ public class UserFinanceServiceImpl {
             return null;
         }
         if(txRB.getTxPrice() == null || txRB.getTxPrice().compareTo(BigDecimal.ZERO) <= 0){
-            ARE.addInfoError("price.isEmpty", "提现金额必须大于0");
+            ARE.addInfoError("price.isEmpty", "提现金额必须大于20");
+            return null;
+        }
+        if(txRB.getTxPrice().compareTo(new BigDecimal("20")) < 0){
+            ARE.addInfoError("price.overMax", "提现金额最少20");
             return null;
         }
         if(txRB.getTxPrice().compareTo(new BigDecimal("5000")) > 0){
@@ -236,7 +240,7 @@ public class UserFinanceServiceImpl {
         Date end = DateFormatUtil.getMonthStart(date);
         int count = userMapperSelf.countTxByTime(start, end, userId);
         if(count > 3){
-            ARE.addInfoError("count.overMax", "当前提现不能超过三次");
+            ARE.addInfoError("count.overMax", "当月提现不能超过三次");
             return null;
         }
         TradeType tradeType = new TradeType();
