@@ -12,6 +12,7 @@ public class TxRecord {
     private String revenue;
     private Integer status;
     private String rejectReason;
+    private String alipayNo;
 
     public Date getTxDate() {
         return txDate;
@@ -51,5 +52,13 @@ public class TxRecord {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getAlipayNo() {
+        return alipayNo;
+    }
+
+    public void setAlipayNo(String alipayNo) {
+        this.alipayNo = alipayNo;
     }
 }
