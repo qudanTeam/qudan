@@ -422,11 +422,11 @@ public class ApplyServiceImpl {
                     log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
                 }
                 inviteUser = userMapperSelf.selectById(qrCode.getUserId());
-            }
-            if(inviteUser != null){
-                apply.setInviteCode(inviteUser.getInviteCode());
-            } else {
-                log.info("===================inviteUser:"+ inviteUser +" 无效--------------------------------");
+                if(inviteUser != null){
+                    apply.setInviteCode(inviteUser.getInviteCode());
+                } else {
+                    log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                }
             }
         }
         applyMapperSelf.insertSelective(apply);
