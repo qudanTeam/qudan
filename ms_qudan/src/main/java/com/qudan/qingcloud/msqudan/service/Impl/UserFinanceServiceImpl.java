@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -53,6 +54,9 @@ public class UserFinanceServiceImpl {
 
     @Autowired
     BankMapperSelf bankMapperSelf;
+
+    @Autowired
+    UserAccountMapper userAccountMapper;
 
 
 
@@ -205,6 +209,7 @@ public class UserFinanceServiceImpl {
     }
 
     // 提现申请
+    @Transactional
     public Map<String,Object> txRB(ApiResponseEntity ARE, TxRB txRB){
         Map<String,Object> data = Maps.newHashMap();
         Integer userId = ARE.getUserId();
@@ -222,6 +227,7 @@ public class UserFinanceServiceImpl {
             ARE.addInfoError("price.isEmpty", "提现金额必须大于20");
             return null;
         }
+        txRB.setTxPrice(txRB.getTxPrice().setScale(2, BigDecimal.ROUND_HALF_UP));
         if(txRB.getTxPrice().compareTo(new BigDecimal("20")) < 0){
             ARE.addInfoError("price.overMax", "提现金额最少20");
             return null;
@@ -242,7 +248,6 @@ public class UserFinanceServiceImpl {
             ARE.addInfoError("count.overMax", "当月提现不能超过三次");
             return null;
         }
-        txRB.setTxPrice(txRB.getTxPrice().setScale(2, BigDecimal.ROUND_HALF_UP));
         TradeType tradeType = new TradeType();
         tradeType.setTradeType(QudanConstant.TRADE_TYPE.TI_XIAN.getType());
         tradeType.setIndirectType(null);
@@ -260,6 +265,7 @@ public class UserFinanceServiceImpl {
 
         tradeTypeMapper.insertSelective(tradeType);
         account.setAllowTx(account.getAllowTx().multiply(tradeType.getPrice()));
+        userAccountMapper.updateByPrimaryKeySelective(account);
         data.put("id", tradeType.getId());
         return data;
     }

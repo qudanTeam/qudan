@@ -8,6 +8,8 @@ import java.util.Date;
 public class RevenueRecord {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date auditTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
     private String productName;
     private BigDecimal revenue;
     private Integer sendStatus;
@@ -51,5 +53,13 @@ public class RevenueRecord {
 
     public void setProductLogo(String productLogo) {
         this.productLogo = productLogo;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

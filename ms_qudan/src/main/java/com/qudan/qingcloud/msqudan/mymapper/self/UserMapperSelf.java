@@ -162,6 +162,7 @@ public interface UserMapperSelf extends UserMapper {
     @Select({
         "<script>",
         "SELECT",
+            "t.create_time createTime,",
             "t.audit_time auditTime,",
             "t.price revenue,",
             "t.send_status sendStatus,",
