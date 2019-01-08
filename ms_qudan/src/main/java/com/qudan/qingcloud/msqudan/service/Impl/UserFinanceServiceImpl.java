@@ -145,7 +145,6 @@ public class UserFinanceServiceImpl {
         return true;
     }
 
-
     public Map<String,Object> becomeVip(Integer userId, Integer vipId){
         Map<String,Object> data = Maps.newHashMap();
 
@@ -243,6 +242,7 @@ public class UserFinanceServiceImpl {
             ARE.addInfoError("count.overMax", "当月提现不能超过三次");
             return null;
         }
+        txRB.setTxPrice(txRB.getTxPrice().setScale(2, BigDecimal.ROUND_HALF_UP));
         TradeType tradeType = new TradeType();
         tradeType.setTradeType(QudanConstant.TRADE_TYPE.TI_XIAN.getType());
         tradeType.setIndirectType(null);
@@ -259,6 +259,7 @@ public class UserFinanceServiceImpl {
         tradeType.setTxAlipayNo(user.getAlipayNo());
 
         tradeTypeMapper.insertSelective(tradeType);
+        account.setAllowTx(account.getAllowTx().multiply(tradeType.getPrice()));
         data.put("id", tradeType.getId());
         return data;
     }
