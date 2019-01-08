@@ -3,6 +3,8 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
 import com.qudan.qingcloud.msqudan.controller.UserController;
 import com.qudan.qingcloud.msqudan.entity.*;
@@ -13,22 +15,28 @@ import com.qudan.qingcloud.msqudan.mymapper.VipRecordMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.BankMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
-import com.qudan.qingcloud.msqudan.util.DateFormatUtil;
-import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.requestBody.QueryBankRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.BankSimple;
+import com.qudan.qingcloud.msqudan.util.responses.QudanHashId12Utils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.Cookie;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -57,6 +65,9 @@ public class UserFinanceServiceImpl {
 
     @Autowired
     UserAccountMapper userAccountMapper;
+
+    @Autowired
+    CommonConfig config;
 
 
 
@@ -94,6 +105,44 @@ public class UserFinanceServiceImpl {
             }
         }
         data.put("status", 3);
+        return data;
+    }
+
+    public Map<String,Object> verifyCodeTrigger(ApiResponseEntity ARE, QueryBankRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(RB.getBankId() == null){
+            ARE.addInfoError("bankId.isEmpty", "bankId不能为空");
+            return null;
+        }
+        BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(bankSimple == null){
+            ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
+            return null;
+        }
+        if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1) { //光大
+            try {
+                HttpResponse<InputStream> response = Unirest.get("https://xyk.cebbank.com/verify_code.jpg?" + RandomUtils.generateMixString(5) +"=")
+                        .header("content-type", "application/x-www-form-urlencoded")
+                        .header("x-requested-with", "XMLHttpRequest")
+                        .header("cookie", "weblogic=3d07a8c0; JSESSIONID=0lENLdo6JK4SIC9cUTPazYxIqNsNjCkIzMk9wlpK-tSztcqomZaD!-228252945!-673098056; __v=1.2652440260958570500.1546409418.1546409418.1546409418.1; __l=770095; ALLYESID4=10EF888DC7270C7B")
+                        .asBinary();
+                InputStream inputStream = response.getBody();
+                byte[] bytes = null;
+                bytes = ImageUtils.input2byte(inputStream);
+                String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/bank/imgcode", RandomUtils.generateMixString(12), bytes).upload();
+                String url =  ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
+                data.put("imgCodeUrl",url);
+                List<String> cookieStr = response.getHeaders().get("Set-Cookie");
+                data.put("cookieStr", cookieStr.get(0).split(";")[0].toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("触发验证码失败", e);
+                ARE.addInfoError("imgCode.error", "获取验证码失败");
+            }
+        } else {
+            ARE.addInfoError("imgCode.notNeed", "不需要获取图形验证码");
+        }
+
         return data;
     }
 

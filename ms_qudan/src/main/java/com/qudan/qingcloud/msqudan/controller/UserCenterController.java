@@ -44,6 +44,14 @@ public class UserCenterController {
         return ARE.createResponseEntity();
     }
 
+    @PostMapping("/user/imgcode/trigger")
+    public ResponseEntity<Map<String, Object>> imgcode(@RequestBody QueryBankRB RB,
+                                                       HttpServletRequest request) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        ARE.setData(userFinanceService.verifyCodeTrigger(ARE, RB));
+        return ARE.createResponseEntity();
+    }
+
     /**
      * 收入记录
      * sendStatus 1-待结算，2已结算

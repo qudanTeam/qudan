@@ -57,7 +57,7 @@ public class ImageUtils {
         return data;
     }
 
-    private static final byte[] input2byte(InputStream inStream)
+    public static final byte[] input2byte(InputStream inStream)
             throws IOException {
         ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
         byte[] buff = new byte[100];
