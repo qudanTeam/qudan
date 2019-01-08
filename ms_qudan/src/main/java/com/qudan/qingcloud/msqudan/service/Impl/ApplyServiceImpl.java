@@ -420,12 +420,13 @@ public class ApplyServiceImpl {
                 UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
                 if(qrCode == null){
                     log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
-                }
-                inviteUser = userMapperSelf.selectById(qrCode.getUserId());
-                if(inviteUser != null){
-                    apply.setInviteCode(inviteUser.getInviteCode());
                 } else {
-                    log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                    inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                    if(inviteUser != null){
+                        apply.setInviteCode(inviteUser.getInviteCode());
+                    } else {
+                        log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                    }
                 }
             }
         }
