@@ -411,9 +411,11 @@ public class ApplyServiceImpl {
         apply.setLastOfficialQuery(null);
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());
+        log.info("===================shareid:"+ RB.getShareid() +"--------------------------------");
         if(StringUtils.isNotBlank(RB.getShareid())){
             User inviteUser = null;
             Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+            log.info("===================qrcodeId:"+ qrcodeId +" --------------------------------");
             if(qrcodeId == null){
                 log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
             } else {
