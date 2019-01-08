@@ -6,8 +6,10 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
 import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
+import com.qudan.qingcloud.msqudan.mymapper.UserShareQrCodeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
+import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +47,11 @@ public class ApplyServiceImpl {
     @Autowired
     private RewordServiceImpl rewordService;
 
+    @Autowired
+    private UserShareQrCodeMapper userShareQrCodeMapper;
+
+    @Autowired
+    UserMapperSelf userMapperSelf;
 
     @Transactional
     public Map<String,Object> settlement(ApiResponseEntity ARE, Integer applyId){
@@ -405,12 +412,21 @@ public class ApplyServiceImpl {
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());
         if(StringUtils.isNotBlank(RB.getShareid())){
-            Integer inviteUserId = QudanHashId10Utils.decodeHashId(RB.getShareid());
-            if(inviteUserId != null){
-                User inviteUser = userService.getUserById(inviteUserId);
+            User inviteUser = null;
+            Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+            if(qrcodeId == null){
+                log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
+            } else {
+                UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
+                if(qrCode == null){
+                    log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
+                }
+                inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+            }
+            if(inviteUser != null){
                 apply.setInviteCode(inviteUser.getInviteCode());
             } else {
-                log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
+                log.info("===================inviteUser:"+ inviteUser +" 无效--------------------------------");
             }
         }
         applyMapperSelf.insertSelective(apply);
