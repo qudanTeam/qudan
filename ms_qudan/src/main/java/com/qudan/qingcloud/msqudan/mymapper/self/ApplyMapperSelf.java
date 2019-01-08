@@ -5,6 +5,8 @@ import com.qudan.qingcloud.msqudan.mymapper.ApplyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 public interface ApplyMapperSelf extends ApplyMapper {
 
     @Select({
@@ -21,4 +23,14 @@ public interface ApplyMapperSelf extends ApplyMapper {
             "SELECT * FROM apply WHERE product_id = #{productId} AND id_no = #{idNo} LIMIT 1"
     })
     Apply selectApplyIdNo(@Param("idNo")String idNo, @Param("productId")Integer productId);
+
+    @Select({
+        "SELECT id FROM apply WHERE apply_id_code like '%${ds}%' "
+    })
+    Integer selectLast5Apply(@Param("ds")String ds);
+
+    @Select({
+        "SELECT count(1) FROM apply"
+    })
+    Integer countApply();
 }

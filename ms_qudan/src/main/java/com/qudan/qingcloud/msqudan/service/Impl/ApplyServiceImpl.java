@@ -10,6 +10,7 @@ import com.qudan.qingcloud.msqudan.mymapper.UserShareQrCodeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
+import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
@@ -397,6 +398,8 @@ public class ApplyServiceImpl {
 
     private Apply createByRB(ApplyRB RB, Integer userId, Map<String,Object> data){
         Date date = new Date();
+        String dayStr = DateUtil.getFormatDate(date, "yyyyMMdd");
+        dayStr = dayStr.substring(2, dayStr.length());
         Apply apply = new Apply();
         apply.setUserId(userId);
         apply.setProductId(RB.getProductId());
@@ -436,6 +439,22 @@ public class ApplyServiceImpl {
         Apply apply_update = new Apply();
         apply_update.setId(apply.getId());
         apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
+        Integer lastIdOfCurrentDay = applyMapperSelf.selectLast5Apply("QD"+dayStr+"0001");
+        Integer sub = 1;
+        if(lastIdOfCurrentDay != null){
+            sub = (sub + apply.getId()-lastIdOfCurrentDay);
+        }
+        String code = "";
+        if(sub < 10){
+            code = "000" + sub;
+        } else if(sub >= 10 && sub < 100){
+            code = "00" + sub;
+        } else if(sub >= 100 && sub < 1000){
+            code = "0" + sub;
+        } else {
+            code = sub + "";
+        }
+        apply_update.setApplyIdCode("QD"+dayStr + code);
         applyMapperSelf.updateByPrimaryKeySelective(apply_update);
         ProductSimple productSimple = productMapperSelf.selectSimpleByProductId(apply.getProductId());
         data.put("productLink", productSimple.getProductLink());
