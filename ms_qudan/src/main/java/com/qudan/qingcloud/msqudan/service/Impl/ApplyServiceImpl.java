@@ -151,7 +151,7 @@ public class ApplyServiceImpl {
             shareAccount = userService.getUserAccountByUserId(shareUser.getId());
         }
         if(isDL){
-            agentPrice = basePrice.multiply(agentConfig.getRelatedRate());
+            agentPrice = basePrice.multiply(agentConfig.getDirectRate());
             dlAccount = userService.getUserAccountByUserId(shareUser.getId());
         }
         if(user != null){
@@ -195,7 +195,7 @@ public class ApplyServiceImpl {
             );
             teamTrade.setAccount(dlAccount.getId());
             teamTrade.setAgentLevel(agentConfig.getLevel());
-            teamTrade.setAgentRate(agentConfig.getRelatedRate());
+            teamTrade.setAgentRate(agentConfig.getDirectRate());
             teamTrade.setRelationUserId(inviteUser.getId());//业绩人
             teamTrade.setPrice(agentPrice);
         }
@@ -228,7 +228,7 @@ public class ApplyServiceImpl {
             );
             teamTrade.setAccount(dlAccount.getId());
             teamTrade.setAgentLevel(agentConfig.getLevel());
-            teamTrade.setAgentRate(agentConfig.getRelatedRate());
+            teamTrade.setAgentRate(agentConfig.getDirectRate());
             teamTrade.setRelationUserId(inviteUser.getId());//业绩人
             teamTrade.setPrice(agentPrice);
         }
@@ -261,7 +261,7 @@ public class ApplyServiceImpl {
             );
             teamTrade.setAccount(dlAccount.getId());
             teamTrade.setAgentLevel(agentConfig.getLevel());
-            teamTrade.setAgentRate(agentConfig.getRelatedRate());
+            teamTrade.setAgentRate(agentConfig.getDirectRate());
             teamTrade.setRelationUserId(shareUser.getId());//业绩人
             teamTrade.setPrice(agentPrice);
         }
