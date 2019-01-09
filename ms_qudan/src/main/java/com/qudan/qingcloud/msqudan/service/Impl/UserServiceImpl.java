@@ -508,7 +508,7 @@ public class UserServiceImpl {
         //userInfo.setAllowTx(userMapperSelf.selectWaitTx(userId));
         userInfo.setAllowTx(account.getAllowTx());
         userInfo.setWaitSettle(userMapperSelf.selectWaitSettle(userId));
-        userInfo.setTxGoing(userMapperSelf.selectTxGoing(userId));
+        userInfo.setTxGoing(account.getTx());
         userInfo.setBlance(account.getBlance());
 
         UserVipVo userVipVo = new UserVipVo();

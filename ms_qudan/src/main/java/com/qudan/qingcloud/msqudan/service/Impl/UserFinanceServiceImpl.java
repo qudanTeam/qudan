@@ -314,6 +314,8 @@ public class UserFinanceServiceImpl {
 
         tradeTypeMapper.insertSelective(tradeType);
         account.setAllowTx(account.getAllowTx().multiply(tradeType.getPrice()));
+        account.setBlance(account.getBlance().multiply(tradeType.getPrice()));
+        account.setTx(account.getTx().add(tradeType.getPrice()));
         userAccountMapper.updateByPrimaryKeySelective(account);
         data.put("id", tradeType.getId());
         return data;
