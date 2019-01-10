@@ -118,11 +118,17 @@ public class Product {
 
     private BigDecimal productProfitPrice;
 
+    private String productLink;
+
     private Byte cardKind;
 
     private String productPoster;
 
-    private String productLink;
+    private Integer loanLimit;
+
+    private String shareLogo;
+
+    private String shareContent;
 
     public Integer getId() {
         return id;
@@ -580,6 +586,14 @@ public class Product {
         this.productProfitPrice = productProfitPrice;
     }
 
+    public String getProductLink() {
+        return productLink;
+    }
+
+    public void setProductLink(String productLink) {
+        this.productLink = productLink == null ? null : productLink.trim();
+    }
+
     public Byte getCardKind() {
         return cardKind;
     }
@@ -596,11 +610,27 @@ public class Product {
         this.productPoster = productPoster == null ? null : productPoster.trim();
     }
 
-    public String getProductLink() {
-        return productLink;
+    public Integer getLoanLimit() {
+        return loanLimit;
     }
 
-    public void setProductLink(String productLink) {
-        this.productLink = productLink == null ? null : productLink.trim();
+    public void setLoanLimit(Integer loanLimit) {
+        this.loanLimit = loanLimit;
+    }
+
+    public String getShareLogo() {
+        return shareLogo;
+    }
+
+    public void setShareLogo(String shareLogo) {
+        this.shareLogo = shareLogo == null ? null : shareLogo.trim();
+    }
+
+    public String getShareContent() {
+        return shareContent;
+    }
+
+    public void setShareContent(String shareContent) {
+        this.shareContent = shareContent == null ? null : shareContent.trim();
     }
 }

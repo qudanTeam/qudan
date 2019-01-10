@@ -149,6 +149,7 @@ public interface UserMapperSelf extends UserMapper {
     @Select({
 
         "SELECT",
+        "id,",
         "create_time txDate,",
         "price revenue,",
         "status status,",

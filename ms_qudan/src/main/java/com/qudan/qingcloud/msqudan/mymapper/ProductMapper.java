@@ -48,8 +48,9 @@ public interface ProductMapper {
         "preferential, special_tag, ",
         "special_txt, unit, ",
         "jl_unite, product_profit_price, ",
-        "card_kind, product_poster, ",
-        "product_link)",
+        "product_link, card_kind, ",
+        "product_poster, loan_limit, ",
+        "share_logo, share_content)",
         "values (#{productName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, ",
         "#{productType,jdbcType=INTEGER}, #{isHot,jdbcType=INTEGER}, ",
         "#{isShow,jdbcType=INTEGER}, #{customer,jdbcType=INTEGER}, ",
@@ -78,8 +79,9 @@ public interface ProductMapper {
         "#{preferential,jdbcType=VARCHAR}, #{specialTag,jdbcType=VARCHAR}, ",
         "#{specialTxt,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, ",
         "#{jlUnite,jdbcType=VARCHAR}, #{productProfitPrice,jdbcType=DECIMAL}, ",
-        "#{cardKind,jdbcType=TINYINT}, #{productPoster,jdbcType=VARCHAR}, ",
-        "#{productLink,jdbcType=LONGVARCHAR})"
+        "#{productLink,jdbcType=VARCHAR}, #{cardKind,jdbcType=TINYINT}, ",
+        "#{productPoster,jdbcType=VARCHAR}, #{loanLimit,jdbcType=INTEGER}, ",
+        "#{shareLogo,jdbcType=VARCHAR}, #{shareContent,jdbcType=VARCHAR})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(Product record);
@@ -99,7 +101,7 @@ public interface ProductMapper {
         "product_show_img, burundian, settlement_type, expire_unit, how_settle, expire_begin, ",
         "expire_end, commission_standard, share_title, card_progress_img, base_right, ",
         "preferential, special_tag, special_txt, unit, jl_unite, product_profit_price, ",
-        "card_kind, product_poster, product_link",
+        "product_link, card_kind, product_poster, loan_limit, share_logo, share_content",
         "from product",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -161,9 +163,12 @@ public interface ProductMapper {
         @Result(column="unit", property="unit", jdbcType=JdbcType.VARCHAR),
         @Result(column="jl_unite", property="jlUnite", jdbcType=JdbcType.VARCHAR),
         @Result(column="product_profit_price", property="productProfitPrice", jdbcType=JdbcType.DECIMAL),
+        @Result(column="product_link", property="productLink", jdbcType=JdbcType.VARCHAR),
         @Result(column="card_kind", property="cardKind", jdbcType=JdbcType.TINYINT),
         @Result(column="product_poster", property="productPoster", jdbcType=JdbcType.VARCHAR),
-        @Result(column="product_link", property="productLink", jdbcType=JdbcType.LONGVARCHAR)
+        @Result(column="loan_limit", property="loanLimit", jdbcType=JdbcType.INTEGER),
+        @Result(column="share_logo", property="shareLogo", jdbcType=JdbcType.VARCHAR),
+        @Result(column="share_content", property="shareContent", jdbcType=JdbcType.VARCHAR)
     })
     Product selectByPrimaryKey(Integer id);
 
@@ -228,73 +233,12 @@ public interface ProductMapper {
           "unit = #{unit,jdbcType=VARCHAR},",
           "jl_unite = #{jlUnite,jdbcType=VARCHAR},",
           "product_profit_price = #{productProfitPrice,jdbcType=DECIMAL},",
+          "product_link = #{productLink,jdbcType=VARCHAR},",
           "card_kind = #{cardKind,jdbcType=TINYINT},",
           "product_poster = #{productPoster,jdbcType=VARCHAR},",
-          "product_link = #{productLink,jdbcType=LONGVARCHAR}",
-        "where id = #{id,jdbcType=INTEGER}"
-    })
-    int updateByPrimaryKeyWithBLOBs(Product record);
-
-    @Update({
-        "update product",
-        "set product_name = #{productName,jdbcType=VARCHAR},",
-          "logo = #{logo,jdbcType=VARCHAR},",
-          "product_type = #{productType,jdbcType=INTEGER},",
-          "is_hot = #{isHot,jdbcType=INTEGER},",
-          "is_show = #{isShow,jdbcType=INTEGER},",
-          "customer = #{customer,jdbcType=INTEGER},",
-          "is_in_shop = #{isInShop,jdbcType=INTEGER},",
-          "is_shelf = #{isShelf,jdbcType=INTEGER},",
-          "create_time = #{createTime,jdbcType=TIMESTAMP},",
-          "modify_time = #{modifyTime,jdbcType=TIMESTAMP},",
-          "commission = #{commission,jdbcType=DECIMAL},",
-          "sort_val = #{sortVal,jdbcType=INTEGER},",
-          "bg_category = #{bgCategory,jdbcType=VARCHAR},",
-          "amount_line = #{amountLine,jdbcType=INTEGER},",
-          "progress_query_img = #{progressQueryImg,jdbcType=VARCHAR},",
-          "allow_rate = #{allowRate,jdbcType=DECIMAL},",
-          "apply_num = #{applyNum,jdbcType=INTEGER},",
-          "apply_condition = #{applyCondition,jdbcType=VARCHAR},",
-          "apply_tp_img = #{applyTpImg,jdbcType=VARCHAR},",
-          "day_rate = #{dayRate,jdbcType=DECIMAL},",
-          "month_rate = #{monthRate,jdbcType=DECIMAL},",
-          "a_begin = #{aBegin,jdbcType=INTEGER},",
-          "a_limit = #{aLimit,jdbcType=INTEGER},",
-          "b_begin = #{bBegin,jdbcType=INTEGER},",
-          "b_limit = #{bLimit,jdbcType=INTEGER},",
-          "c_start = #{cStart,jdbcType=INTEGER},",
-          "c_limit = #{cLimit,jdbcType=INTEGER},",
-          "a_level_reward = #{aLevelReward,jdbcType=DECIMAL},",
-          "b_level_reward = #{bLevelReward,jdbcType=DECIMAL},",
-          "c_level_reward = #{cLevelReward,jdbcType=DECIMAL},",
-          "base_salary = #{baseSalary,jdbcType=DECIMAL},",
-          "month_salary = #{monthSalary,jdbcType=VARCHAR},",
-          "salary = #{salary,jdbcType=VARCHAR},",
-          "salary_desc = #{salaryDesc,jdbcType=VARCHAR},",
-          "month_salary_desc = #{monthSalaryDesc,jdbcType=VARCHAR},",
-          "second_summary = #{secondSummary,jdbcType=VARCHAR},",
-          "third_summary = #{thirdSummary,jdbcType=VARCHAR},",
-          "detail_header_img = #{detailHeaderImg,jdbcType=VARCHAR},",
-          "card_long_img = #{cardLongImg,jdbcType=VARCHAR},",
-          "product_show_img = #{productShowImg,jdbcType=VARCHAR},",
-          "burundian = #{burundian,jdbcType=VARCHAR},",
-          "settlement_type = #{settlementType,jdbcType=INTEGER},",
-          "expire_unit = #{expireUnit,jdbcType=VARCHAR},",
-          "how_settle = #{howSettle,jdbcType=VARCHAR},",
-          "expire_begin = #{expireBegin,jdbcType=INTEGER},",
-          "expire_end = #{expireEnd,jdbcType=INTEGER},",
-          "commission_standard = #{commissionStandard,jdbcType=VARCHAR},",
-          "share_title = #{shareTitle,jdbcType=VARCHAR},",
-          "card_progress_img = #{cardProgressImg,jdbcType=VARCHAR},",
-          "base_right = #{baseRight,jdbcType=VARCHAR},",
-          "preferential = #{preferential,jdbcType=VARCHAR},",
-          "special_tag = #{specialTag,jdbcType=VARCHAR},",
-          "special_txt = #{specialTxt,jdbcType=VARCHAR},",
-          "unit = #{unit,jdbcType=VARCHAR},",
-          "jl_unite = #{jlUnite,jdbcType=VARCHAR},",
-          "product_profit_price = #{productProfitPrice,jdbcType=DECIMAL},",
-          "card_kind = #{cardKind,jdbcType=TINYINT},",
-          "product_poster = #{productPoster,jdbcType=VARCHAR}",
+          "loan_limit = #{loanLimit,jdbcType=INTEGER},",
+          "share_logo = #{shareLogo,jdbcType=VARCHAR},",
+          "share_content = #{shareContent,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Product record);

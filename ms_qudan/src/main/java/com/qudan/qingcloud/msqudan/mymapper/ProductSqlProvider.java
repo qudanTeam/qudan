@@ -240,6 +240,10 @@ public class ProductSqlProvider {
             VALUES("product_profit_price", "#{productProfitPrice,jdbcType=DECIMAL}");
         }
         
+        if (record.getProductLink() != null) {
+            VALUES("product_link", "#{productLink,jdbcType=VARCHAR}");
+        }
+        
         if (record.getCardKind() != null) {
             VALUES("card_kind", "#{cardKind,jdbcType=TINYINT}");
         }
@@ -248,8 +252,16 @@ public class ProductSqlProvider {
             VALUES("product_poster", "#{productPoster,jdbcType=VARCHAR}");
         }
         
-        if (record.getProductLink() != null) {
-            VALUES("product_link", "#{productLink,jdbcType=LONGVARCHAR}");
+        if (record.getLoanLimit() != null) {
+            VALUES("loan_limit", "#{loanLimit,jdbcType=INTEGER}");
+        }
+        
+        if (record.getShareLogo() != null) {
+            VALUES("share_logo", "#{shareLogo,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getShareContent() != null) {
+            VALUES("share_content", "#{shareContent,jdbcType=VARCHAR}");
         }
         
         return SQL();
@@ -483,6 +495,10 @@ public class ProductSqlProvider {
             SET("product_profit_price = #{productProfitPrice,jdbcType=DECIMAL}");
         }
         
+        if (record.getProductLink() != null) {
+            SET("product_link = #{productLink,jdbcType=VARCHAR}");
+        }
+        
         if (record.getCardKind() != null) {
             SET("card_kind = #{cardKind,jdbcType=TINYINT}");
         }
@@ -491,8 +507,16 @@ public class ProductSqlProvider {
             SET("product_poster = #{productPoster,jdbcType=VARCHAR}");
         }
         
-        if (record.getProductLink() != null) {
-            SET("product_link = #{productLink,jdbcType=LONGVARCHAR}");
+        if (record.getLoanLimit() != null) {
+            SET("loan_limit = #{loanLimit,jdbcType=INTEGER}");
+        }
+        
+        if (record.getShareLogo() != null) {
+            SET("share_logo = #{shareLogo,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getShareContent() != null) {
+            SET("share_content = #{shareContent,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");
