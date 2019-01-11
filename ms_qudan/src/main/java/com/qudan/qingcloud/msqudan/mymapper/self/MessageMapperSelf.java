@@ -17,6 +17,7 @@ public interface MessageMapperSelf extends MessageMapper{
             "msg_logo,",
             "msg_title,",
             "msg_content,",
+
             "msg_link,",
             "create_time,",
             "modify_time",
