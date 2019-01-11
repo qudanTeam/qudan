@@ -36,7 +36,7 @@ public class MessageController {
         ApiResponseEntity ARE = new ApiResponseEntity();
         Integer userId = LocalUserHelper.getUserId();
         ARE.setUserId(userId);
-        messageService.messageGet(ARE, id);
+        ARE.setData(messageService.messageGet(ARE, id));
         return ARE.createResponseEntity();
     }
 
