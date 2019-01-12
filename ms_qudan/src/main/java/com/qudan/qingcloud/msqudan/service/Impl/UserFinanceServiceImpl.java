@@ -174,15 +174,14 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
                 return null;
             }
-            if(!triggerGDMobileVerify(RB)){
-                ARE.addInfoError("mobileCode.error", "验证码获取错误");
+            if(!triggerGDMobileVerify(ARE, RB)){
                 return null;
             }
         }
         return data;
     }
 
-    public boolean triggerGDMobileVerify(QueryBankRB RB){
+    public boolean triggerGDMobileVerify(ApiResponseEntity ARE, QueryBankRB RB){
         try {
             HttpResponse<String> response = Unirest.post("https://xyk.cebbank.com/home/fz/application_get_activityCode.htm")
                     .header("Content-Type", "application/x-www-form-urlencoded")
@@ -190,10 +189,18 @@ public class UserFinanceServiceImpl {
                     .header("Cookie", RB.getCookieStr())
                     .body("id_no="+ RB.getIdno() + "&ver_code="+ RB.getImgCode() +"&id_Type=A" + "&name="+RB.getName())
                     .asString();
-            log.info("返回消息!!!"+ response.getBody().toString());
+            String info = response.getBody();
+            log.info("返回消息!!!"+ info);
+            Map<String,Object> map = QudanJsonUtils.parseJSONToMap(info);
+            Object flag = map.get("flag");
+            if(flag != null && flag.toString().equals("2")){
+                ARE.addInfoError("imgCode.isError", map.get("msg").toString());
+                return false;
+            }
         }catch (Exception ex){
             ex.printStackTrace();
             log.error("触发验证码失败", ex);
+            ARE.addInfoError("imgCode.isSystemError", "触发验证码失败");
             return false;
         }
         return true;
