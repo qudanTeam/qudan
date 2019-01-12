@@ -14,6 +14,7 @@ public class RevenueRecord {
     private BigDecimal revenue;
     private Integer sendStatus;
     private String productLogo;
+    private Integer tradeType;
 
     public Date getAuditTime() {
         return auditTime;
@@ -61,5 +62,13 @@ public class RevenueRecord {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(Integer tradeType) {
+        this.tradeType = tradeType;
     }
 }

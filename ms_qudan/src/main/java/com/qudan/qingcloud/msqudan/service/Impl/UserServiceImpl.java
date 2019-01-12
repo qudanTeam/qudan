@@ -560,6 +560,9 @@ public class UserServiceImpl {
                 if(vo.getProductLogo()!= null){
                     vo.setProductLogo(ComUtils.addPrefixToImg(vo.getProductLogo(), config.getQiniuImageUrl()));
                 }
+                if(vo.getTradeType().intValue() == 5){
+                    vo.setProductName("阶梯奖励");
+                }
             }
         }
         data.put("rows", list);

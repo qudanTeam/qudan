@@ -169,6 +169,7 @@ public interface UserMapperSelf extends UserMapper {
             "t.price revenue,",
             "t.send_status sendStatus,",
             "p.product_name productName,",
+            "t.trade_type tradeType,",
             "p.logo productLogo",
         "FROM trade_type t",
         "LEFT JOIN apply a on t.apply_id = a.id",
