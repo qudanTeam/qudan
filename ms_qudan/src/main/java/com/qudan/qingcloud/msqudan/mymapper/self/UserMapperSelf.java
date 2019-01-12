@@ -50,7 +50,7 @@ public interface UserMapperSelf extends UserMapper {
      * @return
      */
     @Select({
-        "SELECT SUM(price) FROM trade_type WHERE (trade_type = 2 OR trade_type = 3) AND send_status = 1 AND status = 1 AND user_id = #{userId}"
+        "SELECT SUM(price) FROM trade_type WHERE (trade_type = 2 OR trade_type = 3 OR trade_type = 5) AND send_status = 1 AND status = 1 AND user_id = #{userId}"
     })
     BigDecimal selectWaitSettle(@Param("userId") Integer userId);
 
