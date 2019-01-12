@@ -562,6 +562,7 @@ public class UserServiceImpl {
                 }
                 if(vo.getTradeType().intValue() == 5){
                     vo.setProductName("阶梯奖励");
+                    vo.setProductLogo("http://qudanmedia.myhshop.top/msqudan/ti_reword.png");
                 }
             }
         }
