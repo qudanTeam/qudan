@@ -190,6 +190,7 @@ public class UserFinanceServiceImpl {
                     .header("Cookie", RB.getCookieStr())
                     .body("id_no="+ RB.getIdno() + "&ver_code="+ RB.getImgCode() +"&id_Type=A" + "&name="+RB.getName())
                     .asString();
+            log.info("返回消息!!!"+ response.getBody().toString());
         }catch (Exception ex){
             ex.printStackTrace();
             log.error("触发验证码失败", ex);
