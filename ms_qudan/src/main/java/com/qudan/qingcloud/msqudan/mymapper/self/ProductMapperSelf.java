@@ -39,7 +39,8 @@ public interface ProductMapperSelf extends ProductMapper{
                 ")",
             "AND pro.product_type = #{type}",
             "GROUP BY",
-            "pro.id, pro.product_name , pro.logo, pro.base_salary, pro.sort_val"
+            "pro.id, pro.product_name , pro.logo, pro.base_salary, pro.sort_val",
+            "ORDER BY pro.sort_val"
     })
     List<HotProductVo> getHotProduct(@Param("type")Integer type);
 
