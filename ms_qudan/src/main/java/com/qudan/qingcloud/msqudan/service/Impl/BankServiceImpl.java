@@ -6,8 +6,10 @@ import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.entity.Category;
 import com.qudan.qingcloud.msqudan.mymapper.BannerMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.BankMapperSelf;
+import com.qudan.qingcloud.msqudan.util.ComUtils;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.BankSimple;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,9 @@ public class BankServiceImpl {
     @HystrixCommand
     public Map<String,Object> trggierMobileVerify(ApiResponseEntity ARE, Integer bankId){
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(bankId);
+        if(StringUtils.isNotBlank(bankSimple.getLogo())){
+            bankSimple.setLogo(ComUtils.addPrefixToImg(bankSimple.getLogo(), config.getQiniuImageUrl()));
+        }
         if(bankSimple.getNeedMobileVerifyCode() != null && bankSimple.getNeedMobileVerifyCode() == 1){
 
         } else {
@@ -55,6 +60,9 @@ public class BankServiceImpl {
     public Map<String,Object> bankDetail(ApiResponseEntity ARE, Integer catId){
         Map<String,Object> data = Maps.newHashMap();
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(catId);
+        if(StringUtils.isNotBlank(bankSimple.getLogo())){
+            bankSimple.setLogo(ComUtils.addPrefixToImg(bankSimple.getLogo(), config.getQiniuImageUrl()));
+        }
         if(bankSimple.getNeedMobileVerifyCode() == null){
             bankSimple.setNeedMobileVerifyCode(0);
         }

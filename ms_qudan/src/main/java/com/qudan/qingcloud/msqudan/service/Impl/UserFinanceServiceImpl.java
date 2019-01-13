@@ -82,6 +82,9 @@ public class UserFinanceServiceImpl {
             return null;
         }
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(StringUtils.isNotBlank(bankSimple.getLogo())){
+            bankSimple.setLogo(ComUtils.addPrefixToImg(bankSimple.getLogo(), config.getQiniuImageUrl()));
+        }
         if(bankSimple == null){
             ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
             return null;
@@ -224,6 +227,9 @@ public class UserFinanceServiceImpl {
             return null;
         }
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(StringUtils.isNotBlank(bankSimple.getLogo())){
+            bankSimple.setLogo(ComUtils.addPrefixToImg(bankSimple.getLogo(), config.getQiniuImageUrl()));
+        }
         if(bankSimple == null){
             ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
             return null;
@@ -232,21 +238,26 @@ public class UserFinanceServiceImpl {
             ARE.addInfoError("bankId.imgCodeLinkIsEmpty", "图形验证码的链接不存在");
             return null;
         }
+
+
         if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1) { //光大
             try {
-                HttpResponse<InputStream> response = Unirest.get("https://xyk.cebbank.com/verify_code.jpg?" + RandomUtils.generateMixString(5) +"=")
+                Map<String,Object> objectMap  = HttpUtil.doGetWithCookies("https://xyk.cebbank.com/verify_code.jpg?" + RandomUtils.generateMixString(5) +"=");
+
+                /*HttpResponse<InputStream> response = Unirest.get("https://xyk.cebbank.com/verify_code.jpg?" + RandomUtils.generateMixString(5) +"=")
                         .header("content-type", "application/x-www-form-urlencoded")
                         .header("x-requested-with", "XMLHttpRequest")
                         .header("cookie", "weblogic=3d07a8c0; JSESSIONID=0lENLdo6JK4SIC9cUTPazYxIqNsNjCkIzMk9wlpK-tSztcqomZaD!-228252945!-673098056; __v=1.2652440260958570500.1546409418.1546409418.1546409418.1; __l=770095; ALLYESID4=10EF888DC7270C7B")
-                        .asBinary();
-                InputStream inputStream = response.getBody();
+                        .asBinary();*/
+                InputStream inputStream = (InputStream) objectMap.get("input");
                 byte[] bytes = null;
                 bytes = ImageUtils.input2byte(inputStream);
                 String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/bank/imgcode", RandomUtils.generateMixString(12), bytes).upload();
                 String url =  ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
                 data.put("imgCodeUrl",url);
-                List<String> cookieStr = response.getHeaders().get("Set-Cookie");
-                data.put("cookieStr", cookieStr.get(0).split(";")[0].toString());
+
+                //List<String> cookieStr = response.getHeaders().get("Set-Cookie");
+                data.put("cookieStr", objectMap.get("cookieStr").toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("触发验证码失败", e);
@@ -254,16 +265,14 @@ public class UserFinanceServiceImpl {
             }
         } else if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("creditcard.cmbc") > -1){
             try {
-                HttpResponse<InputStream> response = Unirest.get("https://creditcard.cmbc.com.cn/fe/opencard/safeCode.gsp?" + RandomUtils.generateMixString(5) +"=")
-                        .header("content-type", "application/x-www-form-urlencoded")
-                        .header("x-requested-with", "XMLHttpRequest")
-                        .asBinary();
-                InputStream inputStream = response.getBody();
+                Map<String,Object> objectMap  = HttpUtil.doGetWithCookies("https://creditcard.cmbc.com.cn/fe/opencard/safeCode.gsp?rd=0.0" + RandomUtils.generateMixString(17) +"=");
+                InputStream inputStream = (InputStream) objectMap.get("input");
                 byte[] bytes = null;
                 bytes = ImageUtils.input2byte(inputStream);
                 String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/bank/imgcode", RandomUtils.generateMixString(12), bytes).upload();
                 String url =  ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
                 data.put("imgCodeUrl",url);
+                data.put("cookieStr", objectMap.get("cookieStr").toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("触发验证码失败", e);
@@ -283,8 +292,15 @@ public class UserFinanceServiceImpl {
             return null;
         }
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
+        if(StringUtils.isNotBlank(bankSimple.getLogo())){
+            bankSimple.setLogo(ComUtils.addPrefixToImg(bankSimple.getLogo(), config.getQiniuImageUrl()));
+        }
         if(bankSimple == null){
             ARE.addInfoError("bankId.isEmpty", "银行信息不存在");
+            return null;
+        }
+        if(StringUtils.isBlank(bankSimple.getVerifyCodeLink())){
+            ARE.addInfoError("bankId.mobileLinkBIsEmpty", "短信链接未配置");
             return null;
         }
         if(bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1){ //光大
@@ -307,8 +323,48 @@ public class UserFinanceServiceImpl {
             if(!triggerGDMobileVerify(ARE, RB)){
                 return null;
             }
+        } else if(bankSimple.getVerifyCodeLink().indexOf("creditcard.cmbc") > -1){
+            if(StringUtils.isBlank(RB.getIdno())){
+                ARE.addInfoError("idno.isEmpty", "身份证不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getName())){
+                ARE.addInfoError("name.isEmpty", "姓名不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getCookieStr())){
+                ARE.addInfoError("cookieStr.isEmpty", "cookieStr不能为空");
+                return null;
+            }
+        } else {
+            ARE.addInfoError("imgCode.notNeed", "暂未对接该银行，请联系客服!");
         }
         return data;
+    }
+
+    public boolean triggerMSMobileVerify(ApiResponseEntity ARE, QueryBankRB RB){
+        try {
+            HttpResponse<String> response = Unirest.post("https://creditcard.cmbc.com.cn/fe/op_exchange_rate/verificationCode.gsp")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .header("Cookie", RB.getCookieStr())
+                    .body("sKeyType=011&sCustId="+ RB.getIdno() +"&safeCode="+RB.getImgCode())
+                    .asString();
+            String info = response.getBody();
+            log.info("返回消息!!!"+ info);
+            Map<String,Object> map = QudanJsonUtils.parseJSONToMap(info);
+            Object errorCode = map.get("errorCode");
+            if(errorCode != null && Integer.valueOf(errorCode.toString()) > 0){
+                ARE.addInfoError("imgCode.isError", map.get("errorMessage").toString());
+                return false;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            log.error("触发验证码失败", ex);
+            ARE.addInfoError("imgCode.isSystemError", "触发验证码失败");
+            return false;
+        }
+        return true;
     }
 
     public boolean triggerGDMobileVerify(ApiResponseEntity ARE, QueryBankRB RB){

@@ -8,6 +8,7 @@ public class BankSimple {
     private Integer needMobileVerifyCode;
     private String verifyCodeLink;
     private String mobileVerifyCodeLink;
+    private String logo;
 
     public String getGetLink() {
         return getLink;
@@ -63,5 +64,13 @@ public class BankSimple {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

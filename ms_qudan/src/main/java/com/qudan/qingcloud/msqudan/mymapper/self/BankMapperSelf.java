@@ -25,6 +25,7 @@ public interface BankMapperSelf {
             "C.need_verify_code needVerifyCode,",
             "C.need_mobile_verify_code needMobileVerifyCode,",
             "C.verify_code_link verifyCodeLink, ",
+            "C.logo logo,",
             "C.mobile_verify_code_link mobileVerifyCodeLink",
             "FROM category C",
             "WHERE C.id = #{catId}",
