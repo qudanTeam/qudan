@@ -380,14 +380,15 @@ public class UserFinanceServiceImpl {
             }
         } else if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("creditcard.cmbc") > -1){
             try {
-                Map<String,Object> objectMap  = HttpUtil.doGetWithCookies("https://creditcard.cmbc.com.cn/fe/opencard/safeCode.gsp?rd=0.0" + RandomUtils.generateMixString(17) +"=");
+                String cookieStr = HttpUtil.doGetCookiesWithCookies(("https://creditcard.cmbc.com.cn/fe//op_exchange_rate/islogined.gsp"));
+                Map<String,Object> objectMap  = HttpUtil.doGetWithCookies("https://creditcard.cmbc.com.cn/fe/opencard/safeCode.gsp?rd=0." + RandomUtils.generateNumString(9) +"=", cookieStr);
                 InputStream inputStream = (InputStream) objectMap.get("input");
                 byte[] bytes = null;
                 bytes = ImageUtils.input2byte(inputStream);
                 String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/bank/imgcode", RandomUtils.generateMixString(12), bytes).upload();
                 String url =  ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
                 data.put("imgCodeUrl",url);
-                data.put("cookieStr", objectMap.get("cookieStr").toString());
+                data.put("cookieStr", cookieStr);
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("触发验证码失败", e);

@@ -18,6 +18,7 @@ import javax.net.ssl.SSLSession;
 import com.google.common.collect.Maps;
 import com.qudan.qingcloud.msqudan.service.Impl.UserFinanceServiceImpl;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -85,6 +86,43 @@ public class HttpUtil {
         return doGet(url, new HashMap<String, Object>());
     }
 
+    public static Map<String,Object> doGetWithCookies(String url) {
+        return doGetWithCookies(url, null);
+    }
+
+    public static String doGetCookiesWithCookies(String url) {
+        String result = null;// 返回的数据
+        HttpClient httpClient = null;
+        if (url.startsWith("https")) {// 创建https连接
+            httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory())
+                    .setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig).build();
+        } else {// 创建http连接
+            httpClient = HttpClients.createDefault();
+        }
+        try {
+            CookieStore cookieStore = new BasicCookieStore();
+            HttpContext localContext = new BasicHttpContext();
+            // Bind custom cookie store to the local context
+            localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.addHeader("cache-control", "no-cache");
+            httpGet.addHeader("", "");
+            HttpResponse response = httpClient.execute(httpGet, localContext);
+            // 获取返回的内容
+            HttpEntity entity = response.getEntity();
+            String cookieStr = "";
+            List<Cookie> cookies = cookieStore.getCookies();
+            for (int i = 0; i < cookies.size(); i++) {
+                Cookie cookie = cookies.get(i);
+                cookieStr += (cookie.getName()+"="+cookie.getValue()+"; ");
+            }
+            log.info("cookieStr: " + cookieStr);
+            return cookieStr;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * 发送 GET 请求
      *
@@ -92,7 +130,7 @@ public class HttpUtil {
      *            请求参数
      * @return
      */
-    public static Map<String,Object> doGetWithCookies(String url) {
+    public static Map<String,Object> doGetWithCookies(String url, String cookieHeader) {
         Map<String,Object> objectMap = Maps.newHashMap();
         StringBuilder sb = new StringBuilder();
 
@@ -110,6 +148,8 @@ public class HttpUtil {
             // Bind custom cookie store to the local context
             localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
             HttpGet httpGet = new HttpGet(url);
+            httpGet.addHeader("Connection", "keep-alive");
+            httpGet.addHeader("Cookie", cookieHeader);
             HttpResponse response = httpClient.execute(httpGet, localContext);
             // 获取返回的内容
             HttpEntity entity = response.getEntity();
@@ -121,7 +161,6 @@ public class HttpUtil {
             List<Cookie> cookies = cookieStore.getCookies();
             for (int i = 0; i < cookies.size(); i++) {
                 Cookie cookie = cookies.get(i);
-                log.info("Local cookie: " + cookies.get(i));
                 cookieStr += (cookie.getName()+"="+cookie.getValue()+";");
             }
             log.info("cookieStr: " + cookieStr);
