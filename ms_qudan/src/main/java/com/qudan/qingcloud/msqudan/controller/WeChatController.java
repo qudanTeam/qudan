@@ -252,8 +252,8 @@ public class WeChatController {
         if (!initRouter) {
             initRouter = true;
             wxMpMessageRouter
-                    .rule().handler(new LogHadler()).end();
-            wxMpMessageRouter.rule().msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_CLICK).handler(clickMenuButtonHandler).end();
+                    .rule().handler(new LogHadler()).next()
+                    .rule().msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_CLICK).handler(clickMenuButtonHandler).end();
         }
     }
 }
