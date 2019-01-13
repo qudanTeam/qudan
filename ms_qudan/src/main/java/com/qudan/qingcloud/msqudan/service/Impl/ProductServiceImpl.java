@@ -81,7 +81,7 @@ public class ProductServiceImpl {
         Map<String,Object> data = Maps.newHashMap();
         ProductSimple productSimple = productMapperSelf.selectSimpleByProductId(id);
         productSimple.setLogo(ComUtils.addPrefixToImg(productSimple.getLogo(), config.getQiniuImageUrl()));
-        data.put("simple", productMapperSelf.selectSimpleByProductId(id));
+        data.put("simple", productSimple);
         return data;
     }
 
