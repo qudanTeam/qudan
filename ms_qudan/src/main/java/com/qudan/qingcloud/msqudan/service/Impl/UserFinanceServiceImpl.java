@@ -172,7 +172,7 @@ public class UserFinanceServiceImpl {
                     .body("sKeyType=01&sCustId="+ RB.getIdno() +"&DYPW="+ RB.getActivityCode() +"&mar=1")
                     .asString();
             String body = response.getBody();
-            log.info("ms responseBody", body);
+            log.info("ms responseBody:" + body);
             Map<String,Object> map = QudanJsonUtils.parseJSONToMap(body);
             String retCode = map.get("retCode").toString();
             if(Integer.valueOf(retCode) > 0){
@@ -195,7 +195,7 @@ public class UserFinanceServiceImpl {
                     .body("COUT=1&FOUT=10")
                     .asString();
             String body = response.getBody();
-            log.info("ms responseBody" + body);
+            log.info("ms responseBody:" + body);
             Map<String,Object> map = QudanJsonUtils.parseJSONToMap(body);
             String retCode = map.get("retCode").toString();
             if(Integer.valueOf(retCode) > 0){
