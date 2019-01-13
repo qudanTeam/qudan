@@ -72,11 +72,11 @@ public class CharacterController {
         top4_base = (top4_base.add(top4_base.multiply(addRate))).setScale(2, BigDecimal.ROUND_HALF_UP);
         top5_base = (top5_base.add(top5_base.multiply(addRate))).setScale(2, BigDecimal.ROUND_HALF_UP);
 
-        RankVo top1R = new RankVo(top1_base, "苏正超","http://pj7lk9wjg.bkt.clouddn.com/images/users/face/2018-12-25/12_36_55abjgm9feox.png");
-        RankVo top2R = new RankVo(top2_base, "唐智","http://pj7lk9wjg.bkt.clouddn.com/258811f4-4964-48e6-8cb8-e2bae5cb2d39_hacker_icon.png");
-        RankVo top3R = new RankVo(top3_base, "张小梦","http://pj7lk9wjg.bkt.clouddn.com/u=1513631312,4000935229&fm=27&gp=0.jpg");
-        RankVo top4R = new RankVo(top4_base, "张付勤","http://pj7lk9wjg.bkt.clouddn.com/132.jpg");
-        RankVo top5R = new RankVo(top5_base, "刘华","http://pj7lk9wjg.bkt.clouddn.com/mantenghuawenmodianshiliangbeijing_3924704.jpg");
+        RankVo top1R = new RankVo(top1_base, "苏正超","http://qudanmedia.myhshop.top/msqudan/top1.jpg");
+        RankVo top2R = new RankVo(top2_base, "唐智","http://qudanmedia.myhshop.top/msqudan/top2.jpg");
+        RankVo top3R = new RankVo(top3_base, "张小梦","http://qudanmedia.myhshop.top/msqudan/top3.jpeg");
+        RankVo top4R = new RankVo(top4_base, "张付勤","http://qudanmedia.myhshop.top/msqudan/top4.jpeg");
+        RankVo top5R = new RankVo(top5_base, "刘华","http://qudanmedia.myhshop.top/msqudan/top5.jpeg");
         List<RankVo> rankVoList  = Lists.newArrayList();
         rankVoList.add(top1R);
         rankVoList.add(top2R);
