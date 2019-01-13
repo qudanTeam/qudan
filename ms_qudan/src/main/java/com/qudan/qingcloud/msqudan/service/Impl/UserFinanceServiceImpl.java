@@ -258,8 +258,9 @@ public class UserFinanceServiceImpl {
                 document = processGDJsoupDoc(ARE, RB);
             }
         } catch (Exception e) {
-            log.error("解析光大银行文本错误", e);
-            log.info("解析光大银行文本错误----------------------\n",RB.toString());
+            e.printStackTrace();
+            log.error("解析光大银行文本错误 doc", e);
+            log.info("解析光大银行文本错误 doc----------------------\n",RB.toString());
             ARE.addInfoError("bankGet.isError", "获取查询信息错误！");
             return null;
         }
@@ -298,7 +299,8 @@ public class UserFinanceServiceImpl {
                 }
             }
         }catch (Exception ex){
-            log.error("解析光大银行文本错误", ex);
+            log.error("解析光大银行文本错误 analysis", ex);
+            log.info("解析光大银行文本错误 analysis----------------------\n",RB.toString());
             ARE.addInfoError("bankGet.isError", "手机验证码不正确");
         }
         return list;
