@@ -46,4 +46,15 @@ public class ProcessFromBank {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ProcessFromBank{" +
+                "name='" + name + '\'' +
+                ", cardCat='" + cardCat + '\'' +
+                ", jinjianDate='" + jinjianDate + '\'' +
+                ", cardStatus='" + cardStatus + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

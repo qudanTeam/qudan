@@ -3,6 +3,7 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
 import com.qudan.qingcloud.msqudan.entity.*;
@@ -110,6 +111,10 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("activityCode.isEmpty", "activityCode不能为空");
                 return null;
             }
+            if(StringUtils.isBlank(RB.getCookieStr())){
+                ARE.addInfoError("cookieStr.isEmpty", "cookieStr不能为空");
+                return null;
+            }
             List<ProcessFromBank> bfbs = processGDJsoup(ARE, RB);
             if(!CollectionUtils.isEmpty(bfbs)){
                 for (ProcessFromBank processFromBank : bfbs){
@@ -134,12 +139,114 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
                 return null;
             }
-            ARE.addInfoError("imgCode.notNeed", "民生银行未对接，请联系客服!");
+            List<ProcessFromBank> bfbs = processMSJsoup(ARE, RB);
+            if(!CollectionUtils.isEmpty(bfbs)){
+                for (ProcessFromBank processFromBank : bfbs){
+                    BankQuery bankQuery = new BankQuery();
+                    BeanUtils.copyProperties(processFromBank, bankQuery);
+                    bankQuery.setBankId(RB.getBankId());
+                    bankQuery.setBankName(bankSimple.getBankName());
+                    bankQueryMapper.insertSelective(bankQuery);
+                }
+                data.put("bfbs", bfbs);
+            }
         } else{
             ARE.addInfoError("imgCode.notNeed", "暂未对接该银行，请联系客服!");
         }
         return data;
     }
+
+
+    public List<ProcessFromBank> processMSJsoup(ApiResponseEntity ARE,  QueryBankRB RB) {
+        List<ProcessFromBank> bfbs = new ArrayList<ProcessFromBank>();
+        try {
+            HttpResponse<String> response = Unirest.post("https://creditcard.cmbc.com.cn/fe/op_exchange_rate/messageSubmit.gsp")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Cookie", RB.getCookieStr())
+                    .header("cache-control", "no-cache")
+                    .body("sKeyType=01&sCustId="+ RB.getIdno() +"&DYPW="+ RB.getActivityCode() +"&mar=1")
+                    .asString();
+            String body = response.getBody();
+            log.info("ms responseBody", body);
+            Map<String,Object> map = QudanJsonUtils.parseJSONToMap(body);
+            String retCode = map.get("retCode").toString();
+            if(Integer.valueOf(retCode) > 0){
+                ARE.addInfoError("mobileCodeLink.isError", map.get("msg").toString());
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("民生银行 验证手机号错误", e);
+            ARE.addInfoError("mobileCodeLink.isSystemError", "手机号验证错误， 稍后再试");
+            return null;
+        }
+
+        try {
+            HttpResponse<String> response = Unirest.post("https://creditcard.cmbc.com.cn/fe/op_exchange_rate/cardProgressStep.gsp?COUT=1&FOUT=5")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Cookie", RB.getCookieStr())
+                    .header("cache-control", "no-cache")
+                    .header("Postman-Token", "4a3d9667-145b-4597-b11b-7b4380c35671")
+                    .body("COUT=1&FOUT=10")
+                    .asString();
+            String body = response.getBody();
+            log.info("ms responseBody", body);
+            Map<String,Object> map = QudanJsonUtils.parseJSONToMap(body);
+            String retCode = map.get("retCode").toString();
+            if(Integer.valueOf(retCode) > 0){
+                ARE.addInfoError("mobileCodeLink.isError", map.get("msg").toString());
+                return null;
+            }
+            Map<String,Object> data  = (Map<String, Object>) map.get("data");
+            List<Map<String,Object>> list = (List<Map<String, Object>>) data.get("list");
+            for (Map<String,Object> vo : list){
+                ProcessFromBank processFromBank = new ProcessFromBank();
+                processFromBank.setName(RB.getName());
+                processFromBank.setCardStatus(vo.get("MscSrc").toString());
+                processFromBank.setJinjianDate(vo.get("sLostDate").toString());
+                processFromBank.setCardCat(vo.get("Add11").toString());
+                bfbs.add(processFromBank);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("民生银行 验证完手机获取银行返回信息", e);
+            ARE.addInfoError("mobileCodeLink.isSystemError", "手机号验证错误， 稍后再试");
+            return null;
+        }
+        return bfbs;
+    }
+
+ /*   public static void main(String[] args) {
+        String code = "{\n" +
+                "    \"retCode\": \"0000\",\n" +
+                "    \"msg\": \"成功获取列表信息！\",\n" +
+                "    \"data\": {\n" +
+                "        \"FOUT\": \"1\",\n" +
+                "        \"list\": [\n" +
+                "            {\n" +
+                "                \"sBusiDept\": \"9011345841\",\n" +
+                "                \"Add11\": \"民生同道星座金卡\",\n" +
+                "                \"MscSrc\": \"已产生卡片\",\n" +
+                "                \"sLostDate\": \"2019-01-11\",\n" +
+                "                \"CardNo\": \"6226********4531\",\n" +
+                "                \"cMaFlag\": \"主卡\"\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    }\n" +
+                "}";
+        Map<String,Object> map = QudanJsonUtils.parseJSONToMap(code);
+        String retCode = map.get("retCode").toString();
+        Map<String,Object> data  = (Map<String, Object>) map.get("data");
+        List<Map<String,Object>> list = (List<Map<String, Object>>) data.get("list");
+        for (Map<String,Object> vo : list){
+            ProcessFromBank processFromBank = new ProcessFromBank();
+            processFromBank.setName("123");
+            processFromBank.setCardStatus(vo.get("MscSrc").toString());
+            processFromBank.setJinjianDate(vo.get("sLostDate").toString());
+            processFromBank.setCardCat(vo.get("Add11").toString());
+            System.out.println(processFromBank.toString());
+        }
+    }*/
 
     public List<ProcessFromBank> processGDJsoup(ApiResponseEntity ARE,  QueryBankRB RB){
         Document document = null;
@@ -161,7 +268,7 @@ public class UserFinanceServiceImpl {
             Elements table = elements.select("table");
             if(table == null || table.size() == 0){
                 log.error("解析光大银行文本错误", new RuntimeException(document.toString()));
-                ARE.addInfoError("bankGet.isError", "手机验证码不正确");
+                ARE.addInfoError("mobileCodeLink.isError", "手机验证码不正确");
             }
             for(Element element:table){
                 if(element.text()!=null&& !"".equals(element.text())){
@@ -209,6 +316,7 @@ public class UserFinanceServiceImpl {
     public Document processGDJsoupDoc(ApiResponseEntity ARE,  QueryBankRB RB) throws Exception{
         Connection.Response response = Jsoup.connect("https://xyk.cebbank.com/home/fz/card-app-status-query.htm")
                         .userAgent("Mozilla/5.0")
+                        .header("Cookie", RB.getCookieStr())
                         .timeout(10 * 1000)
                         .method(Connection.Method.POST)
                         .data("name", RB.getName())
