@@ -64,4 +64,17 @@ public class QueryBankRB {
     public void setTest(Boolean test) {
         isTest = test;
     }
+
+    @Override
+    public String toString() {
+        return "QueryBankRB{" +
+                "idno='" + idno + '\'' +
+                ", bankId=" + bankId +
+                ", name='" + name + '\'' +
+                ", cookieStr='" + cookieStr + '\'' +
+                ", imgCode='" + imgCode + '\'' +
+                ", activityCode='" + activityCode + '\'' +
+                ", isTest=" + isTest +
+                '}';
+    }
 }

@@ -77,6 +77,7 @@ public class UserFinanceServiceImpl {
     //TODO 成为VIP
 
     public Map<String,Object>queryCardInfo(ApiResponseEntity ARE, QueryBankRB RB){
+        log.info("-----------------------------\n"+RB.toString());
         Map<String,Object> data = Maps.newHashMap();
         if(RB.getBankId() == null){
             ARE.addInfoError("bankId.isEmpty", "bankId不能为空");
