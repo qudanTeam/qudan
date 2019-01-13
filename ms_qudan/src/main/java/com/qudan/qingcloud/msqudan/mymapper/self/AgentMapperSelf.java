@@ -13,6 +13,7 @@ public interface AgentMapperSelf extends AgentConfigMapper {
     })
     AgentConfig selectConfigByLevel(@Param("level")int level);
 
+
     @Select({
         "SELECT * FROM agent_config ORDER BY level ASC"
     })

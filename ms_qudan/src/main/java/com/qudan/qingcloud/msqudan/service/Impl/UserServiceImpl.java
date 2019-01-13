@@ -532,9 +532,14 @@ public class UserServiceImpl {
             userAgentVo.setAgentLevel(user.getAgentLevel());
             AgentConfig agentConfig = agentMapperSelf.selectConfigByLevel(user.getAgentLevel());
             userAgentVo.setAgentRate(agentConfig.getDirectRate());
-
+            AgentConfig agentConfigNext = agentMapperSelf.selectConfigByLevel(user.getAgentLevel()+1);
+            Integer recommendJob = userMapperSelf.countInviteCt(user.getId());
+            if(agentConfigNext !=  null && agentConfigNext.getInviteLimit() != null && agentConfigNext.getInviteLimit() > 0){
+                userAgentVo.setNextLevelGap(agentConfigNext.getInviteLimit() - recommendJob);
+            } else {
+                userAgentVo.setNextLevelGap(0);
+            }
             //TODO 下一等级计算
-            userAgentVo.setNextLevelGap(20);
             userAgentVo.setAgentRevenue(userMapperSelf.selectAgentRevenue(userId));
             userAgentVo.setRecommendJobDoneCount(userMapperSelf.selectAgentRevenueDone(userId));
             userAgentVo.setRecommendRegisterCount(userMapperSelf.selectRecommendCount(userId));
