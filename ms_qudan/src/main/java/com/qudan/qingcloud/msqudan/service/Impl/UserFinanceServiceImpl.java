@@ -126,7 +126,7 @@ public class UserFinanceServiceImpl {
                 }
                 data.put("bfbs", bfbs);
             }
-        } else  if(bankSimple.getVerifyCodeLink().indexOf("https://creditcard.cmbc") > -1) { //民生
+        } else  if(bankSimple.getGetLink().indexOf("creditcard.cmbc") > -1) { //民生
             if(StringUtils.isBlank(RB.getIdno())){
                 ARE.addInfoError("idno.isEmpty", "身份证不能为空");
                 return null;
