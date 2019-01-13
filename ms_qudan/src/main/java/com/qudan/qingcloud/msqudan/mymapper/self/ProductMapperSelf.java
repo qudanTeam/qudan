@@ -104,6 +104,7 @@ public interface ProductMapperSelf extends ProductMapper{
     @Select({
             "SELECT ",
             "C.logo logo,",
+            "C.name bankName,",
             "C.id bankId,",
             "p.id productId,",
             "p.product_link productLink,",

@@ -2,6 +2,7 @@ package com.qudan.qingcloud.msqudan.util.responses;
 
 public class ProductSimple {
     private Integer bankId;
+    private String bankName;
     private Integer productId;
     private String getLink;
     private Integer needVerifyCode;
@@ -81,5 +82,13 @@ public class ProductSimple {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }
