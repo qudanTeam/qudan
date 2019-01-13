@@ -77,7 +77,7 @@ public interface ProductMapperSelf extends ProductMapper{
             "<if test=\"keyword != null\">",
                 "AND  pro.product_name LIKE '%${keyword}%'",
             "</if>",
-            "ORDER BY pro.create_time ASC",
+            "ORDER BY pro.sort_val ASC",
         "</script>",
     })
     List<ProductListVo> getProductList(@Param("type")Integer type, @Param("keyword")String keyword);
