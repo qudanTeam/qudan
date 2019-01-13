@@ -140,6 +140,10 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
                 return null;
             }
+            if(StringUtils.isBlank(RB.getCookieStr())){
+                ARE.addInfoError("cookieStr.isEmpty", "cookieStr不能为空");
+                return null;
+            }
             List<ProcessFromBank> bfbs = processMSJsoup(ARE, RB);
             if(!CollectionUtils.isEmpty(bfbs)){
                 for (ProcessFromBank processFromBank : bfbs){
