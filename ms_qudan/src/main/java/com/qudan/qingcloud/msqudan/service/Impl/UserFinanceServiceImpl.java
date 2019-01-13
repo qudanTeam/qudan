@@ -86,7 +86,11 @@ public class UserFinanceServiceImpl {
             ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
             return null;
         }
-        if(bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1) { //光大
+        if(StringUtils.isBlank(bankSimple.getGetLink())){
+            ARE.addInfoError("bankId.linkIsEmpty", "查询链接不存在");
+            return null;
+        }
+        if(bankSimple.getGetLink().indexOf("xyk.cebbank") > -1) { //光大
             if(StringUtils.isBlank(RB.getIdno())){
                 ARE.addInfoError("idno.isEmpty", "身份证不能为空");
                 return null;
@@ -222,6 +226,10 @@ public class UserFinanceServiceImpl {
         BankSimple bankSimple = bankMapperSelf.selectSimpleByProductId(RB.getBankId());
         if(bankSimple == null){
             ARE.addInfoError("bankId.isNotExist", "银行信息不存在");
+            return null;
+        }
+        if(StringUtils.isBlank(bankSimple.getVerifyCodeLink()) ){
+            ARE.addInfoError("bankId.imgCodeLinkIsEmpty", "图形验证码的链接不存在");
             return null;
         }
         if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("xyk.cebbank") > -1) { //光大
