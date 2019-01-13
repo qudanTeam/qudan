@@ -26,7 +26,7 @@ public class ClickMenuButtonHandler implements WxMpMessageHandler {
                     .content(messageText)
                     .build();
         } else if ("zxjd".equals(wxMessage.getEventKey())) {
-            mpCustomMessage = WxMpKefuMessage.IMAGE().mediaId("vA29UdLF_BJpFYjU7Z1Ss5BM9YHnzdEytmvhOlvkYds").build();
+            mpCustomMessage = WxMpKefuMessage.IMAGE().toUser(wxMessage.getFromUser()).mediaId("vA29UdLF_BJpFYjU7Z1Ss5BM9YHnzdEytmvhOlvkYds").build();
         }
         if(mpCustomMessage != null){
             wxMpService.getKefuService().sendKefuMessage(mpCustomMessage);
