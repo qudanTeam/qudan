@@ -106,7 +106,7 @@ public class ProductServiceImpl {
         product.setDetailHeaderImg(ComUtils.addPrefixToImg(product.getDetailHeaderImg(), config.getQiniuImageUrl()));
         product.setCardLongImg(ComUtils.addPrefixToImg(product.getCardLongImg(), config.getQiniuImageUrl()));
         product.setProductShowImg(ComUtils.addPrefixToImg(product.getProductShowImg(), config.getQiniuImageUrl()));
-        product.setCardProgressImg(ComUtils.addPrefixToImg(product.getCardProgressImg(), config.getQiniuImageUrl()));
+        //product.setCardProgressImg(ComUtils.addPrefixToImg(product.getCardProgressImg(), config.getQiniuImageUrl()));
         product.setProductPoster(ComUtils.addPrefixToImg(product.getProductPoster(), config.getQiniuImageUrl()));
         product.setShareLogo(ComUtils.addPrefixToImg(product.getShareLogo(), config.getQiniuImageUrl()));
         productVo.setProduct(product);
