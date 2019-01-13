@@ -59,14 +59,14 @@ public class LoginServiceImpl {
         smsSendRecord.setCreateTime(new Date());
         smsSendRecord.setSendType(validcodeRB.getType());
         smsSendRecord.setMobile(validcodeRB.getMobile());
-        smsSendRecord.setInvalidTime(DateUtil.getPerDate(date, "m", 2));
+        smsSendRecord.setInvalidTime(DateUtil.getPerDate(date, "m", 5));
         smsSendRecordMapper.insertSelective(smsSendRecord);
 
         //发送短信
         taskExecutor.execute(()->{
             Map<String,Object> params = Maps.newHashMap();
             params.put("code", code);
-            params.put("time", "2");
+            params.put("time", "5");
             smsService.sendThing(validcodeRB.getMobile(), "qeKhW1", params);
         });
         return data;
