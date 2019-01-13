@@ -152,6 +152,10 @@ public class UserFinanceServiceImpl {
         try {
             Elements elements  = document.getElementsByClass("borderWrap2");
             Elements table = elements.select("table");
+            if(table == null || table.size() == 0){
+                log.error("解析光大银行文本错误", new RuntimeException(document.toString()));
+                ARE.addInfoError("bankGet.isError", "手机验证码不正确");
+            }
             for(Element element:table){
                 if(element.text()!=null&& !"".equals(element.text())){
                     Elements es = element.select("tr");
