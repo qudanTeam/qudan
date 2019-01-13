@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
 public class BankSimple {
+    private Integer hasLink;
     private String  bankName;
     private Integer bankId;
     private String getLink;
@@ -72,5 +73,13 @@ public class BankSimple {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Integer getHasLink() {
+        return hasLink;
+    }
+
+    public void setHasLink(Integer hasLink) {
+        this.hasLink = hasLink;
     }
 }

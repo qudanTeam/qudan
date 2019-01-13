@@ -19,6 +19,7 @@ public interface BankMapperSelf {
 
     @Select({
             "SELECT ",
+            "C.has_link hasLink,",
             "C.id bankId,",
             "C.name bankName,",
             "C.get_link getLink,",

@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
 public class ProductSimple {
+    private Integer hasLink;
     private Integer bankId;
     private String bankName;
     private Integer productId;
@@ -90,5 +91,13 @@ public class ProductSimple {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public Integer getHasLink() {
+        return hasLink;
+    }
+
+    public void setHasLink(Integer hasLink) {
+        this.hasLink = hasLink;
     }
 }
