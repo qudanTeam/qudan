@@ -581,6 +581,9 @@ public class UserServiceImpl {
         long total = 0;
         ComUtils.startPage(page, per_page);
         List<OrderVos> list = userMapperSelf.applyRecords(orderParams);
+        for (OrderVos orderVo : list){
+            orderVo.setProductLogo(ComUtils.addPrefixToImg(orderVo.getProductLogo(), config.getQiniuImageUrl()));
+        }
         if(CollectionUtils.isEmpty(list)){
             list = Lists.newArrayList();
         } else {
