@@ -9,6 +9,7 @@ public class ProductSimple {
     private String verifyCodeLink;
     private String mobileVerifyCodeLink;
     private String productLink;
+    private String logo;
 
     public Integer getProductId() {
         return productId;
@@ -72,5 +73,13 @@ public class ProductSimple {
 
     public void setBankId(Integer bankId) {
         this.bankId = bankId;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

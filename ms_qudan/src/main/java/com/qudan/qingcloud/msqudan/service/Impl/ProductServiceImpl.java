@@ -9,12 +9,9 @@ import com.qudan.qingcloud.msqudan.entity.Product;
 import com.qudan.qingcloud.msqudan.entity.ProductConfig;
 import com.qudan.qingcloud.msqudan.entity.ShareManager;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
-import com.qudan.qingcloud.msqudan.util.responses.HotProductVo;
-import com.qudan.qingcloud.msqudan.util.responses.ProductListVo;
-import com.qudan.qingcloud.msqudan.util.responses.ProductVo;
+import com.qudan.qingcloud.msqudan.util.responses.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.util.ComUtils;
-import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +79,8 @@ public class ProductServiceImpl {
 
     public Map<String,Object> productSimple(ApiResponseEntity ARE, Integer id){
         Map<String,Object> data = Maps.newHashMap();
+        ProductSimple productSimple = productMapperSelf.selectSimpleByProductId(id);
+        productSimple.setLogo(ComUtils.addPrefixToImg(productSimple.getLogo(), config.getQiniuImageUrl()));
         data.put("simple", productMapperSelf.selectSimpleByProductId(id));
         return data;
     }
