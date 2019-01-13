@@ -1,6 +1,7 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
 public class BankSimple {
+    private String  bankName;
     private Integer bankId;
     private String getLink;
     private Integer needVerifyCode;
@@ -54,5 +55,13 @@ public class BankSimple {
 
     public void setBankId(Integer bankId) {
         this.bankId = bankId;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

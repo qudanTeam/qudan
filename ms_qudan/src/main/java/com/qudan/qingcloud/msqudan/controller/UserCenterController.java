@@ -40,9 +40,20 @@ public class UserCenterController {
     public ResponseEntity<Map<String, Object>> process(@RequestBody QueryBankRB RB,
                                                              HttpServletRequest request) {
         ApiResponseEntity ARE = new ApiResponseEntity();
+        RB.setTest(false);
         ARE.setData(userFinanceService.queryCardInfo(ARE, RB));
         return ARE.createResponseEntity();
     }
+
+    @PostMapping("/user/process/test")
+    public ResponseEntity<Map<String, Object>> processTest(@RequestBody QueryBankRB RB,
+                                                       HttpServletRequest request) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        RB.setTest(true);
+        ARE.setData(userFinanceService.queryCardInfo(ARE, RB));
+        return ARE.createResponseEntity();
+    }
+
 
     @PostMapping("/user/imgcode/trigger")
     public ResponseEntity<Map<String, Object>> imgcode(@RequestBody QueryBankRB RB,

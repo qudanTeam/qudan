@@ -7,6 +7,7 @@ public class QueryBankRB {
     private String cookieStr;
     private String imgCode;
     private String activityCode;
+    private Boolean isTest;
 
     public String getIdno() {
         return idno;
@@ -54,5 +55,13 @@ public class QueryBankRB {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
+    }
+
+    public Boolean getTest() {
+        return isTest;
+    }
+
+    public void setTest(Boolean test) {
+        isTest = test;
     }
 }

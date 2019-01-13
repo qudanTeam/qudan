@@ -3,38 +3,35 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.qudan.qingcloud.msqudan.config.CommonConfig;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
-import com.qudan.qingcloud.msqudan.controller.UserController;
 import com.qudan.qingcloud.msqudan.entity.*;
-import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
-import com.qudan.qingcloud.msqudan.mymapper.UserAccountMapper;
-import com.qudan.qingcloud.msqudan.mymapper.VipConfigMapper;
-import com.qudan.qingcloud.msqudan.mymapper.VipRecordMapper;
+import com.qudan.qingcloud.msqudan.mymapper.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.BankMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.requestBody.QueryBankRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.TxRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.BankSimple;
-import com.qudan.qingcloud.msqudan.util.responses.QudanHashId12Utils;
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.Cookie;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +65,9 @@ public class UserFinanceServiceImpl {
 
     @Autowired
     CommonConfig config;
+
+    @Autowired
+    BankQueryMapper bankQueryMapper;
 
 
 
@@ -103,9 +103,110 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("activityCode.isEmpty", "activityCode不能为空");
                 return null;
             }
+            List<ProcessFromBank> bfbs = processGDJsoup(ARE, RB);
+            if(!CollectionUtils.isEmpty(bfbs)){
+                for (ProcessFromBank processFromBank : bfbs){
+                    BankQuery bankQuery = new BankQuery();
+                    BeanUtils.copyProperties(processFromBank, bankQuery);
+                    bankQuery.setBankId(RB.getBankId());
+                    bankQuery.setBankName(bankSimple.getBankName());
+                    bankQueryMapper.insertSelective(bankQuery);
+                }
+                data.put("bfbs", bfbs);
+            }
+        } else  if(bankSimple.getVerifyCodeLink().indexOf("https://creditcard.cmbc") > -1) { //民生
+            if(StringUtils.isBlank(RB.getIdno())){
+                ARE.addInfoError("idno.isEmpty", "身份证不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getName())){
+                ARE.addInfoError("name.isEmpty", "姓名不能为空");
+                return null;
+            }
+            if(StringUtils.isBlank(RB.getImgCode())){
+                ARE.addInfoError("imgCode.isEmpty", "imgCode不能为空");
+                return null;
+            }
+            ARE.addInfoError("imgCode.notNeed", "民生银行未对接，请联系客服!");
+        } else{
+            ARE.addInfoError("imgCode.notNeed", "暂未对接该银行，请联系客服!");
         }
-        data.put("status", 3);
         return data;
+    }
+
+    public List<ProcessFromBank> processGDJsoup(ApiResponseEntity ARE,  QueryBankRB RB){
+        Document document = null;
+        try {
+            if(RB.getTest()){
+                document = processGDJsoupDocTest(ARE, RB);
+            } else {
+                document = processGDJsoupDoc(ARE, RB);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("解析光大银行文本错误", e);
+            ARE.addInfoError("bankGet.isError", "获取查询信息错误！");
+            return null;
+        }
+        List<ProcessFromBank> list = new ArrayList<ProcessFromBank>();
+        try {
+            Elements elements  = document.getElementsByClass("borderWrap2");
+            Elements table = elements.select("table");
+            for(Element element:table){
+                if(element.text()!=null&& !"".equals(element.text())){
+                    Elements es = element.select("tr");
+                    for(Element tdelement:es){
+                        if(tdelement.text().indexOf(RB.getName()) > -1){
+                            ProcessFromBank bfb = new ProcessFromBank();
+                            Elements tdes = tdelement.select("td");
+                            for(int i = 0; i < tdes.size(); i++){
+                                if(i == 0){
+                                    bfb.setName(tdes.get(i).text());
+                                }
+                                if(i == 1){
+                                    bfb.setCardCat(tdes.get(i).text());
+                                }
+                                if(i == 3){
+                                    bfb.setJinjianDate(tdes.get(i).text());
+                                }
+                                if(i == 4){
+                                    bfb.setCardStatus(tdes.get(i).text());
+                                }
+                            }
+                            list.add(bfb);
+                        }
+                    }
+                }
+            }
+        }catch (Exception ex){
+            log.error("解析光大银行文本错误", ex);
+            ARE.addInfoError("bankGet.isError", "手机验证码不正确");
+        }
+        return list;
+    }
+
+    public Document processGDJsoupDocTest(ApiResponseEntity ARE,  QueryBankRB RB) throws Exception{
+        Connection.Response response = Jsoup.connect("http://qudanmedia.myhshop.top/msqudan/gd.html")
+                .userAgent("Mozilla/5.0")
+                .timeout(10 * 1000)
+                .method(Connection.Method.GET)
+                .followRedirects(true)
+                .execute();
+        return response.parse();
+    }
+
+    public Document processGDJsoupDoc(ApiResponseEntity ARE,  QueryBankRB RB) throws Exception{
+        Connection.Response response = Jsoup.connect("https://xyk.cebbank.com/home/fz/card-app-status-query.htm")
+                        .userAgent("Mozilla/5.0")
+                        .timeout(10 * 1000)
+                        .method(Connection.Method.POST)
+                        .data("name", RB.getName())
+                        .data("id_no", RB.getIdno())
+                        .data("ver_code", RB.getImgCode())
+                        .data("activity_code", RB.getActivityCode())
+                        .followRedirects(true)
+                        .execute();
+        return response.parse();
     }
 
     public Map<String,Object> verifyCodeTrigger(ApiResponseEntity ARE, QueryBankRB RB){
@@ -139,8 +240,25 @@ public class UserFinanceServiceImpl {
                 log.error("触发验证码失败", e);
                 ARE.addInfoError("imgCode.error", "获取验证码失败");
             }
+        } else if(StringUtils.isNotBlank(bankSimple.getVerifyCodeLink()) && bankSimple.getVerifyCodeLink().indexOf("creditcard.cmbc") > -1){
+            try {
+                HttpResponse<InputStream> response = Unirest.get("https://creditcard.cmbc.com.cn/fe/opencard/safeCode.gsp?" + RandomUtils.generateMixString(5) +"=")
+                        .header("content-type", "application/x-www-form-urlencoded")
+                        .header("x-requested-with", "XMLHttpRequest")
+                        .asBinary();
+                InputStream inputStream = response.getBody();
+                byte[] bytes = null;
+                bytes = ImageUtils.input2byte(inputStream);
+                String imgKey =  new UploadToQiniu(config, "qudan", "img", "images/bank/imgcode", RandomUtils.generateMixString(12), bytes).upload();
+                String url =  ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
+                data.put("imgCodeUrl",url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("触发验证码失败", e);
+                ARE.addInfoError("imgCode.error", "获取验证码失败");
+            }
         } else {
-            ARE.addInfoError("imgCode.notNeed", "不需要获取图形验证码");
+            ARE.addInfoError("imgCode.notNeed", "暂未对接该银行，请联系客服!");
         }
 
         return data;
