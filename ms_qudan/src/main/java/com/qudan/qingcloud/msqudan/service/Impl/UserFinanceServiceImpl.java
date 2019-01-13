@@ -258,8 +258,8 @@ public class UserFinanceServiceImpl {
                 document = processGDJsoupDoc(ARE, RB);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("解析光大银行文本错误", e);
+            log.info("解析光大银行文本错误----------------------\n",RB.toString());
             ARE.addInfoError("bankGet.isError", "获取查询信息错误！");
             return null;
         }
