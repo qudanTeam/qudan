@@ -528,14 +528,15 @@ public class UserServiceImpl {
             userVipVo.setVipRevenue(userMapperSelf.selectVipRevenue(userId));
             userVipVo.setVipLevel(vipConfig.getVipLevel());
         }
+        Integer recommendCt = userMapperSelf.countInviteCt(user.getId());
+        userInfo.setRecommendCt(recommendCt);
         if(userInfo.getIsAgent()){
             userAgentVo.setAgentLevel(user.getAgentLevel());
             AgentConfig agentConfig = agentMapperSelf.selectConfigByLevel(user.getAgentLevel());
             userAgentVo.setAgentRate(agentConfig.getDirectRate());
             AgentConfig agentConfigNext = agentMapperSelf.selectConfigByLevel(user.getAgentLevel()+1);
-            Integer recommendJob = userMapperSelf.countInviteCt(user.getId());
             if(agentConfigNext !=  null && agentConfigNext.getInviteLimit() != null && agentConfigNext.getInviteLimit() > 0){
-                userAgentVo.setNextLevelGap(agentConfigNext.getInviteLimit() - recommendJob);
+                userAgentVo.setNextLevelGap(agentConfigNext.getInviteLimit() - recommendCt);
             } else {
                 userAgentVo.setNextLevelGap(0);
             }

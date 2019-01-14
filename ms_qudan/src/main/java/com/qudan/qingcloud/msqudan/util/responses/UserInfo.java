@@ -3,6 +3,7 @@ package com.qudan.qingcloud.msqudan.util.responses;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.qudan.qingcloud.msqudan.entity.User;
 import com.qudan.qingcloud.msqudan.util.responses.jackson.NullBigDecimalSerializer;
+import com.qudan.qingcloud.msqudan.util.responses.jackson.NullIntegerSerializer;
 
 import java.math.BigDecimal;
 
@@ -20,6 +21,8 @@ public class UserInfo extends User {
     private UserAgentVo agent;
     private UserVipVo vip;
     private String recommendUsername;
+    @JsonSerialize(nullsUsing = NullIntegerSerializer.class)
+    private Integer recommendCt;
 
 
     public Boolean getIsAgent() {
@@ -92,5 +95,13 @@ public class UserInfo extends User {
 
     public void setRecommendUsername(String recommendUsername) {
         this.recommendUsername = recommendUsername;
+    }
+
+    public Integer getRecommendCt() {
+        return recommendCt;
+    }
+
+    public void setRecommendCt(Integer recommendCt) {
+        this.recommendCt = recommendCt;
     }
 }
