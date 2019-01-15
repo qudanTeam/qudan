@@ -60,7 +60,7 @@ public class CharacterController {
         BigDecimal top3_base = new BigDecimal(7065.45);
         BigDecimal top4_base = new BigDecimal(6912.98);
         BigDecimal top5_base = new BigDecimal(6812.65);
-        Date basedate = DateUtil.StrToDate("2018-12-29", "yyyy-MM-dd");
+        Date basedate = DateUtil.StrToDate("2018-12-31", "yyyy-MM-dd");
         Date now = new Date();
         long miao = now.getTime()-basedate.getTime();
         long yitian = 3600*24;
@@ -83,12 +83,12 @@ public class CharacterController {
         rankVoList.add(top3R);
         rankVoList.add(top4R);
         rankVoList.add(top5R);
-        BigDecimal all = top1_base.add(top2_base).add(top3_base).add(top4_base).add(top5_base).add(new BigDecimal(1111.11)).multiply(new BigDecimal("8.845"));
+        BigDecimal all = top1_base.add(top2_base).add(top3_base).add(top4_base).add(top5_base).add(new BigDecimal(1111.11)).multiply(new BigDecimal("1.2845"));
         all = all.setScale(2, BigDecimal.ROUND_HALF_UP);
         Map<String,Object> data = Maps.newHashMap();
         data.put("ranks", rankVoList);
         data.put("allRevenue", all);
-        BigDecimal num = all.divide(new BigDecimal(178.23) ,BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal num = all.divide(new BigDecimal(8.23) ,BigDecimal.ROUND_HALF_DOWN);
         num = num.setScale(0, BigDecimal.ROUND_HALF_UP);
         data.put("all", num);
         ARE.setData(data);
