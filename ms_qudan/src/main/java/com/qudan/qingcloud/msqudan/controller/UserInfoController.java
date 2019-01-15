@@ -34,6 +34,16 @@ public class UserInfoController {
         return ARE.createResponseEntity();
     }
 
+    @GetMapping("/user/info/binding")
+    public ResponseEntity<Map<String, Object>> userInfoBingding() {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.getUserInfoBinding(ARE));
+        return ARE.createResponseEntity();
+    }
+
+
     @PostMapping("/user/share/qrcodeurl")
     public ResponseEntity<Map<String, Object>> getShareCodeurl(@RequestBody  ShareRB shareRB) {
         ApiResponseEntity ARE = new ApiResponseEntity();

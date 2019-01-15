@@ -489,6 +489,16 @@ public class UserServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> getUserInfoBinding(ApiResponseEntity ARE){
+        Map<String,Object> data = Maps.newHashMap();
+        Integer userId = ARE.getUserId();
+        User user = userMapperSelf.selectById(userId);
+        WeixinBinding weixinBinding = weixinService.selectBindingByUserId(user.getId());
+        data.put("binding", weixinBinding != null);
+        if (weixinBinding != null) data.put("openid", weixinBinding.getOpenid());
+        return data;
+    }
+    @HystrixCommand
     public Map<String,Object> getUserInfo(ApiResponseEntity ARE){
         Map<String,Object> data = Maps.newHashMap();
         Date date = new Date();
