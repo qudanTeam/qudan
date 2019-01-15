@@ -161,10 +161,10 @@ public class UserServiceImpl {
             }*/
 
             User mobileuser = userMapperSelf.selectUserByMobile(RB.getMobile());
-          /*  WeixinBinding userBing = null;
+            WeixinBinding userBing = null;
             if(mobileuser != null){
                 userBing = weixinService.selectBindingByUserId(mobileuser.getId());
-            }*/
+            }
 
             User user = null;
             WeixinBinding binding = null;
@@ -227,15 +227,21 @@ public class UserServiceImpl {
                 ARE.addInfoError("openid.binging.isExist", "微信号绑定关系已存在，不需要在绑定了!");
                 return null;
             } else if(openidBind == null && mobileuser != null){
-                user = mobileuser;
-                User user_update = new User();
-                user_update.setId(user.getId());
-                user_update.setUsername(wut.getNickname());
-                user_update.setUserface(MatrixToImageWriter.getWeixinTx(
-                        config, wut.getHeadImgUrl()
-                ));
-                userMapperSelf.updateByPrimaryKeySelective(user_update);
-                data = getToken(ARE, user);
+                if(userBing != null && !userBing.getOpenid().equals(wut.getOpenid())){
+                    ARE.addInfoError("mobile.binging.isExist", "手机号已经绑定其他微信号，不需要在绑定了!");
+                    return null;
+                }
+                if(userBing == null || userBing.getOpenid().equals(wut.getOpenid())){
+                    user = mobileuser;
+                    User user_update = new User();
+                    user_update.setId(user.getId());
+                    user_update.setUsername(wut.getNickname());
+                    user_update.setUserface(MatrixToImageWriter.getWeixinTx(
+                            config, wut.getHeadImgUrl()
+                    ));
+                    userMapperSelf.updateByPrimaryKeySelective(user_update);
+                    data = getToken(ARE, user);
+                }
             } else if(openidBind != null && mobileuser != null){
                 ARE.addInfoError("openid.bingingAndMoblie.isExist", "手机号，微信号绑定关系已存在，不需要在绑定了!");
                 return null;

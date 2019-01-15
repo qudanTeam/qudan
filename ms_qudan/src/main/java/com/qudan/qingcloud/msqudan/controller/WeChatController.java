@@ -8,6 +8,7 @@ import com.qudan.qingcloud.msqudan.mymapper.WeixinUserTempMapper;
 import com.qudan.qingcloud.msqudan.service.Impl.UserServiceImpl;
 import com.qudan.qingcloud.msqudan.service.Impl.WeixinServiceImpl;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.EmojiFilter;
 import com.qudan.qingcloud.msqudan.util.responses.ApiResponseEntity;
 import com.qudan.qingcloud.msqudan.util.responses.ErrorDetail;
 import com.qudan.qingcloud.msqudan.util.responses.QudanHashId14Utils;
@@ -178,7 +179,7 @@ public class WeChatController {
                         WeixinUserTemp wut = new WeixinUserTemp();
                         wut.setOpenid(wxMpUser.getOpenId());
                         wut.setUnionid(wxMpUser.getUnionId());
-                        wut.setNickname(wxMpUser.getNickname());
+                        wut.setNickname(EmojiFilter.filterEmoji(wxMpUser.getNickname()));
                         wut.setHeadImgUrl(wxMpUser.getHeadImgUrl());
 
                         wut.setProvince(wxMpUser.getProvince());
@@ -203,7 +204,7 @@ public class WeChatController {
                 WeixinUserTemp wut = new WeixinUserTemp();
                 wut.setOpenid(wxMpUser.getOpenId());
                 wut.setUnionid(wxMpUser.getUnionId());
-                wut.setNickname(wxMpUser.getNickname());
+                wut.setNickname(EmojiFilter.filterEmoji(wxMpUser.getNickname()));
                 wut.setHeadImgUrl(wxMpUser.getHeadImgUrl());
 
                 wut.setProvince(wxMpUser.getProvince());
