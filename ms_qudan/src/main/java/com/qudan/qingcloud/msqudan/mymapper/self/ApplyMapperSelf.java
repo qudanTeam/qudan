@@ -20,7 +20,7 @@ public interface ApplyMapperSelf extends ApplyMapper {
     Apply selectApplyByUsernameAndIdNo(@Param("username")String username, @Param("idNo")String idNo, @Param("productId")Integer productId);
 
     @Select({
-            "SELECT * FROM apply WHERE product_id = #{productId} AND id_no = #{idNo} LIMIT 1"
+            "SELECT * FROM apply WHERE product_id = #{productId} AND id_no = #{idNo} AND status = 2 LIMIT 1"
     })
     Apply selectApplyIdNo(@Param("idNo")String idNo, @Param("productId")Integer productId);
 

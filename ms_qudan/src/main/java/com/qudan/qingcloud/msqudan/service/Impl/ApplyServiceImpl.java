@@ -415,6 +415,7 @@ public class ApplyServiceImpl {
         apply.setRejectReason(null);
         apply.setInviteCode(RB.getInviteCode());
         log.info("===================shareid:"+ RB.getShareid() +"--------------------------------");
+        log.info("===================productId:"+ RB.getProductId() +"--------------------------------");
         if(StringUtils.isNotBlank(RB.getShareid())){
             User inviteUser = null;
             Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
@@ -426,11 +427,15 @@ public class ApplyServiceImpl {
                 if(qrCode == null){
                     log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
                 } else {
-                    inviteUser = userMapperSelf.selectById(qrCode.getUserId());
-                    if(inviteUser != null){
-                        apply.setInviteCode(inviteUser.getInviteCode());
+                    if(qrCode.getPid() != null || qrCode.getPid().intValue() != RB.getProductId()){
+                        log.info("===================qrcodeId.pid:"+ qrCode.getPid() + ";  pid无效--------------------------------");
                     } else {
-                        log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                        inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                        if(inviteUser != null){
+                            apply.setInviteCode(inviteUser.getInviteCode());
+                        } else {
+                            log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                        }
                     }
                 }
             }
