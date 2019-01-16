@@ -427,7 +427,7 @@ public class ApplyServiceImpl {
                 if(qrCode == null){
                     log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
                 } else {
-                    if(qrCode.getPid() != null || qrCode.getPid().intValue() != RB.getProductId()){
+                    if(qrCode.getPid() == null || qrCode.getPid().intValue() != RB.getProductId()){
                         log.info("===================qrcodeId.pid:"+ qrCode.getPid() + ";  pid无效--------------------------------");
                     } else {
                         inviteUser = userMapperSelf.selectById(qrCode.getUserId());
