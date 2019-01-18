@@ -126,7 +126,7 @@ public class CharacterServiceImpl {
                 agent_update.setModifyTime(date);
                 agentMapper.updateByPrimaryKeySelective(agent_update);
             }
-            if(user.getUserType() == null){
+            if(user.getUserType() == null || user.getUserType() == 0){
                 user_update.setUserType(2);
             } else if(user.getUserType() != null && user.getUserType() == 1){
                 user_update.setUserType(3);
