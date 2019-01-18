@@ -563,6 +563,11 @@ public class UserFinanceServiceImpl {
         user_update.setId(userId);
         user_update.setVipLevel(vipConfig.getVipLevel());
         user_update.setVipName(vipConfig.getVipName());
+        if(user.getUserType() == null){
+            user_update.setUserType(1);
+        } else if(user.getUserType() != null && user.getUserType() == 2){
+            user_update.setUserType(3);
+        }
         userMapperSelf.updateByPrimaryKeySelective(user_update);
         return data;
     }
