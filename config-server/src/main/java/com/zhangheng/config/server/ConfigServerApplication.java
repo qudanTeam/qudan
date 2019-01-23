@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @EnableConfigServer//开启config-server
-//@EnableDiscoveryClient//将其注册到服务中心
-@EnableEurekaClient
+@EnableDiscoveryClient//将其注册到服务中心
+//@EnableEurekaClient
 @EnableAutoConfiguration
 public class ConfigServerApplication {
 
