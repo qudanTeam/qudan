@@ -3,6 +3,7 @@ package com.qudan.qingcloud.msqudan.wxpay;
 import com.github.wxpay.sdk.WXPayConfig;
 import org.bouncycastle.util.test.Test;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.io.*;
 /**
  * Created by 蜡笔小新不爱吃青椒 on 2018/12/10.
  */
+@Configuration
 public class MyWXConfig implements WXPayConfig {
 
     @Value("${appId}")
