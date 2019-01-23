@@ -6,9 +6,18 @@ spring:
       uri: http://user:123456@47.99.242.122:8888/
 #      profile: dev
       label: master
+#      discovery:
+#        enabled: true
+#        service-id: config-server
   profiles:
     active: test
   boot:
     admin:
       client:
         url: http://47.99.242.122:7086
+eureka:
+  client:
+    service-url:
+      defaultZone: http://47.99.242.122:8761/eureka/
+
+
