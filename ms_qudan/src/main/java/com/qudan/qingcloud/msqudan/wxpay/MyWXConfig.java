@@ -2,6 +2,7 @@ package com.qudan.qingcloud.msqudan.wxpay;
 
 import com.github.wxpay.sdk.WXPayConfig;
 import org.bouncycastle.util.test.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
@@ -11,10 +12,21 @@ import java.io.*;
  */
 public class MyWXConfig implements WXPayConfig {
 
+    @Value("${appId}")
+    private String appId;
 
-    private String appId = "wx5937eccb3b4a99d7";//appId
-    private String  mchId = "1520779301";//商户号
-    private String key = "g317g180q3355G2233G3344Q998ggq88";//密钥key
+    @Value("${mchId}")
+    private String  mchId;
+
+    @Value("${key}")
+    private String key;
+
+    @Value("${wxpath}")
+    private String wxpath;
+
+//    private String appId = "wx5937eccb3b4a99d7";//appId
+//    private String  mchId = "1520779301";//商户号
+//    private String key = "g317g180q3355G2233G3344Q998ggq88";//密钥key
 
     private byte[] certData;
 
@@ -26,7 +38,8 @@ public class MyWXConfig implements WXPayConfig {
 //        InputStream certStream = new FileInputStream(file);
 //        this.certData = new byte[(int) file.length()];
         //打包后的读法
-        InputStream certStream=Test.class.getResourceAsStream("/wxconfig/apiclient_cert.p12");
+//        InputStream certStream=Test.class.getResourceAsStream("/wxconfig/apiclient_cert.p12");
+        InputStream certStream=Test.class.getResourceAsStream(wxpath);
         this.certData = new byte[certStream.available()];
         certStream.read(this.certData);
         certStream.close();
