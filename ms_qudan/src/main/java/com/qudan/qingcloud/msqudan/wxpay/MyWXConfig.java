@@ -11,7 +11,7 @@ import java.io.*;
 /**
  * Created by 蜡笔小新不爱吃青椒 on 2018/12/10.
  */
-@Configuration
+//@Configuration
 public class MyWXConfig implements WXPayConfig {
 
     @Value("${appId}")
