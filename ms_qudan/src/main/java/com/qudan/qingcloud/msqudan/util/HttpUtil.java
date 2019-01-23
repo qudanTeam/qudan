@@ -233,7 +233,8 @@ public class HttpUtil {
      *            请求参数
      * @return
      */
-    public static String doPOSTWithCookieStr(String url, Map<String, Object> params) {
+    public static Map<String,Object> doPOSTWithCookieStr(String url, Map<String, Object> params, String cookieHeader) {
+        Map<String,Object> objectMap = Maps.newHashMap();
         CloseableHttpClient httpClient = null;
         if (url.startsWith("https")) {// 创建https连接
             httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory())
@@ -257,6 +258,7 @@ public class HttpUtil {
                 pairList.add(pair);
             }
             httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8")));
+            httpPost.addHeader("Cookie", cookieHeader);
             response = httpClient.execute(httpPost);
             String cookieStr = "";
             List<Cookie> cookies = cookieStore.getCookies();
@@ -265,8 +267,10 @@ public class HttpUtil {
                 System.out.println("Local cookie: " + cookies.get(i));
                 cookieStr += (cookie.toString()+";");
             }
+            objectMap.put("cookieStr", cookieStr);
             HttpEntity entity = response.getEntity();
             httpStr = EntityUtils.toString(entity, "UTF-8");
+            objectMap.put("httpStr", httpStr);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -278,7 +282,7 @@ public class HttpUtil {
                 }
             }
         }
-        return httpStr;
+        return objectMap;
     }
 
     /**
@@ -302,7 +306,6 @@ public class HttpUtil {
         CloseableHttpResponse response = null;
 
         try {
-
             httpPost.setConfig(requestConfig);
             List<NameValuePair> pairList = new ArrayList<>(params.size());
             for (Map.Entry<String, Object> entry : params.entrySet()) {

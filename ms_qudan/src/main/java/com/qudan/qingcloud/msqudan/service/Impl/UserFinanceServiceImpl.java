@@ -70,7 +70,7 @@ public class UserFinanceServiceImpl {
     @Autowired
     BankQueryMapper bankQueryMapper;
 
-
+    Map<Integer,Object> gdmap = Maps.newHashMap();
 
     //TODO 商品搜索记录
     //TODO 记录商品搜索记录
@@ -321,9 +321,11 @@ public class UserFinanceServiceImpl {
     }
 
     public Document processGDJsoupDoc(ApiResponseEntity ARE,  QueryBankRB RB) throws Exception{
+        Integer userId = ARE.getUserId();
+        String cookieStr = gdmap.get(userId).toString();
         Connection.Response response = Jsoup.connect("https://xyk.cebbank.com/home/fz/card-app-status-query.htm")
                         .userAgent("Mozilla/5.0")
-                        .header("Cookie", RB.getCookieStr())
+                        .header("Cookie", cookieStr)
                         .timeout(10 * 1000)
                         .method(Connection.Method.POST)
                         .data("name", RB.getName())
@@ -485,13 +487,20 @@ public class UserFinanceServiceImpl {
 
     public boolean triggerGDMobileVerify(ApiResponseEntity ARE, QueryBankRB RB){
         try {
-            HttpResponse<String> response = Unirest.post("https://xyk.cebbank.com/home/fz/application_get_activityCode.htm")
+           /* HttpResponse<String> response = Unirest.post("https://xyk.cebbank.com/home/fz/application_get_activityCode.htm")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("X-Requested-With", "XMLHttpRequest")
                     .header("Cookie", RB.getCookieStr())
                     .body("id_no="+ RB.getIdno() + "&ver_code="+ RB.getImgCode() +"&id_Type=A" + "&name="+RB.getName())
-                    .asString();
-            String info = response.getBody();
+                    .asString();*/
+            Map<String,Object> params = Maps.newHashMap();
+            params.put("id_no", RB.getIdno());
+            params.put("ver_code", RB.getImgCode());
+            params.put("id_Type", "A");
+            params.put("name", RB.getName());
+            Map<String,Object> objectMap = HttpUtil.doPOSTWithCookieStr("https://xyk.cebbank.com/home/fz/application_get_activityCode.htm",
+                    params, RB.getCookieStr());
+           String info = objectMap.get("httpStr").toString();
             log.info("返回消息!!!"+ info);
             Map<String,Object> map = QudanJsonUtils.parseJSONToMap(info);
             Object flag = map.get("flag");
@@ -499,6 +508,10 @@ public class UserFinanceServiceImpl {
                 ARE.addInfoError("imgCode.isError", map.get("msg").toString());
                 return false;
             }
+            Map<String,Object> data = Maps.newHashMap();
+            data.put("cookieStr", objectMap.get("cookieStr"));
+            ARE.setData(data);
+            gdmap.put(ARE.getUserId(), objectMap.get("cookieStr"));
         }catch (Exception ex){
             ex.printStackTrace();
             log.error("触发验证码失败", ex);
