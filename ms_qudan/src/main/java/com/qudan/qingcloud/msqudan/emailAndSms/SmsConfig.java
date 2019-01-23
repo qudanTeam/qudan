@@ -36,9 +36,6 @@ public class SmsConfig {
     @Value("${sms.active}")
     private String smsActive;
 
-    @Value("${spring.profiles}")
-    private String env;
-
     @Bean
     public SmsService smsService() {
         SmsService smsService = null;
