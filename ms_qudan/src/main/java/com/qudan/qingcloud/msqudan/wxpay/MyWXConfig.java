@@ -14,21 +14,21 @@ import java.io.*;
 //@Configuration
 public class MyWXConfig implements WXPayConfig {
 
-    @Value("${appId}")
-    private String appId;
+//    @Value("${appId}")
+//    private String appId;
+//
+//    @Value("${mchId}")
+//    private String  mchId;
+//
+//    @Value("${key}")
+//    private String key;
+//
+//    @Value("${wxpath}")
+//    private String wxpath;
 
-    @Value("${mchId}")
-    private String  mchId;
-
-    @Value("${key}")
-    private String key;
-
-    @Value("${wxpath}")
-    private String wxpath;
-
-//    private String appId = "wx17dd8d8d9de5910e";//appId
-//    private String  mchId = "1524656921";//商户号
-//    private String key = "gGq1265zbb6743lH5672019JSynb8tg8";//密钥key
+    private String appId = "wx17dd8d8d9de5910e";//appId
+    private String  mchId = "1524656921";//商户号
+    private String key = "gGq1265zbb6743lH5672019JSynb8tg8";//密钥key
 
     private byte[] certData;
 
@@ -40,8 +40,8 @@ public class MyWXConfig implements WXPayConfig {
 //        InputStream certStream = new FileInputStream(file);
 //        this.certData = new byte[(int) file.length()];
         //打包后的读法
-//        InputStream certStream=Test.class.getResourceAsStream("/wxproconfig/apiclient_cert.p12");
-        InputStream certStream=Test.class.getResourceAsStream(wxpath);
+        InputStream certStream=Test.class.getResourceAsStream("/wxproconfig/apiclient_cert.p12");
+//        InputStream certStream=Test.class.getResourceAsStream(wxpath);
         this.certData = new byte[certStream.available()];
         certStream.read(this.certData);
         certStream.close();
