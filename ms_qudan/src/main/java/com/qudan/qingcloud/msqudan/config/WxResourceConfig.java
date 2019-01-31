@@ -48,8 +48,8 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_APPSECRET = "861f22c47a40774f26e7f44b472069e7";
                     WEIXIN_QUDAN_TOKEN = "weixinQudan";
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
-                    WEIXIN_SERVER_URL = "http://msqudan.myhshop.top";
-                    WEIXIN_SERVER_API_URL = "http://msqudan.myhshop.top/msquan/api";
+                    WEIXIN_SERVER_URL = "http://txmsqudan.myhshop.top";
+                    WEIXIN_SERVER_API_URL = "http://txmsqudan.myhshop.top/msquan/api";
             }
         } else {//正式 wx-pro
             WEIXIN_QUDAN_APPID = "wx17dd8d8d9de5910e";
