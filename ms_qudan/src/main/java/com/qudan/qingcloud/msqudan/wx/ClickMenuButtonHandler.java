@@ -19,7 +19,7 @@ public class ClickMenuButtonHandler implements WxMpMessageHandler {
         log.info("ClickMenuButtonHandler:"+wxMessage.toString());
         WxMpKefuMessage mpCustomMessage = null;
         if ("lxwm".equals(wxMessage.getEventKey())) {
-            String messageText = "微信号：QDSH-0918\nQQ号：609677651";
+            String messageText = "微信号1：QDSH-0918\nQQ号：609677651";
             mpCustomMessage = WxMpKefuMessage
                     .TEXT()
                     .toUser(wxMessage.getFromUser())
