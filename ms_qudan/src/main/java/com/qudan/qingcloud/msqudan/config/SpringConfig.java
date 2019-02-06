@@ -75,7 +75,9 @@ public class SpringConfig {
         registrationBean.addInitParameter("uncertainUrl",
                 "/msqudan/api/product/*,"
                 + "/msqudan/api/user/apply/loan,"
-                + "/msqudan/api/user/apply/card"
+                + "/msqudan/api/user/apply/card,"
+                + "/msqudan/api/user/apply/pos,"
+                + "/msqudan/api/user/apply/pos/test"
         );
         return registrationBean;
     }

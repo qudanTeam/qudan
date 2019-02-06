@@ -1,10 +1,10 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
-import com.alipay.api.domain.Account;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
 import com.qudan.qingcloud.msqudan.entity.*;
+import com.qudan.qingcloud.msqudan.mymapper.PosApplyExtMapper;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.UserShareQrCodeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
@@ -12,14 +12,17 @@ import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.PosApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import scala.App;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -54,8 +57,15 @@ public class ApplyServiceImpl {
     @Autowired
     UserMapperSelf userMapperSelf;
 
+    @Autowired
+    PosApplyExtMapper posApplyExtMapper;
+
+
+
     @Transactional
     public Map<String,Object> settlement(ApiResponseEntity ARE, Integer applyId){
+
+        //TODO POS金额结算 ， 是否有代理，奖励记录是否要体现TYPE=7 的金额
         log.info("applyid:"+applyId);
         Apply apply = applyMapperSelf.selectByPrimaryKey(applyId);
         if(apply == null){
@@ -101,6 +111,12 @@ public class ApplyServiceImpl {
         if(shareUser != null && shareUser.getRecommendInviteId() != null){
             userDL = userService.getUserById(shareUser.getRecommendInviteId());
         }
+
+
+        //TODO 平台奖励的归属人是谁
+        /*if(product.getProductType() == 3){
+            userDL = null;
+        }*/
 
         //是否是点分享链接的
         boolean isShare = shareUser != null;
@@ -337,7 +353,7 @@ public class ApplyServiceImpl {
     }
 
     @HystrixCommand
-    public Map<String,Object> loanApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
+    public Map<String,Object> loanApply(ApiResponseEntity ARE, ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
             createByRB(RB, ARE.getUserId(),data);
@@ -346,12 +362,63 @@ public class ApplyServiceImpl {
     }
 
     @HystrixCommand
-    public Map<String,Object> cardApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
+    public Map<String,Object> posApply(ApiResponseEntity ARE,PosApplyRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(checkPosApply(ARE, RB)){
+            PosApplyExt ext = createPosApply(RB, ARE.getUserId(), data);
+        }
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> cardApply(ApiResponseEntity ARE, ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
             createByRB(RB, ARE.getUserId(), data);
         }
         return data;
+    }
+
+
+    private boolean checkPosApply(ApiResponseEntity ARE,PosApplyRB RB){
+        if(StringUtils.isBlank(RB.getAddress())){
+            ARE.addInfoError("address.isEmpty", "收货地址不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getApplyMobile())){
+            ARE.addInfoError("applyMobile.isEmpty", "申请手机号不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getApplyName())){
+            ARE.addInfoError("applyName.isEmpty", "申请人不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getReceiver())){
+            ARE.addInfoError("receiver.isEmpty", "收货人不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getReceiverMobile())){
+            ARE.addInfoError("receiverMobile.isEmpty", "收货收机不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getRegion())){
+            ARE.addInfoError("region.isEmpty", "不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getValidcode())){
+            ARE.addInfoError("validcode.isEmpty", "不能为空");
+            return false;
+        }
+        if(RB.getProductId() == null){
+            ARE.addInfoError("productId.isEmpty", "产品ID不能为空");
+            return false;
+        }
+        Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
+        if(product == null){
+            ARE.addInfoError("product.isNotExist", "不存在的产品Id");
+            return false;
+        }
+        return userService.checkCode(ARE, RB.getApplyMobile(), RB.getValidcode(), 4, true);
     }
 
     private boolean checkApplyRB(ApiResponseEntity ARE,ApplyRB RB){
@@ -394,6 +461,111 @@ public class ApplyServiceImpl {
             return false;
         }
         return userService.checkCode(ARE, RB.getMobile(), RB.getValidcode(), 4, true);
+    }
+
+    private PosApplyExt createPosApply(PosApplyRB  RB, Integer userId, Map<String,Object> data){
+        Date date = new Date();
+        PosApplyExt ext = new PosApplyExt();
+        BeanUtils.copyProperties(RB, ext);
+        ext.setUserId(userId);
+        ext.setCreateTime(date);
+        if(StringUtils.isNotBlank(RB.getShareid())){
+            User inviteUser = null;
+            Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+            log.info("===================qrcodeId:"+ qrcodeId +" --------------------------------");
+            if(qrcodeId == null){
+                log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
+            } else {
+                UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
+                if(qrCode == null){
+                    log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
+                } else {
+                    if(qrCode.getPid() == null || qrCode.getPid().intValue() != RB.getProductId()){
+                        log.info("===================qrcodeId.pid:"+ qrCode.getPid() + ";  pid无效--------------------------------");
+                    } else {
+                        inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                        if(inviteUser != null){
+                            ext.setInviteCode(inviteUser.getInviteCode());
+                        } else {
+                            log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                        }
+                    }
+                }
+            }
+        }
+        Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
+        data.put("deposit", product.getPosDeposit().toString());
+        posApplyExtMapper.insertSelective(ext);
+        data.put("extId", QudanHashId12Utils.encodeHashId(ext.getId()+4000));
+        return ext;
+    }
+
+
+    /**
+     * 支付成功后的回调
+     * @param extIdStr
+     * @param payOrderNo
+     * @return
+     */
+    public boolean callBackPosApply(String extIdStr, String payOrderNo){
+        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+        if(extId != null){
+            extId = extId - 4000;
+            PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
+            if(ext != null){
+                log.info("---------------------不存在的EXT信息["+extId+"]");
+                Apply apply = new Apply();
+                Date date = new Date();
+                String dayStr = DateUtil.getFormatDate(date, "yyyyMMdd");
+                dayStr = dayStr.substring(2, dayStr.length());
+                apply.setUserId(ext.getUserId());
+                apply.setProductId(ext.getProductId());
+                apply.setCreateTime(date);
+                apply.setModifyTime(date);
+                apply.setMobile(ext.getApplyMobile());
+                apply.setName(ext.getApplyName());
+                apply.setStatus(1);
+                apply.setOfficialStatus(0);
+                apply.setIsSettle(0);
+                apply.setLastOfficialQuery(null);
+                apply.setRejectReason(null);
+                apply.setInviteCode(ext.getInviteCode());
+                applyMapperSelf.insertSelective(apply);
+                Apply apply_update = new Apply();
+                apply_update.setId(apply.getId());
+                apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
+                Integer lastIdOfCurrentDay = applyMapperSelf.selectLast5Apply("QD"+dayStr+"0001");
+                Integer sub = 1;
+                if(lastIdOfCurrentDay != null){
+                    sub = (sub + apply.getId()-lastIdOfCurrentDay);
+                }
+                String code = "";
+                if(sub < 10){
+                    code = "000" + sub;
+                } else if(sub >= 10 && sub < 100){
+                    code = "00" + sub;
+                } else if(sub >= 100 && sub < 1000){
+                    code = "0" + sub;
+                } else {
+                    code = sub + "";
+                }
+                apply_update.setApplyIdCode("QD"+dayStr + code);
+                applyMapperSelf.updateByPrimaryKeySelective(apply_update);
+
+                PosApplyExt ext_update = new PosApplyExt();
+                ext_update.setId(ext.getId());
+                ext_update.setPayOrderNo(payOrderNo);
+                ext_update.setDepositStatus(1);
+                ext_update.setDeliverStatus(1);
+                ext_update.setApplyId(apply.getId());
+                ext_update.setModifyTime(date);
+                //TODO 保证金， 支付金额， 支付类型
+                posApplyExtMapper.updateByPrimaryKeySelective(ext_update);
+            }
+        } else {
+            log.info("---------------------不存在的EXT信息["+extIdStr+"]");
+        }
+        return false;
     }
 
     private Apply createByRB(ApplyRB RB, Integer userId, Map<String,Object> data){

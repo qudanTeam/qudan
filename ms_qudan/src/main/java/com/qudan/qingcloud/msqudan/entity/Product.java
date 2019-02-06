@@ -130,6 +130,12 @@ public class Product {
 
     private String shareContent;
 
+    private BigDecimal platformAward;
+
+    private BigDecimal posPrice;
+
+    private BigDecimal posDeposit;
+
     public Integer getId() {
         return id;
     }
@@ -632,5 +638,29 @@ public class Product {
 
     public void setShareContent(String shareContent) {
         this.shareContent = shareContent == null ? null : shareContent.trim();
+    }
+
+    public BigDecimal getPlatformAward() {
+        return platformAward;
+    }
+
+    public void setPlatformAward(BigDecimal platformAward) {
+        this.platformAward = platformAward;
+    }
+
+    public BigDecimal getPosPrice() {
+        return posPrice;
+    }
+
+    public void setPosPrice(BigDecimal posPrice) {
+        this.posPrice = posPrice;
+    }
+
+    public BigDecimal getPosDeposit() {
+        return posDeposit;
+    }
+
+    public void setPosDeposit(BigDecimal posDeposit) {
+        this.posDeposit = posDeposit;
     }
 }

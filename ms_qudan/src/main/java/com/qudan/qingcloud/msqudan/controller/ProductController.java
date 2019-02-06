@@ -52,7 +52,7 @@ public class ProductController {
                                                     ) {
         ApiResponseEntity ARE = new ApiResponseEntity();
         if(ComUtils.validPage(ARE, request)){
-            ARE.setData(productService.products(ARE, type, keyword, ComUtils.getPage(request), ComUtils.getPerPage(request)));
+            ARE.setData(productService.productss(ARE, type, keyword, ComUtils.getPage(request), ComUtils.getPerPage(request)));
         }
         return ARE.createResponseEntity();
     }

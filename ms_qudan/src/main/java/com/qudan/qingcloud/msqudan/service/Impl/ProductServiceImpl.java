@@ -46,6 +46,30 @@ public class ProductServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> productss(ApiResponseEntity ARE,
+                                       Integer type,
+                                       String keyword,
+                                       Integer page,
+                                       Integer perPage
+    ){
+        ComUtils.startPage(page, perPage);
+        List<ProductListVo> list = productMapperSelf.getProductList(type, keyword);
+        Map<String,Object> data = Maps.newHashMap();
+        long total = 0;
+        if(CollectionUtils.isEmpty(list)){
+            list = Lists.newArrayList();
+        } else {
+            total =  ((Page) list).getTotal();
+        }
+        for (ProductListVo vo : list){
+            vo.setLogo(config.getQiniuImageUrl()+vo.getLogo());
+        }
+        data.put("rows", list);
+        data.put("total", total);
+        return data;
+    }
+
+    @HystrixCommand
     public Map<String,Object> products(ApiResponseEntity ARE,
                                        Integer type,
                                        String keyword,
@@ -112,16 +136,18 @@ public class ProductServiceImpl {
         productVo.setProduct(product);
 
         List<Category> categories = productMapperSelf.selectCatByProductId(id);
-        if(product.getProductType() == 1){
-            productVo.setBank(categories.get(0).getName());
-            productVo.setBankQueryLink(categories.get(0).getGetLink());
-            productVo.setLoanTag(Lists.newArrayList());
-        } else {
-            List<String> tags = Lists.newArrayList();
-            for (Category category:categories) {
-                tags.add(category.getName());
+        if(!CollectionUtils.isEmpty(categories)){
+            if(product.getProductType() == 1){
+                productVo.setBank(categories.get(0).getName());
+                productVo.setBankQueryLink(categories.get(0).getGetLink());
+                productVo.setLoanTag(Lists.newArrayList());
+            } else {
+                List<String> tags = Lists.newArrayList();
+                for (Category category:categories) {
+                    tags.add(category.getName());
+                }
+                productVo.setLoanTag(tags);
             }
-            productVo.setLoanTag(tags);
         }
         if(ARE.getUserId() != null){
             productVo.setApply(applyMapperSelf.selectApplyByUserIdAndProductId(product.getId(), ARE.getUserId()) == null);

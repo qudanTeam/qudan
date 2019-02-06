@@ -264,6 +264,18 @@ public class ProductSqlProvider {
             VALUES("share_content", "#{shareContent,jdbcType=VARCHAR}");
         }
         
+        if (record.getPlatformAward() != null) {
+            VALUES("platform_award", "#{platformAward,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getPosPrice() != null) {
+            VALUES("pos_price", "#{posPrice,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getPosDeposit() != null) {
+            VALUES("pos_deposit", "#{posDeposit,jdbcType=DECIMAL}");
+        }
+        
         return SQL();
     }
 
@@ -517,6 +529,18 @@ public class ProductSqlProvider {
         
         if (record.getShareContent() != null) {
             SET("share_content = #{shareContent,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getPlatformAward() != null) {
+            SET("platform_award = #{platformAward,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getPosPrice() != null) {
+            SET("pos_price = #{posPrice,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getPosDeposit() != null) {
+            SET("pos_deposit = #{posDeposit,jdbcType=DECIMAL}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

@@ -50,7 +50,9 @@ public interface ProductMapper {
         "jl_unite, product_profit_price, ",
         "product_link, card_kind, ",
         "product_poster, loan_limit, ",
-        "share_logo, share_content)",
+        "share_logo, share_content, ",
+        "platform_award, pos_price, ",
+        "pos_deposit)",
         "values (#{productName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, ",
         "#{productType,jdbcType=INTEGER}, #{isHot,jdbcType=INTEGER}, ",
         "#{isShow,jdbcType=INTEGER}, #{customer,jdbcType=INTEGER}, ",
@@ -81,7 +83,9 @@ public interface ProductMapper {
         "#{jlUnite,jdbcType=VARCHAR}, #{productProfitPrice,jdbcType=DECIMAL}, ",
         "#{productLink,jdbcType=VARCHAR}, #{cardKind,jdbcType=TINYINT}, ",
         "#{productPoster,jdbcType=VARCHAR}, #{loanLimit,jdbcType=INTEGER}, ",
-        "#{shareLogo,jdbcType=VARCHAR}, #{shareContent,jdbcType=VARCHAR})"
+        "#{shareLogo,jdbcType=VARCHAR}, #{shareContent,jdbcType=VARCHAR}, ",
+        "#{platformAward,jdbcType=DECIMAL}, #{posPrice,jdbcType=DECIMAL}, ",
+        "#{posDeposit,jdbcType=DECIMAL})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(Product record);
@@ -101,7 +105,8 @@ public interface ProductMapper {
         "product_show_img, burundian, settlement_type, expire_unit, how_settle, expire_begin, ",
         "expire_end, commission_standard, share_title, card_progress_img, base_right, ",
         "preferential, special_tag, special_txt, unit, jl_unite, product_profit_price, ",
-        "product_link, card_kind, product_poster, loan_limit, share_logo, share_content",
+        "product_link, card_kind, product_poster, loan_limit, share_logo, share_content, ",
+        "platform_award, pos_price, pos_deposit",
         "from product",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -168,7 +173,10 @@ public interface ProductMapper {
         @Result(column="product_poster", property="productPoster", jdbcType=JdbcType.VARCHAR),
         @Result(column="loan_limit", property="loanLimit", jdbcType=JdbcType.INTEGER),
         @Result(column="share_logo", property="shareLogo", jdbcType=JdbcType.VARCHAR),
-        @Result(column="share_content", property="shareContent", jdbcType=JdbcType.VARCHAR)
+        @Result(column="share_content", property="shareContent", jdbcType=JdbcType.VARCHAR),
+        @Result(column="platform_award", property="platformAward", jdbcType=JdbcType.DECIMAL),
+        @Result(column="pos_price", property="posPrice", jdbcType=JdbcType.DECIMAL),
+        @Result(column="pos_deposit", property="posDeposit", jdbcType=JdbcType.DECIMAL)
     })
     Product selectByPrimaryKey(Integer id);
 
@@ -238,7 +246,10 @@ public interface ProductMapper {
           "product_poster = #{productPoster,jdbcType=VARCHAR},",
           "loan_limit = #{loanLimit,jdbcType=INTEGER},",
           "share_logo = #{shareLogo,jdbcType=VARCHAR},",
-          "share_content = #{shareContent,jdbcType=VARCHAR}",
+          "share_content = #{shareContent,jdbcType=VARCHAR},",
+          "platform_award = #{platformAward,jdbcType=DECIMAL},",
+          "pos_price = #{posPrice,jdbcType=DECIMAL},",
+          "pos_deposit = #{posDeposit,jdbcType=DECIMAL}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Product record);

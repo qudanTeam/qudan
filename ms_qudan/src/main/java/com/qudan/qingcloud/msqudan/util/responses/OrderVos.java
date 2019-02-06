@@ -16,6 +16,10 @@ public class OrderVos {
     private Integer productId;
     private Integer applyId;
     private Integer productType;
+    private Integer depositStatus;
+    private Integer deliverStatus;
+    private String expressName;
+    private String expressNo;
 
     public String getProductLogo() {
         return productLogo;
@@ -135,5 +139,37 @@ public class OrderVos {
 
     public void setProductType(Integer productType) {
         this.productType = productType;
+    }
+
+    public Integer getDepositStatus() {
+        return depositStatus;
+    }
+
+    public void setDepositStatus(Integer depositStatus) {
+        this.depositStatus = depositStatus;
+    }
+
+    public Integer getDeliverStatus() {
+        return deliverStatus;
+    }
+
+    public void setDeliverStatus(Integer deliverStatus) {
+        this.deliverStatus = deliverStatus;
+    }
+
+    public String getExpressName() {
+        return expressName;
+    }
+
+    public void setExpressName(String expressName) {
+        this.expressName = expressName;
+    }
+
+    public String getExpressNo() {
+        return expressNo;
+    }
+
+    public void setExpressNo(String expressNo) {
+        this.expressNo = expressNo;
     }
 }
