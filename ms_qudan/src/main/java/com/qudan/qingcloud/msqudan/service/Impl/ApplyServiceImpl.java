@@ -112,12 +112,6 @@ public class ApplyServiceImpl {
             userDL = userService.getUserById(shareUser.getRecommendInviteId());
         }
 
-
-        //TODO 平台奖励的归属人是谁
-        /*if(product.getProductType() == 3){
-            userDL = null;
-        }*/
-
         //是否是点分享链接的
         boolean isShare = shareUser != null;
         //是否有邀请人
@@ -154,6 +148,7 @@ public class ApplyServiceImpl {
 
 
         BigDecimal basePrice = rewordService.getBasePrice(product);
+        BigDecimal platformPrice = product.getProductType() == 3? product.getPlatformAward() : null;
         BigDecimal vipPrice = null;
         BigDecimal agentPrice = null;
         BigDecimal userVipPrice = null;
@@ -201,6 +196,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
 
 
             teamTrade = createTradeByApply(apply,
@@ -235,6 +234,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
 
             teamTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TEAM_REWORD.getType(),
@@ -267,6 +270,10 @@ public class ApplyServiceImpl {
                 taskTrade.setPrice(vipPrice.add(basePrice));
             } else {
                 taskTrade.setPrice(basePrice);
+            }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
             }
 
             teamTrade = createTradeByApply(apply,
@@ -302,6 +309,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
         }
 
         if(!isDL && !isShare){
@@ -327,6 +338,10 @@ public class ApplyServiceImpl {
                 taskTrade.setPrice(userVipPrice.add(basePrice));
             } else {
                 taskTrade.setPrice(basePrice);
+            }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
             }
         }
 
