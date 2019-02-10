@@ -136,6 +136,12 @@ public class Product {
 
     private BigDecimal posDeposit;
 
+    private String benefitsB;
+
+    private String benefitsC;
+
+    private String require;
+
     public Integer getId() {
         return id;
     }
@@ -662,5 +668,29 @@ public class Product {
 
     public void setPosDeposit(BigDecimal posDeposit) {
         this.posDeposit = posDeposit;
+    }
+
+    public String getBenefitsB() {
+        return benefitsB;
+    }
+
+    public void setBenefitsB(String benefitsB) {
+        this.benefitsB = benefitsB == null ? null : benefitsB.trim();
+    }
+
+    public String getBenefitsC() {
+        return benefitsC;
+    }
+
+    public void setBenefitsC(String benefitsC) {
+        this.benefitsC = benefitsC == null ? null : benefitsC.trim();
+    }
+
+    public String getRequire() {
+        return require;
+    }
+
+    public void setRequire(String require) {
+        this.require = require == null ? null : require.trim();
     }
 }

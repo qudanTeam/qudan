@@ -276,6 +276,18 @@ public class ProductSqlProvider {
             VALUES("pos_deposit", "#{posDeposit,jdbcType=DECIMAL}");
         }
         
+        if (record.getBenefitsB() != null) {
+            VALUES("benefits_b", "#{benefitsB,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getBenefitsC() != null) {
+            VALUES("benefits_c", "#{benefitsC,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getRequire() != null) {
+            VALUES("require", "#{require,jdbcType=VARCHAR}");
+        }
+        
         return SQL();
     }
 
@@ -541,6 +553,18 @@ public class ProductSqlProvider {
         
         if (record.getPosDeposit() != null) {
             SET("pos_deposit = #{posDeposit,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getBenefitsB() != null) {
+            SET("benefits_b = #{benefitsB,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getBenefitsC() != null) {
+            SET("benefits_c = #{benefitsC,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getRequire() != null) {
+            SET("require = #{require,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");
