@@ -284,8 +284,8 @@ public class ProductSqlProvider {
             VALUES("benefits_c", "#{benefitsC,jdbcType=VARCHAR}");
         }
         
-        if (record.getRequire() != null) {
-            VALUES("require", "#{require,jdbcType=VARCHAR}");
+        if (record.getRequireCondition() != null) {
+            VALUES("require_condition", "#{requireCondition,jdbcType=VARCHAR}");
         }
         
         return SQL();
@@ -563,8 +563,8 @@ public class ProductSqlProvider {
             SET("benefits_c = #{benefitsC,jdbcType=VARCHAR}");
         }
         
-        if (record.getRequire() != null) {
-            SET("require = #{require,jdbcType=VARCHAR}");
+        if (record.getRequireCondition() != null) {
+            SET("require_condition = #{requireCondition,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

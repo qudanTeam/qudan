@@ -140,7 +140,7 @@ public class Product {
 
     private String benefitsC;
 
-    private String require;
+    private String requireCondition;
 
     public Integer getId() {
         return id;
@@ -686,11 +686,11 @@ public class Product {
         this.benefitsC = benefitsC == null ? null : benefitsC.trim();
     }
 
-    public String getRequire() {
-        return require;
+    public String getRequireCondition() {
+        return requireCondition;
     }
 
-    public void setRequire(String require) {
-        this.require = require == null ? null : require.trim();
+    public void setRequireCondition(String requireCondition) {
+        this.requireCondition = requireCondition == null ? null : requireCondition.trim();
     }
 }

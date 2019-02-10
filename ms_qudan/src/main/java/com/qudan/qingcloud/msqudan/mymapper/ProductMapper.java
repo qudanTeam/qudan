@@ -53,7 +53,7 @@ public interface ProductMapper {
         "share_logo, share_content, ",
         "platform_award, pos_price, ",
         "pos_deposit, benefits_b, ",
-        "benefits_c, require)",
+        "benefits_c, require_condition)",
         "values (#{productName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, ",
         "#{productType,jdbcType=INTEGER}, #{isHot,jdbcType=INTEGER}, ",
         "#{isShow,jdbcType=INTEGER}, #{customer,jdbcType=INTEGER}, ",
@@ -87,7 +87,7 @@ public interface ProductMapper {
         "#{shareLogo,jdbcType=VARCHAR}, #{shareContent,jdbcType=VARCHAR}, ",
         "#{platformAward,jdbcType=DECIMAL}, #{posPrice,jdbcType=DECIMAL}, ",
         "#{posDeposit,jdbcType=DECIMAL}, #{benefitsB,jdbcType=VARCHAR}, ",
-        "#{benefitsC,jdbcType=VARCHAR}, #{require,jdbcType=VARCHAR})"
+        "#{benefitsC,jdbcType=VARCHAR}, #{requireCondition,jdbcType=VARCHAR})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(Product record);
@@ -108,7 +108,7 @@ public interface ProductMapper {
         "expire_end, commission_standard, share_title, card_progress_img, base_right, ",
         "preferential, special_tag, special_txt, unit, jl_unite, product_profit_price, ",
         "product_link, card_kind, product_poster, loan_limit, share_logo, share_content, ",
-        "platform_award, pos_price, pos_deposit, benefits_b, benefits_c, require",
+        "platform_award, pos_price, pos_deposit, benefits_b, benefits_c, require_condition",
         "from product",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -181,7 +181,7 @@ public interface ProductMapper {
         @Result(column="pos_deposit", property="posDeposit", jdbcType=JdbcType.DECIMAL),
         @Result(column="benefits_b", property="benefitsB", jdbcType=JdbcType.VARCHAR),
         @Result(column="benefits_c", property="benefitsC", jdbcType=JdbcType.VARCHAR),
-        @Result(column="require", property="require", jdbcType=JdbcType.VARCHAR)
+        @Result(column="require_condition", property="requireCondition", jdbcType=JdbcType.VARCHAR)
     })
     Product selectByPrimaryKey(Integer id);
 
@@ -257,7 +257,7 @@ public interface ProductMapper {
           "pos_deposit = #{posDeposit,jdbcType=DECIMAL},",
           "benefits_b = #{benefitsB,jdbcType=VARCHAR},",
           "benefits_c = #{benefitsC,jdbcType=VARCHAR},",
-          "require = #{require,jdbcType=VARCHAR}",
+          "require_condition = #{requireCondition,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Product record);
