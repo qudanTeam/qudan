@@ -125,7 +125,7 @@ public interface UserMapperSelf extends UserMapper {
             "LEFT JOIN category C ON C.id = PCR.category_id",
             "WHERE apply.user_id = #{obj.userId}",
             "<if test=\"obj.product_type != null\"> AND p.product_type = #{obj.product_type} </if>",
-            "<if test=\"obj.apply_status != null and obj.product_type == 2\"> AND apply.status = #{obj.apply_status} </if>",
+            "<if test=\"obj.apply_status != null and (obj.product_type == 2 or obj.product_type == 3)\"> AND apply.status = #{obj.apply_status} </if>",
             "<if test=\"obj.official_status != null and obj.product_type == 1\"> AND apply.official_status = #{obj.official_status} </if>",
             "ORDER BY p.create_time DESC",
         "</script>",
