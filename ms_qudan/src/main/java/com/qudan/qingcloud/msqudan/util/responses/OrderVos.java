@@ -1,5 +1,11 @@
 package com.qudan.qingcloud.msqudan.util.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
 public class OrderVos {
     private String productLogo;
     private String productName;
@@ -20,6 +26,16 @@ public class OrderVos {
     private Integer deliverStatus;
     private String expressName;
     private String expressNo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date applyTime;
+    private BigDecimal award;
+
+    @JsonIgnore
+    private BigDecimal basePrice;
+
+    @JsonIgnore
+    private BigDecimal platformPrice;
 
     public String getProductLogo() {
         return productLogo;
@@ -172,4 +188,38 @@ public class OrderVos {
     public void setExpressNo(String expressNo) {
         this.expressNo = expressNo;
     }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public BigDecimal getAward() {
+        return award;
+    }
+
+    public void setAward(BigDecimal award) {
+        this.award = award;
+    }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(BigDecimal basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public BigDecimal getPlatformPrice() {
+        return platformPrice;
+    }
+
+    public void setPlatformPrice(BigDecimal platformPrice) {
+        this.platformPrice = platformPrice;
+    }
+
+
 }

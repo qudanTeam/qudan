@@ -604,6 +604,9 @@ public class UserServiceImpl {
         List<OrderVos> list = userMapperSelf.applyRecords(orderParams);
         for (OrderVos orderVo : list){
             orderVo.setProductLogo(ComUtils.addPrefixToImg(orderVo.getProductLogo(), config.getQiniuImageUrl()));
+            if(orderVo.getProductType() == 3){
+                orderVo.setAward(orderVo.getBasePrice().add(orderVo.getPlatformPrice()));
+            }
         }
         if(CollectionUtils.isEmpty(list)){
             list = Lists.newArrayList();
