@@ -21,8 +21,4 @@ public class QudanHashId12Utils {
         }
         return id;
     }
-
-    public static void main(String[] args) {
-        System.out.println(decodeHashId(""));
-    }
 }
