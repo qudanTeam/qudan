@@ -64,6 +64,14 @@ public class ApplyController {
         return ARE.createResponseEntity();
     }
 
+    @GetMapping("user/apply/pos/pay/test")
+    public ResponseEntity<Map<String, Object>> posApplyTest(@RequestParam("extId")Integer extId) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        applyService.callBackPosApplyTest(extId);
+        return ARE.createResponseEntity();
+    }
+
+
     @GetMapping("/settle/trigger")
     public ResponseEntity<Map<String, Object>> loanApply(@RequestParam("applyid")Integer applyId) {
         ApiResponseEntity ARE = new ApiResponseEntity();

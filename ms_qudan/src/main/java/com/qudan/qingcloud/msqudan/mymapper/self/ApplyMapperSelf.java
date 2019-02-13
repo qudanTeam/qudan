@@ -5,6 +5,7 @@ import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.mymapper.ApplyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface ApplyMapperSelf extends ApplyMapper {
     Integer countApply();
 
     @Select({
-        "SELECT * FROM pay_order where ext_id = #{extId} ORDER BY sid DESC "
+        "SELECT * FROM pay_order where ext_id = #{extId} ORDER BY sid DESC LIMIT 1 "
     })
     PayOrder getPosOrderStatus(@Param("extId")Integer extId);
 
@@ -44,4 +45,9 @@ public interface ApplyMapperSelf extends ApplyMapper {
         "SELECT * FROM pay_order WHERE ext_id = #{extId} AND order_status = 1"
     })
     PayOrder existAlreadyPayPosOrder(@Param("extId")Integer extId);
+
+    @Update({
+        "UPDATE pay_order SET order_status = 1 WHERE order_id = #{orderId}"
+    })
+    int updatePayOrderStatus(@Param("orderId")String orderId);
 }

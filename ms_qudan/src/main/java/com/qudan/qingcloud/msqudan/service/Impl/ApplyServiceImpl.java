@@ -393,7 +393,6 @@ public class ApplyServiceImpl {
            return null;
         }
         Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
-        log.error("ext_id解码错误");
         if(extId == null){
             ARE.addInfoError("extId.isError", "不是正确的extId");
             return null;
@@ -556,6 +555,13 @@ public class ApplyServiceImpl {
         return ext;
     }
 
+
+    public boolean callBackPosApplyTest(Integer extId){
+        PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
+        applyMapperSelf.updatePayOrderStatus(payOrder.getOrderId());
+        return callBackPosApply(extId+4000, payOrder.getOrderId());
+    }
+
     public boolean callBackPosApply(String extIdStr, String payOrderNo){
         Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
         return callBackPosApply(extId, payOrderNo);
@@ -571,7 +577,6 @@ public class ApplyServiceImpl {
             extId = extId - 4000;
             PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
             if(ext != null){
-                log.info("---------------------不存在的EXT信息["+extId+"]");
                 Apply apply = new Apply();
                 Date date = new Date();
                 String dayStr = DateUtil.getFormatDate(date, "yyyyMMdd");

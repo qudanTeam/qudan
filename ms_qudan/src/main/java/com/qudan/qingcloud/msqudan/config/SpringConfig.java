@@ -77,7 +77,8 @@ public class SpringConfig {
                 + "/msqudan/api/user/apply/loan,"
                 + "/msqudan/api/user/apply/card,"
                 + "/msqudan/api/user/apply/pos,"
-                + "/msqudan/api/user/apply/pos/test"
+                + "/msqudan/api/user/apply/pos/test,"
+                + "/msqudan/api/user/apply/pos/pay/test"
         );
         return registrationBean;
     }

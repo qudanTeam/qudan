@@ -277,7 +277,7 @@ public class WxPayServiceImpl {
                                 throw new RuntimeException("订单号不存在");
                             }
                             if(py.getExtId()!=null){
-                                applyService.callBackPosApply(py.getExtId(), out_trade_no);
+                                applyService.callBackPosApply(py.getExtId()+4000, out_trade_no);
                             } else {
                                 BigDecimal vipFee = new BigDecimal(py.getTotalFee());
                                 logger.info("---------vipFee:", vipFee.toString());
