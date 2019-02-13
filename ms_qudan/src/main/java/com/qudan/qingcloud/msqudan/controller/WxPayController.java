@@ -52,6 +52,7 @@ public class WxPayController {
             @ApiParam(required = true, name = "total_fee", value = "订单总金额，单位为分") @RequestParam(required = true,value = "total_fee")String total_fee,
             @ApiParam(required = true, name = "trade_type", value = "交易类型 JSAPI(h5浏览器调用支付) NATIVE(扫码支付) APP(手机app内支付)") @RequestParam(required = true,value = "trade_type")String trade_type,
             @ApiParam(required = false, name = "product_id", value = "商品id 交易类型为NATIVE时必传") @RequestParam(required = false,value = "product_id")String product_id,
+            @ApiParam(required = false, name = "ext_id", value = "临时POS机订单ID 发起POS机订单交易时必传") @RequestParam(required = false,value = "ext_id")String ext_id,
             HttpServletRequest req, HttpServletResponse response) throws Exception {
         logggr.info("进入微信支付申请...");
         JSONObject jsonObject = new JSONObject();
@@ -69,7 +70,7 @@ public class WxPayController {
 //        String spbill_create_ip = GetIPAddrUtil.getIpAddr(req);
         String spbill_create_ip="47.99.242.122";
 //        logggr.info(spbill_create_ip);
-        Map<String,String> result = wxPayService.dounifiedOrder(trade_type,product_id,attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
+        Map<String,String> result = wxPayService.dounifiedOrder(trade_type,product_id, ext_id, attach,userId+"",out_trade_no,total_fee,spbill_create_ip,1);
 //        if(result == null){
 //            return YHResult.build(500,"签名错误");
 //        }

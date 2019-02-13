@@ -55,6 +55,15 @@ public class ApplyController {
         return ARE.createResponseEntity();
     }
 
+    @GetMapping("user/apply/pos/status")
+    public ResponseEntity<Map<String, Object>> posApplyStatus(@RequestParam("extId")String extId) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(applyService.posApplyStatus(ARE, extId));
+        return ARE.createResponseEntity();
+    }
+
     @GetMapping("/settle/trigger")
     public ResponseEntity<Map<String, Object>> loanApply(@RequestParam("applyid")Integer applyId) {
         ApiResponseEntity ARE = new ApiResponseEntity();

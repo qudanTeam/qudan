@@ -386,6 +386,47 @@ public class ApplyServiceImpl {
     }
 
     @HystrixCommand
+    public Map<String,Object> posApplyStatus(ApiResponseEntity ARE,String extIdStr){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(extIdStr)){
+           ARE.addInfoError("extId.isEmpty", "extId不能为空");
+           return null;
+        }
+        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+        log.error("ext_id解码错误");
+        if(extId == null){
+            ARE.addInfoError("extId.isError", "不是正确的extId");
+            return null;
+        } else {
+            extId = extId-4000;
+        }
+        PayOrder result = null;
+        PayOrder payAlready = applyMapperSelf.existAlreadyPayPosOrder(extId);
+        PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
+        if(payAlready != null){
+            result = payAlready;
+        } else{
+            result = payOrder;
+        }
+
+        if(result == null){
+            ARE.addInfoError("extId.isNotExist", "不存在的extId");
+            return null;
+        }
+        String orderStatus = result.getOrderStatus();
+        data.put("orderStatus", orderStatus);
+        data.put("type", null);
+        data.put("orderNo", null);
+        data.put("price", null);
+        if(orderStatus.equals("1")){
+            data.put("type", result.getType());
+            data.put("orderNo", result.getOrderId());
+            data.put("price", result.getTotalFee());
+        }
+        return data;
+    }
+
+    @HystrixCommand
     public Map<String,Object> cardApply(ApiResponseEntity ARE, ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
@@ -515,15 +556,17 @@ public class ApplyServiceImpl {
         return ext;
     }
 
-
+    public boolean callBackPosApply(String extIdStr, String payOrderNo){
+        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+        return callBackPosApply(extId, payOrderNo);
+    }
     /**
      * 支付成功后的回调
-     * @param extIdStr
+     * @param extId
      * @param payOrderNo
      * @return
      */
-    public boolean callBackPosApply(String extIdStr, String payOrderNo){
-        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+    public boolean callBackPosApply(Integer extId, String payOrderNo){
         if(extId != null){
             extId = extId - 4000;
             PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
@@ -578,7 +621,7 @@ public class ApplyServiceImpl {
                 posApplyExtMapper.updateByPrimaryKeySelective(ext_update);
             }
         } else {
-            log.info("---------------------不存在的EXT信息["+extIdStr+"]");
+            log.info("---------------------不存在的EXT信息["+extId+"]");
         }
         return false;
     }
