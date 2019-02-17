@@ -33,4 +33,5 @@ public class PayOrder {
 
     private Integer extId;
 
+    private String openid;
 }

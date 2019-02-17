@@ -99,7 +99,7 @@ public class WxPayServiceImpl {
 //            //设置超时
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
 //    })
-    public Map<String, String> dounifiedOrder(String trade_type,String product_id, String ext_id, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
+    public Map<String, String> dounifiedOrder(String trade_type,String product_id, String ext_id, String openid, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
         Map<String, String> fail = new HashMap<>();
         MyWXConfig config = new MyWXConfig();
         MD5Util md5Util = new MD5Util();
@@ -152,9 +152,12 @@ public class WxPayServiceImpl {
             //获取openid 根据userid
             WeixinBinding weixinBinding = weixinBindingMapper.selectBindingByUserId(Integer.parseInt(user_id));
             if(null != weixinBinding){
+                openid = weixinBinding.getOpenid();
                 data.put("openid",weixinBinding.getOpenid());
                 logger.info("openid："+weixinBinding.getOpenid());
-            } else {
+            } else if(StringUtils.isNotBlank(openid)){//支持微信内支付
+                data.put("openid",openid);
+            }else {
                 fail.put("status","400");
                 fail.put("msg","openid为空!");
                 return fail;
@@ -204,7 +207,8 @@ public class WxPayServiceImpl {
                     payOrder.setPrepayId(prepay_id);
                     //交易时间
                     payOrder.setTradeTime(new Date());
-
+                    //openid
+                    payOrder.setOpenid(openid);
                     payOrder.setExtId(extId);
                     payOrderMapper.insert(payOrder);
                     return resp;
