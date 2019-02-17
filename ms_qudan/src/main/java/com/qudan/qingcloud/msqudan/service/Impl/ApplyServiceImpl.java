@@ -457,11 +457,11 @@ public class ApplyServiceImpl {
             return false;
         }
         if(StringUtils.isBlank(RB.getRegion())){
-            ARE.addInfoError("region.isEmpty", "不能为空");
+            ARE.addInfoError("region.isEmpty", "地址不能不能为空");
             return false;
         }
         if(StringUtils.isBlank(RB.getValidcode())){
-            ARE.addInfoError("validcode.isEmpty", "不能为空");
+            ARE.addInfoError("validcode.isEmpty", "验证码不能为空");
             return false;
         }
         if(RB.getProductId() == null){
@@ -522,6 +522,7 @@ public class ApplyServiceImpl {
         Date date = new Date();
         PosApplyExt ext = new PosApplyExt();
         BeanUtils.copyProperties(RB, ext);
+        ext.setRebackAlipayAccount(RB.getAlipayAcount());
         ext.setUserId(userId);
         ext.setCreateTime(date);
         if(StringUtils.isNotBlank(RB.getShareid())){

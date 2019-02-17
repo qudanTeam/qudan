@@ -10,6 +10,7 @@ public class PosApplyRB {
     private String applyName;
     private String shareid;
     private String validcode;
+    private String alipayAcount;
 
 
     public String getRegion() {
@@ -82,5 +83,13 @@ public class PosApplyRB {
 
     public void setShareid(String shareid) {
         this.shareid = shareid;
+    }
+
+    public String getAlipayAcount() {
+        return alipayAcount;
+    }
+
+    public void setAlipayAcount(String alipayAcount) {
+        this.alipayAcount = alipayAcount;
     }
 }
