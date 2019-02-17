@@ -142,6 +142,8 @@ public class Product {
 
     private String requireCondition;
 
+    private String handingProcess;
+
     public Integer getId() {
         return id;
     }
@@ -692,5 +694,13 @@ public class Product {
 
     public void setRequireCondition(String requireCondition) {
         this.requireCondition = requireCondition == null ? null : requireCondition.trim();
+    }
+
+    public String getHandingProcess() {
+        return handingProcess;
+    }
+
+    public void setHandingProcess(String handingProcess) {
+        this.handingProcess = handingProcess;
     }
 }
