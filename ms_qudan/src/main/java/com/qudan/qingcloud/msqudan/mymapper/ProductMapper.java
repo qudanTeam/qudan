@@ -108,7 +108,7 @@ public interface ProductMapper {
         "expire_end, commission_standard, share_title, card_progress_img, base_right, ",
         "preferential, special_tag, special_txt, unit, jl_unite, product_profit_price, ",
         "product_link, card_kind, product_poster, loan_limit, share_logo, share_content, ",
-        "platform_award, pos_price, pos_deposit, benefits_b, benefits_c, require_condition,handingProcess",
+        "platform_award, pos_price, pos_deposit, benefits_b, benefits_c, require_condition,handing_process",
         "from product",
         "where id = #{id,jdbcType=INTEGER}"
     })
