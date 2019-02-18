@@ -11,6 +11,7 @@ import com.qudan.qingcloud.msqudan.mymapper.UserShareQrCodeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
+import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
 import com.qudan.qingcloud.msqudan.util.RandomUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
@@ -65,6 +66,9 @@ public class ApplyServiceImpl {
 
     @Autowired
     PayOrderMapper payOrderMapper;
+
+    @Autowired
+    VipMapperSelf vipMapperSelf;
 
 
 
@@ -556,7 +560,11 @@ public class ApplyServiceImpl {
             }
         }
         Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
-        data.put("deposit", product.getPosDeposit().toString());
+        BigDecimal total = product.getPosDeposit().add(product.getPosPrice());
+        data.put("deposit", total.toString());
+        //保证金， 支付金额
+        ext.setPayPrice(total);
+        ext.setPayDeposit(product.getPosDeposit());
         posApplyExtMapper.insertSelective(ext);
         data.put("extId", QudanHashId12Utils.encodeHashId(ext.getId()+4000));
         return ext;
@@ -645,15 +653,16 @@ public class ApplyServiceImpl {
                 }
                 apply_update.setApplyIdCode("QD"+dayStr + code);
                 applyMapperSelf.updateByPrimaryKeySelective(apply_update);
-
+                PayOrder payOrder = vipMapperSelf.getFeeByOrderId(payOrderNo);
                 PosApplyExt ext_update = new PosApplyExt();
                 ext_update.setId(ext.getId());
                 ext_update.setPayOrderNo(payOrderNo);
+                //支付类型
+                ext_update.setPayType(Integer.valueOf(payOrder.getTradeType()));
                 ext_update.setDepositStatus(1);
                 ext_update.setDeliverStatus(1);
                 ext_update.setApplyId(apply.getId());
                 ext_update.setModifyTime(date);
-                //TODO 保证金， 支付金额， 支付类型
                 posApplyExtMapper.updateByPrimaryKeySelective(ext_update);
             }
         } else {

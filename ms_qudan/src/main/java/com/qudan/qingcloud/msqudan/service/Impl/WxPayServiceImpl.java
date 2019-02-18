@@ -5,8 +5,10 @@ import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
+import com.qudan.qingcloud.msqudan.entity.PosApplyExt;
 import com.qudan.qingcloud.msqudan.entity.VipConfig;
 import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
+import com.qudan.qingcloud.msqudan.mymapper.PosApplyExtMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
@@ -60,6 +62,9 @@ public class WxPayServiceImpl {
 
     @Autowired
     ApplyMapperSelf applyMapperSelf;
+
+    @Autowired
+    PosApplyExtMapper posApplyExtMapper;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -115,6 +120,8 @@ public class WxPayServiceImpl {
                 return fail;
             }
             extId = extId-4000;
+            PosApplyExt posApplyExt = posApplyExtMapper.selectByPrimaryKey(extId);
+            total_fee = posApplyExt.getPayPrice().toString();//重置支付金额
             PayOrder payAlready = applyMapperSelf.existAlreadyPayPosOrder(extId);
             if(payAlready != null){
                 fail.put("status","400");
