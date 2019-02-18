@@ -658,7 +658,7 @@ public class ApplyServiceImpl {
                 ext_update.setId(ext.getId());
                 ext_update.setPayOrderNo(payOrderNo);
                 //支付类型
-                ext_update.setPayType(Integer.valueOf(payOrder.getTradeType()));
+                ext_update.setPayType(Integer.valueOf(payOrder.getType()));
                 ext_update.setDepositStatus(1);
                 ext_update.setDeliverStatus(1);
                 ext_update.setApplyId(apply.getId());
