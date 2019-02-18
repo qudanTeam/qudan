@@ -26,6 +26,7 @@ public class OrderVos {
     private Integer deliverStatus;
     private String expressName;
     private String expressNo;
+    private String rejectReason;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date applyTime;
@@ -221,5 +222,11 @@ public class OrderVos {
         this.platformPrice = platformPrice;
     }
 
+    public String getRejectReason() {
+        return rejectReason;
+    }
 
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
 }
