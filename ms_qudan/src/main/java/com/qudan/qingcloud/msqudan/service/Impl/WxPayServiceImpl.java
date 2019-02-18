@@ -7,16 +7,18 @@ import com.qudan.qingcloud.msqudan.entity.PayOrder;
 import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.VipConfig;
 import com.qudan.qingcloud.msqudan.entity.WeixinBinding;
+import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import com.qudan.qingcloud.msqudan.util.AmountUtils;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
+import com.qudan.qingcloud.msqudan.util.responses.QudanHashId12Utils;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 import tk.mybatis.mapper.entity.Example;
 
@@ -52,6 +54,12 @@ public class WxPayServiceImpl {
 
     @Autowired
     UserFinanceServiceImpl userFinanceService;
+
+    @Autowired
+    ApplyServiceImpl applyService;
+
+    @Autowired
+    ApplyMapperSelf applyMapperSelf;
 
     /** 用户支付中，需要输入密码 */
     private static final String ERR_CODE_USERPAYING = "USERPAYING";
@@ -91,12 +99,30 @@ public class WxPayServiceImpl {
 //            //设置超时
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "30000")
 //    })
-    public Map<String, String> dounifiedOrder(String trade_type,String product_id, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
+    public Map<String, String> dounifiedOrder(String trade_type,String product_id, String ext_id, String openid, String attach,String user_id,String out_trade_no, String total_fee, String spbill_create_ip, int type) throws Exception {
         Map<String, String> fail = new HashMap<>();
         MyWXConfig config = new MyWXConfig();
         MD5Util md5Util = new MD5Util();
         WXPay wxpay = new WXPay(config);
         Map<String, String> data = new HashMap<>();
+        Integer extId = null;
+        if(StringUtils.isNotBlank(ext_id)){
+            extId = QudanHashId12Utils.decodeHashId(ext_id);
+            if(extId == null){
+                logger.error("ext_id解码错误");
+                fail.put("status","400");
+                fail.put("msg","不是正确的ext_id");
+                return fail;
+            }
+            extId = extId-4000;
+            PayOrder payAlready = applyMapperSelf.existAlreadyPayPosOrder(extId);
+            if(payAlready != null){
+                fail.put("status","400");
+                fail.put("msg","已经支付过的订单");
+                return fail;
+            }
+        }
+
 //        data.put("appid", config.getAppID());
 //        data.put("mch_id", config.getMchID());
 //        data.put("nonce_str","6128be982a7f40daa930025dedd1a90d");
@@ -126,9 +152,12 @@ public class WxPayServiceImpl {
             //获取openid 根据userid
             WeixinBinding weixinBinding = weixinBindingMapper.selectBindingByUserId(Integer.parseInt(user_id));
             if(null != weixinBinding){
+                openid = weixinBinding.getOpenid();
                 data.put("openid",weixinBinding.getOpenid());
                 logger.info("openid："+weixinBinding.getOpenid());
-            } else {
+            } else if(StringUtils.isNotBlank(openid)){//支持微信内支付
+                data.put("openid",openid);
+            }else {
                 fail.put("status","400");
                 fail.put("msg","openid为空!");
                 return fail;
@@ -178,6 +207,9 @@ public class WxPayServiceImpl {
                     payOrder.setPrepayId(prepay_id);
                     //交易时间
                     payOrder.setTradeTime(new Date());
+                    //openid
+                    payOrder.setOpenid(openid);
+                    payOrder.setExtId(extId);
                     payOrderMapper.insert(payOrder);
                     return resp;
                 }else {
@@ -248,16 +280,21 @@ public class WxPayServiceImpl {
                                 logger.error("------------------订单号out_trade_no:" + out_trade_no + ", 找不到订单");
                                 throw new RuntimeException("订单号不存在");
                             }
-                            BigDecimal vipFee = new BigDecimal(py.getTotalFee());
-                            logger.info("---------vipFee:", vipFee.toString());
-                            VipConfig vipConfig = vipMapperSelf.getVipConfigByFee(vipFee);
-                            if(vipConfig == null){
-                                throw new RuntimeException("根据金额找不到VIPCONFIG");
+                            if(py.getExtId()!=null){
+                                applyService.callBackPosApply(py.getExtId()+4000, out_trade_no);
+                            } else {
+                                BigDecimal vipFee = new BigDecimal(py.getTotalFee());
+                                logger.info("---------vipFee:", vipFee.toString());
+                                VipConfig vipConfig = vipMapperSelf.getVipConfigByFee(vipFee);
+                                if(vipConfig == null){
+                                    throw new RuntimeException("根据金额找不到VIPCONFIG");
+                                }
+                                userFinanceService.becomeVip(Integer.valueOf(py.getUserId()), vipConfig.getId());
                             }
-                            userFinanceService.becomeVip(Integer.valueOf(py.getUserId()), vipConfig.getId());
                         }catch (Exception ex){
                             ex.printStackTrace();
-                            logger.error("成为VIP业务逻辑执行错误", ex);
+                            logger.error("成为VIP业务或者支付订单查询" +
+                                    "逻辑执行错误", ex);
                         }
                         //更新订单为成功
                         PayOrder payOrder = new PayOrder();

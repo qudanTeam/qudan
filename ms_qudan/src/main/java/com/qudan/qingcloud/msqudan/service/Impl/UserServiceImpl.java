@@ -10,12 +10,8 @@ import com.qudan.qingcloud.msqudan.mymapper.*;
 import com.qudan.qingcloud.msqudan.mymapper.self.*;
 import com.qudan.qingcloud.msqudan.util.*;
 import com.qudan.qingcloud.msqudan.util.params.OrderParams;
-import com.qudan.qingcloud.msqudan.util.requestBody.ShareRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserLoginRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserPwRB;
-import com.qudan.qingcloud.msqudan.util.requestBody.UserRealnameRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.*;
 import com.qudan.qingcloud.msqudan.util.responses.*;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -453,6 +449,17 @@ public class UserServiceImpl {
         return data;
     }
 
+    public Map<String,Object> getQrcodeUrl(ApiResponseEntity ARE, TextRB RB){
+        if(StringUtils.isBlank(RB.getStr())){
+            ARE.addInfoError("str.isEmpty", "str 不能为空");
+            return null;
+        }
+        Map<String,Object> data = Maps.newHashMap();
+        String qrCodeImgUrl = MatrixToImageWriter.getQrcodeUrl(config, RB.getStr());
+        data.put("qrImgUrl", qrCodeImgUrl);
+        return data;
+    }
+
     @HystrixCommand
     public Map<String,Object> getShareProductQrcodeUrl(ApiResponseEntity ARE, ShareRB RB){
         if(StringUtils.isBlank(RB.getLoadingUrl())){
@@ -605,6 +612,9 @@ public class UserServiceImpl {
         List<OrderVos> list = userMapperSelf.applyRecords(orderParams);
         for (OrderVos orderVo : list){
             orderVo.setProductLogo(ComUtils.addPrefixToImg(orderVo.getProductLogo(), config.getQiniuImageUrl()));
+            if(orderVo.getProductType() == 3){
+                orderVo.setAward(orderVo.getBasePrice().add(orderVo.getPlatformPrice()));
+            }
         }
         if(CollectionUtils.isEmpty(list)){
             list = Lists.newArrayList();

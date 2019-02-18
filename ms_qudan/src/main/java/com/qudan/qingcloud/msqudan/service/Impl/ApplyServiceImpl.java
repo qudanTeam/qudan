@@ -1,27 +1,33 @@
 package com.qudan.qingcloud.msqudan.service.Impl;
 
-import com.alipay.api.domain.Account;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
+import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.*;
+import com.qudan.qingcloud.msqudan.mymapper.PosApplyExtMapper;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.UserShareQrCodeMapper;
 import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.RandomUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
+import com.qudan.qingcloud.msqudan.util.requestBody.PosApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import scala.App;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -54,8 +60,18 @@ public class ApplyServiceImpl {
     @Autowired
     UserMapperSelf userMapperSelf;
 
+    @Autowired
+    PosApplyExtMapper posApplyExtMapper;
+
+    @Autowired
+    PayOrderMapper payOrderMapper;
+
+
+
     @Transactional
     public Map<String,Object> settlement(ApiResponseEntity ARE, Integer applyId){
+
+        //TODO POS金额结算 ， 是否有代理，奖励记录是否要体现TYPE=7 的金额
         log.info("applyid:"+applyId);
         Apply apply = applyMapperSelf.selectByPrimaryKey(applyId);
         if(apply == null){
@@ -138,6 +154,7 @@ public class ApplyServiceImpl {
 
 
         BigDecimal basePrice = rewordService.getBasePrice(product);
+        BigDecimal platformPrice = product.getProductType() == 3? product.getPlatformAward() : null;
         BigDecimal vipPrice = null;
         BigDecimal agentPrice = null;
         BigDecimal userVipPrice = null;
@@ -185,6 +202,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
 
 
             teamTrade = createTradeByApply(apply,
@@ -219,6 +240,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
 
             teamTrade = createTradeByApply(apply,
                     QudanConstant.TRADE_TYPE.TEAM_REWORD.getType(),
@@ -251,6 +276,10 @@ public class ApplyServiceImpl {
                 taskTrade.setPrice(vipPrice.add(basePrice));
             } else {
                 taskTrade.setPrice(basePrice);
+            }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
             }
 
             teamTrade = createTradeByApply(apply,
@@ -286,6 +315,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
         }
 
         if(!isDL && !isShare){
@@ -312,6 +345,10 @@ public class ApplyServiceImpl {
             } else {
                 taskTrade.setPrice(basePrice);
             }
+            if(platformPrice != null) {
+                taskTrade.setPlatformPrice(platformPrice);
+                taskTrade.setPrice(taskTrade.getPrice().add(platformPrice));
+            }
         }
 
         if(taskTrade != null){
@@ -327,7 +364,7 @@ public class ApplyServiceImpl {
         apply_update.setIsSettle(1);
         if(product.getProductType() == 1){
             apply_update.setOfficialLimit(new BigDecimal(200000));
-        } else {
+        } else if(product.getProductType() == 2){
             apply_update.setOfficialLimit(new BigDecimal(product.getAmountLine().toString()));
             apply_update.setOfficialExpire("12期");
         }
@@ -337,7 +374,7 @@ public class ApplyServiceImpl {
     }
 
     @HystrixCommand
-    public Map<String,Object> loanApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
+    public Map<String,Object> loanApply(ApiResponseEntity ARE, ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
             createByRB(RB, ARE.getUserId(),data);
@@ -346,12 +383,103 @@ public class ApplyServiceImpl {
     }
 
     @HystrixCommand
-    public Map<String,Object> cardApply(ApiResponseEntity ARE, @RequestBody ApplyRB RB){
+    public Map<String,Object> posApply(ApiResponseEntity ARE,PosApplyRB RB){
+        Map<String,Object> data = Maps.newHashMap();
+        if(checkPosApply(ARE, RB)){
+            PosApplyExt ext = createPosApply(RB, ARE.getUserId(), data);
+        }
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> posApplyStatus(ApiResponseEntity ARE,String extIdStr){
+        Map<String,Object> data = Maps.newHashMap();
+        if(StringUtils.isBlank(extIdStr)){
+           ARE.addInfoError("extId.isEmpty", "extId不能为空");
+           return null;
+        }
+        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+        if(extId == null){
+            ARE.addInfoError("extId.isError", "不是正确的extId");
+            return null;
+        } else {
+            extId = extId-4000;
+        }
+        PayOrder result = null;
+        PayOrder payAlready = applyMapperSelf.existAlreadyPayPosOrder(extId);
+        PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
+        if(payAlready != null){
+            result = payAlready;
+        } else{
+            result = payOrder;
+        }
+
+        if(result == null){
+            ARE.addInfoError("extId.isNotExist", "不存在的extId");
+            return null;
+        }
+        String orderStatus = result.getOrderStatus();
+        data.put("orderStatus", orderStatus);
+        data.put("type", null);
+        data.put("orderNo", null);
+        data.put("price", null);
+        if(orderStatus.equals("1")){
+            data.put("type", result.getType());
+            data.put("orderNo", result.getOrderId());
+            data.put("price", result.getTotalFee());
+        }
+        return data;
+    }
+
+    @HystrixCommand
+    public Map<String,Object> cardApply(ApiResponseEntity ARE, ApplyRB RB){
         Map<String,Object> data = Maps.newHashMap();
         if(checkApplyRB(ARE, RB)){
             createByRB(RB, ARE.getUserId(), data);
         }
         return data;
+    }
+
+
+    private boolean checkPosApply(ApiResponseEntity ARE,PosApplyRB RB){
+        if(StringUtils.isBlank(RB.getAddress())){
+            ARE.addInfoError("address.isEmpty", "收货地址不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getApplyMobile())){
+            ARE.addInfoError("applyMobile.isEmpty", "申请手机号不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getApplyName())){
+            ARE.addInfoError("applyName.isEmpty", "申请人不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getReceiver())){
+            ARE.addInfoError("receiver.isEmpty", "收货人不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getReceiverMobile())){
+            ARE.addInfoError("receiverMobile.isEmpty", "收货收机不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getRegion())){
+            ARE.addInfoError("region.isEmpty", "地址不能不能为空");
+            return false;
+        }
+        if(StringUtils.isBlank(RB.getValidcode())){
+            ARE.addInfoError("validcode.isEmpty", "验证码不能为空");
+            return false;
+        }
+        if(RB.getProductId() == null){
+            ARE.addInfoError("productId.isEmpty", "产品ID不能为空");
+            return false;
+        }
+        Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
+        if(product == null){
+            ARE.addInfoError("product.isNotExist", "不存在的产品Id");
+            return false;
+        }
+        return userService.checkCode(ARE, RB.getApplyMobile(), RB.getValidcode(), 4, true);
     }
 
     private boolean checkApplyRB(ApiResponseEntity ARE,ApplyRB RB){
@@ -394,6 +522,144 @@ public class ApplyServiceImpl {
             return false;
         }
         return userService.checkCode(ARE, RB.getMobile(), RB.getValidcode(), 4, true);
+    }
+
+    private PosApplyExt createPosApply(PosApplyRB  RB, Integer userId, Map<String,Object> data){
+        Date date = new Date();
+        PosApplyExt ext = new PosApplyExt();
+        BeanUtils.copyProperties(RB, ext);
+        ext.setRebackAlipayAccount(RB.getAlipayAcount());
+        ext.setUserId(userId);
+        ext.setCreateTime(date);
+        if(StringUtils.isNotBlank(RB.getShareid())){
+            User inviteUser = null;
+            Integer qrcodeId = QudanHashId10Utils.decodeHashId(RB.getShareid());
+            log.info("===================qrcodeId:"+ qrcodeId +" --------------------------------");
+            if(qrcodeId == null){
+                log.info("===================shareid:"+ RB.getShareid() +" 无效--------------------------------");
+            } else {
+                UserShareQrCode qrCode = userShareQrCodeMapper.selectByPrimaryKey(qrcodeId);
+                if(qrCode == null){
+                    log.info("===================qrcodeId:"+ qrcodeId +" 无效--------------------------------");
+                } else {
+                    if(qrCode.getPid() == null || qrCode.getPid().intValue() != RB.getProductId()){
+                        log.info("===================qrcodeId.pid:"+ qrCode.getPid() + ";  pid无效--------------------------------");
+                    } else {
+                        inviteUser = userMapperSelf.selectById(qrCode.getUserId());
+                        if(inviteUser != null){
+                            ext.setInviteCode(inviteUser.getInviteCode());
+                        } else {
+                            log.info("===================inviteUserId:"+ qrCode.getUserId() +" 无效--------------------------------");
+                        }
+                    }
+                }
+            }
+        }
+        Product product = productMapperSelf.selectByPrimaryKey(RB.getProductId());
+        data.put("deposit", product.getPosDeposit().toString());
+        posApplyExtMapper.insertSelective(ext);
+        data.put("extId", QudanHashId12Utils.encodeHashId(ext.getId()+4000));
+        return ext;
+    }
+
+
+    public boolean callBackPosApplyTest(Integer extId){
+        PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
+        PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
+        if(payOrder == null){
+            payOrder = new PayOrder();
+            Date now = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");//可以方便地修改日期格式
+            String out_trade_no = dateFormat.format(now);
+            payOrder.setOrderId(out_trade_no);
+            //微信支付交易类型
+            payOrder.setTradeType("NATIVE");
+            //支付状态(待支付:0)
+            payOrder.setOrderStatus("0");
+            //1:微信支付，2:支付宝支付
+            payOrder.setType("1");
+            //用户id
+            payOrder.setUserId(ext.getUserId()==null?"":ext.getUserId().toString());
+            //支付金额(单位：分)
+            payOrder.setTotalFee("0.01");
+            //微信支付 prepay_id
+            payOrder.setPrepayId("wxmn"+ RandomUtils.generateNumString(32));
+            //交易时间
+            payOrder.setTradeTime(now);
+            payOrder.setExtId(extId);
+            payOrderMapper.insert(payOrder);
+        }
+        applyMapperSelf.updatePayOrderStatus(payOrder.getOrderId());
+        return callBackPosApply(extId+4000, payOrder.getOrderId());
+    }
+
+    public boolean callBackPosApply(String extIdStr, String payOrderNo){
+        Integer extId = QudanHashId12Utils.decodeHashId(extIdStr);
+        return callBackPosApply(extId, payOrderNo);
+    }
+    /**
+     * 支付成功后的回调
+     * @param extId
+     * @param payOrderNo
+     * @return
+     */
+    public boolean callBackPosApply(Integer extId, String payOrderNo){
+        if(extId != null){
+            extId = extId - 4000;
+            PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
+            if(ext != null){
+                Apply apply = new Apply();
+                Date date = new Date();
+                String dayStr = DateUtil.getFormatDate(date, "yyyyMMdd");
+                dayStr = dayStr.substring(2, dayStr.length());
+                apply.setUserId(ext.getUserId());
+                apply.setProductId(ext.getProductId());
+                apply.setCreateTime(date);
+                apply.setModifyTime(date);
+                apply.setMobile(ext.getApplyMobile());
+                apply.setName(ext.getApplyName());
+                apply.setStatus(1);
+                apply.setOfficialStatus(0);
+                apply.setIsSettle(0);
+                apply.setLastOfficialQuery(null);
+                apply.setRejectReason(null);
+                apply.setInviteCode(ext.getInviteCode());
+                applyMapperSelf.insertSelective(apply);
+                Apply apply_update = new Apply();
+                apply_update.setId(apply.getId());
+                apply_update.setApplyIdCode(QudanHashIdUtils.encodeHashId(apply.getId()));
+                Integer lastIdOfCurrentDay = applyMapperSelf.selectLast5Apply("QD"+dayStr+"0001");
+                Integer sub = 1;
+                if(lastIdOfCurrentDay != null){
+                    sub = (sub + apply.getId()-lastIdOfCurrentDay);
+                }
+                String code = "";
+                if(sub < 10){
+                    code = "000" + sub;
+                } else if(sub >= 10 && sub < 100){
+                    code = "00" + sub;
+                } else if(sub >= 100 && sub < 1000){
+                    code = "0" + sub;
+                } else {
+                    code = sub + "";
+                }
+                apply_update.setApplyIdCode("QD"+dayStr + code);
+                applyMapperSelf.updateByPrimaryKeySelective(apply_update);
+
+                PosApplyExt ext_update = new PosApplyExt();
+                ext_update.setId(ext.getId());
+                ext_update.setPayOrderNo(payOrderNo);
+                ext_update.setDepositStatus(1);
+                ext_update.setDeliverStatus(1);
+                ext_update.setApplyId(apply.getId());
+                ext_update.setModifyTime(date);
+                //TODO 保证金， 支付金额， 支付类型
+                posApplyExtMapper.updateByPrimaryKeySelective(ext_update);
+            }
+        } else {
+            log.info("---------------------不存在的EXT信息["+extId+"]");
+        }
+        return false;
     }
 
     private Apply createByRB(ApplyRB RB, Integer userId, Map<String,Object> data){

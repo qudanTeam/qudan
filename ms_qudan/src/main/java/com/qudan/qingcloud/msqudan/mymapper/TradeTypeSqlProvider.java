@@ -104,6 +104,18 @@ public class TradeTypeSqlProvider {
             VALUES("agent_rate", "#{agentRate,jdbcType=DECIMAL}");
         }
         
+        if (record.getRemark() != null) {
+            VALUES("remark", "#{remark,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductId() != null) {
+            VALUES("product_id", "#{productId,jdbcType=INTEGER}");
+        }
+        
+        if (record.getPlatformPrice() != null) {
+            VALUES("platform_price", "#{platformPrice,jdbcType=DECIMAL}");
+        }
+        
         return SQL();
     }
 
@@ -197,6 +209,18 @@ public class TradeTypeSqlProvider {
         
         if (record.getAgentRate() != null) {
             SET("agent_rate = #{agentRate,jdbcType=DECIMAL}");
+        }
+        
+        if (record.getRemark() != null) {
+            SET("remark = #{remark,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getProductId() != null) {
+            SET("product_id = #{productId,jdbcType=INTEGER}");
+        }
+        
+        if (record.getPlatformPrice() != null) {
+            SET("platform_price = #{platformPrice,jdbcType=DECIMAL}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

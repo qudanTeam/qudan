@@ -2,7 +2,7 @@ package com.qudan.qingcloud.msqudan.util.params;
 
 public class OrderParams {
     Integer userId;
-    Integer product_type; //1-信用卡，2-贷款
+    Integer product_type; //1-信用卡，2-贷款 ,3-POS机
     Integer apply_status; // 贷款查询状态 1-审核中，2审核通过，3-退回
     Integer official_status; //信用卡查询状态 0-待查询，1-审核中，2审核通过，3-退回
 

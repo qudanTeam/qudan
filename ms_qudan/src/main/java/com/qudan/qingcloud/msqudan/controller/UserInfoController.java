@@ -43,6 +43,14 @@ public class UserInfoController {
         return ARE.createResponseEntity();
     }
 
+    @PostMapping("/qrcodeurl")
+    public ResponseEntity<Map<String, Object>> qtCodeurl(@RequestBody  TextRB textRB) {
+        ApiResponseEntity ARE = new ApiResponseEntity();
+        Integer userId = LocalUserHelper.getUserId();
+        ARE.setUserId(userId);
+        ARE.setData(userService.getQrcodeUrl(ARE, textRB));
+        return ARE.createResponseEntity();
+    }
 
     @PostMapping("/user/share/qrcodeurl")
     public ResponseEntity<Map<String, Object>> getShareCodeurl(@RequestBody  ShareRB shareRB) {

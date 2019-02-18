@@ -130,6 +130,20 @@ public class Product {
 
     private String shareContent;
 
+    private BigDecimal platformAward;
+
+    private BigDecimal posPrice;
+
+    private BigDecimal posDeposit;
+
+    private String benefitsB;
+
+    private String benefitsC;
+
+    private String requireCondition;
+
+    private String handingProcess;
+
     public Integer getId() {
         return id;
     }
@@ -632,5 +646,61 @@ public class Product {
 
     public void setShareContent(String shareContent) {
         this.shareContent = shareContent == null ? null : shareContent.trim();
+    }
+
+    public BigDecimal getPlatformAward() {
+        return platformAward;
+    }
+
+    public void setPlatformAward(BigDecimal platformAward) {
+        this.platformAward = platformAward;
+    }
+
+    public BigDecimal getPosPrice() {
+        return posPrice;
+    }
+
+    public void setPosPrice(BigDecimal posPrice) {
+        this.posPrice = posPrice;
+    }
+
+    public BigDecimal getPosDeposit() {
+        return posDeposit;
+    }
+
+    public void setPosDeposit(BigDecimal posDeposit) {
+        this.posDeposit = posDeposit;
+    }
+
+    public String getBenefitsB() {
+        return benefitsB;
+    }
+
+    public void setBenefitsB(String benefitsB) {
+        this.benefitsB = benefitsB == null ? null : benefitsB.trim();
+    }
+
+    public String getBenefitsC() {
+        return benefitsC;
+    }
+
+    public void setBenefitsC(String benefitsC) {
+        this.benefitsC = benefitsC == null ? null : benefitsC.trim();
+    }
+
+    public String getRequireCondition() {
+        return requireCondition;
+    }
+
+    public void setRequireCondition(String requireCondition) {
+        this.requireCondition = requireCondition == null ? null : requireCondition.trim();
+    }
+
+    public String getHandingProcess() {
+        return handingProcess;
+    }
+
+    public void setHandingProcess(String handingProcess) {
+        this.handingProcess = handingProcess;
     }
 }

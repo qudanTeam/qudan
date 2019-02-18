@@ -74,8 +74,12 @@ public class SpringConfig {
         //无论有没有JWT都给通过的链接 以逗号隔开
         registrationBean.addInitParameter("uncertainUrl",
                 "/msqudan/api/product/*,"
+                + "/msqudan/api/wxpay/pay,"
                 + "/msqudan/api/user/apply/loan,"
-                + "/msqudan/api/user/apply/card"
+                + "/msqudan/api/user/apply/card,"
+                + "/msqudan/api/user/apply/pos,"
+                + "/msqudan/api/user/apply/pos/test,"
+                + "/msqudan/api/user/apply/pos/pay/test"
         );
         return registrationBean;
     }

@@ -31,4 +31,7 @@ public class PayOrder {
     //交易时间
     private Date tradeTime;
 
+    private Integer extId;
+
+    private String openid;
 }

@@ -50,6 +50,12 @@ public class TradeType {
 
     private BigDecimal agentRate;
 
+    private String remark;
+
+    private Integer productId;
+
+    private BigDecimal platformPrice;
+
     public Integer getId() {
         return id;
     }
@@ -232,5 +238,29 @@ public class TradeType {
 
     public void setAgentRate(BigDecimal agentRate) {
         this.agentRate = agentRate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public BigDecimal getPlatformPrice() {
+        return platformPrice;
+    }
+
+    public void setPlatformPrice(BigDecimal platformPrice) {
+        this.platformPrice = platformPrice;
     }
 }
