@@ -23,23 +23,25 @@ public interface PosApplyExtMapper {
         "insert into pos_apply_ext (express_name, express_no, ",
         "create_time, apply_id, ",
         "user_id, apply_mobile, ",
-        "product_id, pay_type, ",
-        "pay_price, pay_deposit, ",
-        "address, region, ",
-        "receiver, receiver_mobile, ",
-        "modify_time, deposit_status, ",
-        "apply_name, invite_code, ",
-        "deliver_status, pay_order_no)",
+        "product_id, pos_no, ",
+        "pay_type, pay_price, ",
+        "pay_deposit, address, ",
+        "region, receiver, ",
+        "receiver_mobile, modify_time, ",
+        "deposit_status, apply_name, ",
+        "invite_code, deliver_status, ",
+        "pay_order_no, reback_alipay_account)",
         "values (#{expressName,jdbcType=VARCHAR}, #{expressNo,jdbcType=VARCHAR}, ",
         "#{createTime,jdbcType=TIMESTAMP}, #{applyId,jdbcType=INTEGER}, ",
         "#{userId,jdbcType=INTEGER}, #{applyMobile,jdbcType=VARCHAR}, ",
-        "#{productId,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, ",
-        "#{payPrice,jdbcType=DECIMAL}, #{payDeposit,jdbcType=DECIMAL}, ",
-        "#{address,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, ",
-        "#{receiver,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, ",
-        "#{modifyTime,jdbcType=TIMESTAMP}, #{depositStatus,jdbcType=INTEGER}, ",
-        "#{applyName,jdbcType=VARCHAR}, #{inviteCode,jdbcType=VARCHAR}, ",
-        "#{deliverStatus,jdbcType=INTEGER}, #{payOrderNo,jdbcType=VARCHAR})"
+        "#{productId,jdbcType=INTEGER}, #{posNo,jdbcType=VARCHAR}, ",
+        "#{payType,jdbcType=INTEGER}, #{payPrice,jdbcType=DECIMAL}, ",
+        "#{payDeposit,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, ",
+        "#{region,jdbcType=VARCHAR}, #{receiver,jdbcType=VARCHAR}, ",
+        "#{receiverMobile,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, ",
+        "#{depositStatus,jdbcType=INTEGER}, #{applyName,jdbcType=VARCHAR}, ",
+        "#{inviteCode,jdbcType=VARCHAR}, #{deliverStatus,jdbcType=INTEGER}, ",
+        "#{payOrderNo,jdbcType=VARCHAR}, #{rebackAlipayAccount,jdbcType=VARCHAR})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(PosApplyExt record);
@@ -51,8 +53,9 @@ public interface PosApplyExtMapper {
     @Select({
         "select",
         "id, express_name, express_no, create_time, apply_id, user_id, apply_mobile, ",
-        "product_id, pay_type, pay_price, pay_deposit, address, region, receiver, receiver_mobile, ",
-        "modify_time, deposit_status, apply_name, invite_code, deliver_status, pay_order_no",
+        "product_id, pos_no, pay_type, pay_price, pay_deposit, address, region, receiver, ",
+        "receiver_mobile, modify_time, deposit_status, apply_name, invite_code, deliver_status, ",
+        "pay_order_no, reback_alipay_account",
         "from pos_apply_ext",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -65,6 +68,7 @@ public interface PosApplyExtMapper {
         @Result(column="user_id", property="userId", jdbcType=JdbcType.INTEGER),
         @Result(column="apply_mobile", property="applyMobile", jdbcType=JdbcType.VARCHAR),
         @Result(column="product_id", property="productId", jdbcType=JdbcType.INTEGER),
+        @Result(column="pos_no", property="posNo", jdbcType=JdbcType.VARCHAR),
         @Result(column="pay_type", property="payType", jdbcType=JdbcType.INTEGER),
         @Result(column="pay_price", property="payPrice", jdbcType=JdbcType.DECIMAL),
         @Result(column="pay_deposit", property="payDeposit", jdbcType=JdbcType.DECIMAL),
@@ -77,7 +81,8 @@ public interface PosApplyExtMapper {
         @Result(column="apply_name", property="applyName", jdbcType=JdbcType.VARCHAR),
         @Result(column="invite_code", property="inviteCode", jdbcType=JdbcType.VARCHAR),
         @Result(column="deliver_status", property="deliverStatus", jdbcType=JdbcType.INTEGER),
-        @Result(column="pay_order_no", property="payOrderNo", jdbcType=JdbcType.VARCHAR)
+        @Result(column="pay_order_no", property="payOrderNo", jdbcType=JdbcType.VARCHAR),
+        @Result(column="reback_alipay_account", property="rebackAlipayAccount", jdbcType=JdbcType.VARCHAR)
     })
     PosApplyExt selectByPrimaryKey(Integer id);
 
@@ -93,6 +98,7 @@ public interface PosApplyExtMapper {
           "user_id = #{userId,jdbcType=INTEGER},",
           "apply_mobile = #{applyMobile,jdbcType=VARCHAR},",
           "product_id = #{productId,jdbcType=INTEGER},",
+          "pos_no = #{posNo,jdbcType=VARCHAR},",
           "pay_type = #{payType,jdbcType=INTEGER},",
           "pay_price = #{payPrice,jdbcType=DECIMAL},",
           "pay_deposit = #{payDeposit,jdbcType=DECIMAL},",
@@ -105,7 +111,8 @@ public interface PosApplyExtMapper {
           "apply_name = #{applyName,jdbcType=VARCHAR},",
           "invite_code = #{inviteCode,jdbcType=VARCHAR},",
           "deliver_status = #{deliverStatus,jdbcType=INTEGER},",
-          "pay_order_no = #{payOrderNo,jdbcType=VARCHAR}",
+          "pay_order_no = #{payOrderNo,jdbcType=VARCHAR},",
+          "reback_alipay_account = #{rebackAlipayAccount,jdbcType=VARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(PosApplyExt record);

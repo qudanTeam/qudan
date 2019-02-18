@@ -3,6 +3,7 @@ package com.qudan.qingcloud.msqudan.service.Impl;
 import com.google.common.collect.Maps;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qudan.qingcloud.msqudan.config.QudanConstant;
+import com.qudan.qingcloud.msqudan.dao.PayOrderMapper;
 import com.qudan.qingcloud.msqudan.entity.*;
 import com.qudan.qingcloud.msqudan.mymapper.PosApplyExtMapper;
 import com.qudan.qingcloud.msqudan.mymapper.TradeTypeMapper;
@@ -11,6 +12,7 @@ import com.qudan.qingcloud.msqudan.mymapper.self.ApplyMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.ProductMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.UserMapperSelf;
 import com.qudan.qingcloud.msqudan.util.DateUtil;
+import com.qudan.qingcloud.msqudan.util.RandomUtils;
 import com.qudan.qingcloud.msqudan.util.requestBody.ApplyRB;
 import com.qudan.qingcloud.msqudan.util.requestBody.PosApplyRB;
 import com.qudan.qingcloud.msqudan.util.responses.*;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import scala.App;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -59,6 +62,9 @@ public class ApplyServiceImpl {
 
     @Autowired
     PosApplyExtMapper posApplyExtMapper;
+
+    @Autowired
+    PayOrderMapper payOrderMapper;
 
 
 
@@ -457,11 +463,11 @@ public class ApplyServiceImpl {
             return false;
         }
         if(StringUtils.isBlank(RB.getRegion())){
-            ARE.addInfoError("region.isEmpty", "不能为空");
+            ARE.addInfoError("region.isEmpty", "地址不能不能为空");
             return false;
         }
         if(StringUtils.isBlank(RB.getValidcode())){
-            ARE.addInfoError("validcode.isEmpty", "不能为空");
+            ARE.addInfoError("validcode.isEmpty", "验证码不能为空");
             return false;
         }
         if(RB.getProductId() == null){
@@ -522,6 +528,7 @@ public class ApplyServiceImpl {
         Date date = new Date();
         PosApplyExt ext = new PosApplyExt();
         BeanUtils.copyProperties(RB, ext);
+        ext.setRebackAlipayAccount(RB.getAlipayAcount());
         ext.setUserId(userId);
         ext.setCreateTime(date);
         if(StringUtils.isNotBlank(RB.getShareid())){
@@ -557,7 +564,31 @@ public class ApplyServiceImpl {
 
 
     public boolean callBackPosApplyTest(Integer extId){
+        PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
         PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
+        if(payOrder == null){
+            payOrder = new PayOrder();
+            Date now = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");//可以方便地修改日期格式
+            String out_trade_no = dateFormat.format(now);
+            payOrder.setOrderId(out_trade_no);
+            //微信支付交易类型
+            payOrder.setTradeType("NATIVE");
+            //支付状态(待支付:0)
+            payOrder.setOrderStatus("0");
+            //1:微信支付，2:支付宝支付
+            payOrder.setType("1");
+            //用户id
+            payOrder.setUserId(ext.getUserId()==null?"":ext.getUserId().toString());
+            //支付金额(单位：分)
+            payOrder.setTotalFee("0.01");
+            //微信支付 prepay_id
+            payOrder.setPrepayId("wxmn"+ RandomUtils.generateNumString(32));
+            //交易时间
+            payOrder.setTradeTime(now);
+            payOrder.setExtId(extId);
+            payOrderMapper.insert(payOrder);
+        }
         applyMapperSelf.updatePayOrderStatus(payOrder.getOrderId());
         return callBackPosApply(extId+4000, payOrder.getOrderId());
     }

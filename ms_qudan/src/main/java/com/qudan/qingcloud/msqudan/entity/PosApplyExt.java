@@ -20,6 +20,8 @@ public class PosApplyExt {
 
     private Integer productId;
 
+    private String posNo;
+
     private Integer payType;
 
     private BigDecimal payPrice;
@@ -45,6 +47,8 @@ public class PosApplyExt {
     private Integer deliverStatus;
 
     private String payOrderNo;
+
+    private String rebackAlipayAccount;
 
     public Integer getId() {
         return id;
@@ -108,6 +112,14 @@ public class PosApplyExt {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public String getPosNo() {
+        return posNo;
+    }
+
+    public void setPosNo(String posNo) {
+        this.posNo = posNo == null ? null : posNo.trim();
     }
 
     public Integer getPayType() {
@@ -214,5 +226,11 @@ public class PosApplyExt {
         this.payOrderNo = payOrderNo == null ? null : payOrderNo.trim();
     }
 
+    public String getRebackAlipayAccount() {
+        return rebackAlipayAccount;
+    }
 
+    public void setRebackAlipayAccount(String rebackAlipayAccount) {
+        this.rebackAlipayAccount = rebackAlipayAccount == null ? null : rebackAlipayAccount.trim();
+    }
 }

@@ -44,6 +44,10 @@ public class PosApplyExtSqlProvider {
             VALUES("product_id", "#{productId,jdbcType=INTEGER}");
         }
         
+        if (record.getPosNo() != null) {
+            VALUES("pos_no", "#{posNo,jdbcType=VARCHAR}");
+        }
+        
         if (record.getPayType() != null) {
             VALUES("pay_type", "#{payType,jdbcType=INTEGER}");
         }
@@ -96,6 +100,10 @@ public class PosApplyExtSqlProvider {
             VALUES("pay_order_no", "#{payOrderNo,jdbcType=VARCHAR}");
         }
         
+        if (record.getRebackAlipayAccount() != null) {
+            VALUES("reback_alipay_account", "#{rebackAlipayAccount,jdbcType=VARCHAR}");
+        }
+        
         return SQL();
     }
 
@@ -129,6 +137,10 @@ public class PosApplyExtSqlProvider {
         
         if (record.getProductId() != null) {
             SET("product_id = #{productId,jdbcType=INTEGER}");
+        }
+        
+        if (record.getPosNo() != null) {
+            SET("pos_no = #{posNo,jdbcType=VARCHAR}");
         }
         
         if (record.getPayType() != null) {
@@ -181,6 +193,10 @@ public class PosApplyExtSqlProvider {
         
         if (record.getPayOrderNo() != null) {
             SET("pay_order_no = #{payOrderNo,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getRebackAlipayAccount() != null) {
+            SET("reback_alipay_account = #{rebackAlipayAccount,jdbcType=VARCHAR}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

@@ -156,6 +156,14 @@ public class WeChatController {
         log.info("ip :" + ip);
         log.info(Thread.currentThread() + ",oauth start time :"+ DateUtil.getFormatDate(new Date(),"yyyy-mm-dd HH:MM:ss.SSS"));
         try {
+            if(type == 3){//静默授权获取OPENID
+                Map data = new HashMap();
+                oAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+                String openId = oAuth2AccessToken.getOpenId();
+                data.put("openid", openId);
+                ARE.setData(data);
+                return ARE.createResponseEntity();
+            }
             if (type == 1) {//用户静默授权模式
                 Map data = new HashMap();
                 oAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
