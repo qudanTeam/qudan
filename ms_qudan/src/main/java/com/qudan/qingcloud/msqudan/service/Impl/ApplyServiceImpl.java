@@ -358,7 +358,7 @@ public class ApplyServiceImpl {
         apply_update.setIsSettle(1);
         if(product.getProductType() == 1){
             apply_update.setOfficialLimit(new BigDecimal(200000));
-        } else {
+        } else if(product.getProductType() == 2){
             apply_update.setOfficialLimit(new BigDecimal(product.getAmountLine().toString()));
             apply_update.setOfficialExpire("12期");
         }
