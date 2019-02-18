@@ -409,6 +409,7 @@ public class ApplyServiceImpl {
         } else {
             extId = extId-4000;
         }
+        PosApplyExt ext = posApplyExtMapper.selectByPrimaryKey(extId);
         PayOrder result = null;
         PayOrder payAlready = applyMapperSelf.existAlreadyPayPosOrder(extId);
         PayOrder payOrder = applyMapperSelf.getPosOrderStatus(extId);
@@ -427,10 +428,12 @@ public class ApplyServiceImpl {
         data.put("type", null);
         data.put("orderNo", null);
         data.put("price", null);
+        data.put("deposit", ext.getPayDeposit());
         if(orderStatus.equals("1")){
             data.put("type", result.getType());
             data.put("orderNo", result.getOrderId());
             data.put("price", result.getTotalFee());
+            data.put("deposit", ext.getPayDeposit());
         }
         return data;
     }
