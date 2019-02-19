@@ -26,12 +26,6 @@ public class OrderVos {
     private Integer deliverStatus;
     private String expressName;
     private String expressNo;
-    private String inviteUsername;
-
-    @JsonIgnore
-    private Integer inviteUserId;
-    @JsonIgnore
-    private Integer applyUserId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date applyTime;
@@ -227,27 +221,5 @@ public class OrderVos {
         this.platformPrice = platformPrice;
     }
 
-    public String getInviteUsername() {
-        return inviteUsername;
-    }
 
-    public void setInviteUsername(String inviteUsername) {
-        this.inviteUsername = inviteUsername;
-    }
-
-    public Integer getInviteUserId() {
-        return inviteUserId;
-    }
-
-    public void setInviteUserId(Integer inviteUserId) {
-        this.inviteUserId = inviteUserId;
-    }
-
-    public Integer getApplyUserId() {
-        return applyUserId;
-    }
-
-    public void setApplyUserId(Integer applyUserId) {
-        this.applyUserId = applyUserId;
-    }
 }
