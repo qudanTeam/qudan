@@ -614,6 +614,11 @@ public class UserServiceImpl {
             orderVo.setProductLogo(ComUtils.addPrefixToImg(orderVo.getProductLogo(), config.getQiniuImageUrl()));
             if(orderVo.getProductType() == 3){
                 orderVo.setAward(orderVo.getBasePrice().add(orderVo.getPlatformPrice()));
+                if(orderVo.getInviteUserId() != null && orderVo.getInviteUserId() != orderVo.getApplyUserId()){
+                    orderVo.setPlatformPrice(BigDecimal.ZERO);
+                } else  {
+                    orderVo.setInviteUsername(null);
+                }
             }
         }
         if(CollectionUtils.isEmpty(list)){
