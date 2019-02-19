@@ -27,6 +27,15 @@ public class OrderVos {
     private String expressName;
     private String expressNo;
 
+    private String inviteUsername;
+
+    @JsonIgnore
+    private Integer inviteUserId;
+    @JsonIgnore
+    private Integer applyUserId;
+
+    private String rejectReason;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date applyTime;
     private BigDecimal award;
@@ -221,5 +230,35 @@ public class OrderVos {
         this.platformPrice = platformPrice;
     }
 
+    public String getInviteUsername() {
+        return inviteUsername;
+    }
 
+    public void setInviteUsername(String inviteUsername) {
+        this.inviteUsername = inviteUsername;
+    }
+
+    public Integer getInviteUserId() {
+        return inviteUserId;
+    }
+
+    public void setInviteUserId(Integer inviteUserId) {
+        this.inviteUserId = inviteUserId;
+    }
+
+    public Integer getApplyUserId() {
+        return applyUserId;
+    }
+
+    public void setApplyUserId(Integer applyUserId) {
+        this.applyUserId = applyUserId;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
 }
