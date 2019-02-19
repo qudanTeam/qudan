@@ -615,7 +615,7 @@ public class UserServiceImpl {
             if(orderVo.getProductType() == 3){
                 orderVo.setAward(orderVo.getBasePrice().add(orderVo.getPlatformPrice()));
                 if(orderVo.getInviteUserId() != null && orderVo.getInviteUserId() != orderVo.getApplyUserId()){
-                    orderVo.setPlatformPrice(BigDecimal.ZERO);
+                    orderVo.setAward(BigDecimal.ZERO);
                 } else  {
                     orderVo.setInviteUsername(null);
                 }
