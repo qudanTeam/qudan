@@ -15,6 +15,7 @@ import com.qudan.qingcloud.msqudan.util.responses.QudanHashId14Utils;
 import com.qudan.qingcloud.msqudan.util.responses.QudanHashIdUtils;
 import com.qudan.qingcloud.msqudan.wx.ClickMenuButtonHandler;
 import com.qudan.qingcloud.msqudan.wx.LogHadler;
+import com.qudan.qingcloud.msqudan.wx.SubscribeHandler;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -258,11 +259,13 @@ public class WeChatController {
 
     private void initRouter(WxMpMessageRouter wxMpMessageRouter) {
         ClickMenuButtonHandler clickMenuButtonHandler = new ClickMenuButtonHandler();
+        SubscribeHandler subscribeHandler = new SubscribeHandler();
         if (!initRouter) {
             initRouter = true;
             wxMpMessageRouter
                     .rule().handler(new LogHadler()).next()
                     .rule().msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_CLICK).handler(clickMenuButtonHandler).end();
+            wxMpMessageRouter.rule().msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_SUBSCRIBE).handler(subscribeHandler).end();
         }
     }
 }
