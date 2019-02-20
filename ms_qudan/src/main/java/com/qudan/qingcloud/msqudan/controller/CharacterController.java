@@ -60,7 +60,7 @@ public class CharacterController {
         BigDecimal top3_base = new BigDecimal(7065.45);
         BigDecimal top4_base = new BigDecimal(6912.98);
         BigDecimal top5_base = new BigDecimal(6812.65);
-        Date basedate = DateUtil.StrToDate("2018-12-31", "yyyy-MM-dd");
+        Date basedate = DateUtil.StrToDate("2019-01-27", "yyyy-MM-dd");
         Date now = new Date();
         long miao = now.getTime()-basedate.getTime();
         long yitian = 3600*24;
