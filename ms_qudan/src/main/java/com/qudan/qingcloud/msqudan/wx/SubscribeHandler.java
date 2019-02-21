@@ -21,6 +21,7 @@ public class SubscribeHandler implements WxMpMessageHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> map, WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
         log.info("SubscribeHandler:"+wxMessage.toString());
         WxMpKefuMessage mpCustomMessage = null;
+
         String messageText = "欢迎您关注趣单 [玫瑰][鼓掌][鼓掌]\n" +
                 "--------------------------------\n" +
                 "1、佣金高，下卡快，无需出门即可办理信用卡[强][强]\n" +
