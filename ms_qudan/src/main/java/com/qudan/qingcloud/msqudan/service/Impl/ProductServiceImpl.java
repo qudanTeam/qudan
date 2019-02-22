@@ -106,6 +106,7 @@ public class ProductServiceImpl {
         ProductSimple productSimple = productMapperSelf.selectSimpleByProductId(id);
         productSimple.setLogo(ComUtils.addPrefixToImg(productSimple.getLogo(), config.getQiniuImageUrl()));
         data.put("simple", productSimple);
+        data.put("test", true);
         return data;
     }
 
