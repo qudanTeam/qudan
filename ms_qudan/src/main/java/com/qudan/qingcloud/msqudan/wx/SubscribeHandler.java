@@ -29,7 +29,7 @@ public class SubscribeHandler implements WxMpMessageHandler {
                 "--------------------------------\n" +
                 "2、成为代理，躺赚佣金➕分成<a href=\"http://www.myhshop.top/login.html\"> 《成为代理》</a> [色][色]\n" +
                 "--------------------------------\n" +
-                "3、免费领取POS机，养卡提额一键在手<a href=\"http://www.myhshop.top/qudanIndex.html?type=3\"> 《POS界面》</a> [鼓掌][鼓掌]\n" +
+                "3、免费领取POS机，养卡提额一键在手<a href=\"http://www.myhshop.top/qudanIndex.html?type=3\"> 《立即领取》</a> [鼓掌][鼓掌]\n" +
                 "--------------------------------\n" +
                 "4、这是你的专属学习空间，进来看看吧<a href=\"http://www.myhshop.top/novice.html\"> 《新手攻略》</a> [玫瑰][玫瑰]\n" +
                 "--------------------------------\n" +
