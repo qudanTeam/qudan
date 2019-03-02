@@ -30,13 +30,13 @@ public interface ProductMapperSelf extends ProductMapper{
         "LEFT JOIN trade_type trade ON trade.apply_id = apply.id",
         "WHERE ",
             "pro.is_hot = 1 AND pro.is_show = 1 AND pro.is_shelf = 1",
-            "AND (apply.id is null " +
+/*            "AND (apply.id is null " +
                     "or (",
                         "apply.id is not null ",
                         "AND apply. STATUS != 3",
                         "AND apply.official_status !=3",
                     ")",
-                ")",
+                ")",*/
             "AND pro.product_type = #{type}",
             "GROUP BY",
             "pro.id, pro.product_name , pro.logo, pro.base_salary, pro.sort_val",
