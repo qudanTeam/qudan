@@ -71,7 +71,7 @@ public interface ProductMapperSelf extends ProductMapper{
                 "pro.month_rate monthRate",
             "FROM product pro",
             "WHERE ",
-            "pro.is_hot = 1 AND pro.is_show = 1 AND pro.is_shelf = 1",
+            "pro.is_show = 1 AND pro.is_shelf = 1",
             "<if test=\"type != null\">",
                 "AND pro.product_type = #{type}",
             "</if>",
