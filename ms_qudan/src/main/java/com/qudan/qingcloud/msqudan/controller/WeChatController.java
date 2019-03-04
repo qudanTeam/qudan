@@ -221,7 +221,7 @@ public class WeChatController {
                 wut.setCountry(wxMpUser.getCountry());
                 wut.setLanguage(wxMpUser.getLanguage());
                 weixinUserTempMapper.insertSelective(wut);
-                data.put("wutid", wut.getId());
+                data.put("wutid", QudanHashId14Utils.encodeHashId(wut.getId()));
                 ARE.setData(data);
             }
         }catch (Throwable ex){
