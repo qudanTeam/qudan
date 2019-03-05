@@ -25,6 +25,6 @@ public class HelloController {
 //        ServiceInstance instance = client.getLocalServiceInstance();
 //        logger.info("/hello, host:"+instance.getHost()+", service_id:"+instance.getServiceId());
 
-        return "Hello World!";
+        return "Hello World! f**k word";
     }
 }
