@@ -33,8 +33,6 @@ public class SubscribeHandler implements WxMpMessageHandler {
                 "--------------------------------\n" +
                 "4、这是你的专属学习空间，进来看看吧<a href=\"http://www.myhshop.top/novice.html\"> 《新手攻略》</a> [玫瑰][玫瑰]\n" +
                 "--------------------------------\n" +
-                "5、如果您的问题还未得到解决，请点击<a href=\"http://www.myhshop.top/userMain.html\">《个人中心》</a>联系客服[愉快][愉快]\n" +
-                "--------------------------------\n" +
                 "客服微信号：\n" +
                 "趣单大家庭：QDSH-0918";
         mpCustomMessage = WxMpKefuMessage
