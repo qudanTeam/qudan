@@ -14,6 +14,7 @@ import com.qudan.qingcloud.msqudan.mymapper.self.VipMapperSelf;
 import com.qudan.qingcloud.msqudan.mymapper.self.WeixinMapperSelf;
 import com.qudan.qingcloud.msqudan.util.AmountUtils;
 import com.qudan.qingcloud.msqudan.util.MD5Util;
+import com.qudan.qingcloud.msqudan.util.WxPayXmlUtils;
 import com.qudan.qingcloud.msqudan.util.responses.QudanHashId12Utils;
 import com.qudan.qingcloud.msqudan.wxpay.MyWXConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -264,7 +265,7 @@ public class WxPayServiceImpl {
         String xmlBack="";
         Map<String, String> notifyMap = null;
         try {
-            notifyMap = WXPayUtil.xmlToMap(notifyData);         // 转换成map
+            notifyMap = WxPayXmlUtils.xmlToMap(notifyData);         // 转换成map
             if (wxpay.isPayResultNotifySignatureValid(notifyMap)) {
                 // 签名正确
                 // 进行处理。
@@ -725,8 +726,7 @@ public class WxPayServiceImpl {
 
         // 获取微信调用我们notify_url的返回信息
         String resultXml = new String(outSteam.toByteArray(), "utf-8");
-        Map<String, String> notifyMap = WXPayUtil.xmlToMap(resultXml);
-
+        Map<String, String> notifyMap = WxPayXmlUtils.xmlToMap(resultXml);
         return notifyMap;
     }
     /**
@@ -776,7 +776,7 @@ public class WxPayServiceImpl {
         // java.security.InvalidKeyException: Illegal key size or default parameters
         // https://www.cnblogs.com/yaks/p/5608358.html
         String responseXml = new String(cipher.doFinal(bytes),"UTF-8");
-        Map<String, String> responseMap = WXPayUtil.xmlToMap(responseXml);
+        Map<String, String> responseMap = WxPayXmlUtils.xmlToMap(responseXml);
         return responseMap;
     }
 
