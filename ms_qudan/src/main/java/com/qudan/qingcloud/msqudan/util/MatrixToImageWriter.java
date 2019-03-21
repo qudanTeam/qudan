@@ -87,6 +87,7 @@ public class MatrixToImageWriter {
             return ComUtils.addPrefixToImg(imgKey, config.getQiniuImageUrl());
         } catch (Exception ex) {
             ex.printStackTrace();
+            logger.error("获取二维码失败", ex);
             logger.info("获取二维码失败");
         }
         return null;
