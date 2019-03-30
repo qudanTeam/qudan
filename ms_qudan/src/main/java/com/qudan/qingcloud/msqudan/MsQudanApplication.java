@@ -1,6 +1,10 @@
 package com.qudan.qingcloud.msqudan;
 
 import org.apache.catalina.filters.CorsFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,11 +32,23 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = "com.qudan.qingcloud.msqudan.dao")
 @ComponentScan()
 //@Import({DynamicDataSourceRegister.class}) // 注册动态多数据源
-public class MsQudanApplication {
+public class MsQudanApplication implements CommandLineRunner {
 
+    @Value("${spring.datasource.url}")
+    private String dateUrl;
+
+
+    //日志
+    private final static Logger logger = LoggerFactory.getLogger(MsQudanApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(MsQudanApplication.class, args);
 
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("------------"+dateUrl+"---------------------------------------");
+        logger.info("------------"+dateUrl+"---------------------------------------");
     }
 }
