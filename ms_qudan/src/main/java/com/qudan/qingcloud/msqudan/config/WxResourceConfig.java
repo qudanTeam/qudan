@@ -50,7 +50,7 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
                     WEIXIN_SERVER_URL = "http://txmsqudan.myhshop.top";
                     WEIXIN_SERVER_API_URL = "http://txmsqudan.myhshop.top/msquan/api";
-                case "pro-sh"://趣单生活正式号
+                case "sh-pro"://趣单生活正式号
                     WEIXIN_QUDAN_APPID = "wx5937eccb3b4a99d7";
                     WEIXIN_QUDAN_APPSECRET = "861f22c47a40774f26e7f44b472069e7";
                     WEIXIN_QUDAN_TOKEN = "weixinQudan";

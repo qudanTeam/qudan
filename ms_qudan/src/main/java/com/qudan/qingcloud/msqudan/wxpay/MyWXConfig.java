@@ -41,7 +41,7 @@ public class MyWXConfig implements WXPayConfig {
         String env = System.getProperty("spring.profiles.active");
         String wxDeveloper = System.getProperty("wx.developer");
         InputStream certStream= null;
-        if(!StringUtils.isEmpty(wxDeveloper) && wxDeveloper.equals("pro-sh")){
+        if(!StringUtils.isEmpty(wxDeveloper) && wxDeveloper.equals("sh-pro")){
             appId = "wx5937eccb3b4a99d7";
             mchId = "1520779301";
             key = "g317g180q3355G2233G3344Q998ggq88";
