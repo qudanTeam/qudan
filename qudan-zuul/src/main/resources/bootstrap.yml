@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: dev
-----
+---
 spring:
   application:
     name: qudan-zuul
@@ -15,7 +15,7 @@ spring:
     admin:
       client:
         url: http://47.110.134.189:7086
-----
+---
 spring:
   application:
     name: qudan-zuul
@@ -29,7 +29,7 @@ spring:
     admin:
       client:
         url: http://47.110.134.189:7086
-----
+---
 spring:
   application:
     name: qudan-zuul
