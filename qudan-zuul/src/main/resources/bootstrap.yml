@@ -1,10 +1,43 @@
 spring:
+  profiles:
+    active: dev
+----
+spring:
   application:
     name: qudan-zuul
+  profiles: dev
   cloud:
     config:
       uri: http://user:123456@47.110.134.189:8888/
       profile: dev
+      label: master
+  boot:
+    admin:
+      client:
+        url: http://47.110.134.189:7086
+----
+spring:
+  application:
+    name: qudan-zuul
+  profiles: pro
+  cloud:
+    config:
+      uri: http://user:123456@47.110.134.189:8888/
+      profile: pro
+      label: master
+  boot:
+    admin:
+      client:
+        url: http://47.110.134.189:7086
+----
+spring:
+  application:
+    name: qudan-zuul
+  profiles: sh-pro
+  cloud:
+    config:
+      uri: http://user:123456@47.110.134.189:8888/
+      profile: sh-pro
       label: master
   boot:
     admin:
