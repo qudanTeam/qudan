@@ -50,6 +50,7 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
                     WEIXIN_SERVER_URL = "http://txmsqudan.myhshop.top";
                     WEIXIN_SERVER_API_URL = "http://txmsqudan.myhshop.top/msquan/api";
+                    break;
                 case "pro"://趣单正式号
                     WEIXIN_QUDAN_APPID = "wx17dd8d8d9de5910e";
                     WEIXIN_QUDAN_APPSECRET = "d0088c1d4ce6036620435e707b47570a";
@@ -57,6 +58,7 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_ENCODINGAESKEY = "x8kys4HygZdqZh6ZSXUHYEHwrbQZiz2OnndKXYvDqDg";
                     WEIXIN_SERVER_URL = "http://msqudan.myhshop.wang";
                     WEIXIN_SERVER_API_URL = "http://msqudan.myhshop.wang/msquan/api";
+                    break;
                 case "sh-pro"://趣单生活正式号
                     WEIXIN_QUDAN_APPID = "wx5937eccb3b4a99d7";
                     WEIXIN_QUDAN_APPSECRET = "861f22c47a40774f26e7f44b472069e7";
@@ -64,6 +66,7 @@ public class WxResourceConfig {
                     WEIXIN_QUDAN_ENCODINGAESKEY = "LrXr0FUsS1WVZ151OYXicZoVx7UqyB01BtRbM9W9bgu";
                     WEIXIN_SERVER_URL = "http://msqudan.myhshop.top";
                     WEIXIN_SERVER_API_URL = "http://msqudan.myhshop.top/msquan/api";
+                    break;
             }
         } else {//正式 wx-pro
             WEIXIN_QUDAN_APPID = "wx17dd8d8d9de5910e";
