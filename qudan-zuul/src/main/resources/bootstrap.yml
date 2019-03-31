@@ -36,10 +36,10 @@ spring:
   profiles: sh-pro
   cloud:
     config:
-      uri: http://user:123456@47.110.134.189:8888/
+      uri: http://user:123456@47.99.242.122:8888/
       profile: sh-pro
       label: master
   boot:
     admin:
       client:
-        url: http://47.110.134.189:7086
+        url: http://47.99.242.122:7086
