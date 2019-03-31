@@ -2,7 +2,7 @@ spring:
   application:
     name: qudanEureka
   profiles:
-    active: dev
+    active: pro
 server:
   port: 8761
 ---
