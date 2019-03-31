@@ -1,19 +1,24 @@
 spring:
   application:
     name: config-server
+  profiles:
+    active: pro
+  security:
+    user:
+      name: user
+      password: 123456
   cloud:
     config:
       server:
         git:
           uri: https://github.com/qudanTeam/qudan
-          search-paths: /sh-spring-cloud-config/service*
+          search-paths: /spring-cloud-config/service*
+---
+spring:
+  profiles: pro
 #      uri: http://user:123456@47.110.134.189:8888/
 #      profile: dev
 #      label: master
-  security:
-    user:
-      name: user
-      password: 123456
   boot:
     admin:
       client:
@@ -22,3 +27,17 @@ eureka:
   client:
     service-url:
       defaultZone: http://47.110.134.189:8761/eureka/
+---
+spring:
+  profiles: sh-pro
+#      uri: http://user:123456@47.110.134.189:8888/
+#      profile: dev
+#      label: master
+  boot:
+    admin:
+      client:
+        url: http://47.99.242.122:7086
+eureka:
+  client:
+    service-url:
+      defaultZone: http://47.99.242.122:8761/eureka/
