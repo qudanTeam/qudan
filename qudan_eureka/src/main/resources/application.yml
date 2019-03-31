@@ -1,5 +1,17 @@
+spring:
+  application:
+    name: qudanEureka
+  profiles:
+    active: dev
 server:
   port: 8761
+---
+spring:
+  profiles: pro
+  boot:
+    admin:
+      client:
+        url: http://47.110.134.189:7086
 eureka:
   server:
     enable-self-preservation: true
@@ -16,10 +28,26 @@ eureka:
     fetchRegistry: false
     service-url:
       defaultZone: http://47.110.134.189:8761/eureka
+---
 spring:
-  application:
-    name: qudanEureka
+  profiles: pro-sh
   boot:
     admin:
       client:
         url: http://47.110.134.189:7086
+eureka:
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 3000
+  instance:
+    hostname: 172.16.19.6
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 3
+    prefer-ip-address: true
+    instance-id : 172.16.19.6:${spring.application.name}:${server.port}:@project.version@
+    status-page-url: http://47.99.242.122:8761/swagger-ui.html
+  client:
+    register-with-eureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://47.99.242.122:8761/eureka
