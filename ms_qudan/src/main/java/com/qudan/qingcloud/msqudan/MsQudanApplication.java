@@ -1,8 +1,11 @@
 package com.qudan.qingcloud.msqudan;
 
+import com.qudan.qingcloud.msqudan.config.CommonConfig;
+import com.qudan.qingcloud.msqudan.config.WxResourceConfig;
 import org.apache.catalina.filters.CorsFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -37,6 +40,10 @@ public class MsQudanApplication implements CommandLineRunner {
     @Value("${spring.datasource.url}")
     private String dateUrl;
 
+    @Autowired
+    CommonConfig commonConfig;
+    @Autowired
+    WxResourceConfig wxResourceConfig;
 
     //日志
     private final static Logger logger = LoggerFactory.getLogger(MsQudanApplication.class);
@@ -50,5 +57,9 @@ public class MsQudanApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("------------"+dateUrl+"---------------------------------------");
         logger.info("------------"+dateUrl+"---------------------------------------");
+        logger.info(commonConfig.toString());
+        logger.info(wxResourceConfig.WEIXIN_QUDAN_APPID);
+        logger.info(wxResourceConfig.WEIXIN_QUDAN_APPSECRET);
+        logger.info(wxResourceConfig.WEIXIN_QUDAN_TOKEN);
     }
 }
