@@ -1,23 +1,41 @@
 spring:
   application:
     name: msqudan
+  profiles:
+    active: dev
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: http://user:123456@47.99.242.122:8888/
+      profile: dev
+      label: master
+  boot:
+    admin:
+      client:
+        url: http://47.99.242.122:7086
+---
+spring:
+  profiles: pro
   cloud:
     config:
       uri: http://user:123456@47.110.134.189:8888/
-#      profile: dev
+      profile: pro
       label: master
-#      discovery:
-#        enabled: true
-#        service-id: config-server
-  profiles:
-    active: test
   boot:
     admin:
       client:
         url: http://47.110.134.189:7086
-eureka:
-  client:
-    service-url:
-      defaultZone: http://47.110.134.189:8761/eureka/
-
-
+---
+spring:
+  profiles: sh-pro
+  cloud:
+    config:
+      uri: http://user:123456@47.99.242.122:8888/
+      profile: sh-pro
+      label: master
+  boot:
+    admin:
+      client:
+        url: http://47.99.242.122:7086
