@@ -6,8 +6,8 @@ spring:
       server:
         git:
           uri: https://github.com/qudanTeam/qudan
-          search-paths: /spring-cloud-config/service*
-#      uri: http://user:123456@47.99.242.122:8888/
+          search-paths: /sh-spring-cloud-config/service*
+#      uri: http://user:123456@47.110.134.189:8888/
 #      profile: dev
 #      label: master
   security:
@@ -17,8 +17,8 @@ spring:
   boot:
     admin:
       client:
-        url: http://47.99.242.122:7086
+        url: http://47.110.134.189:7086
 eureka:
   client:
     service-url:
-      defaultZone: http://47.99.242.122:8761/eureka/
+      defaultZone: http://47.110.134.189:8761/eureka/
